@@ -1,0 +1,233 @@
+<?php
+/*
+Plugin Name: MF Email
+Plugin URI: 
+Description: 
+Version: 3.3.7
+Author: Martin Fors
+Author URI: http://frostkom.se
+Text Domain: lang_email
+Domain Path: /lang
+*/
+
+include_once("include/classes.php");
+include_once("include/functions.php");
+
+add_action('cron_base', 'activate_email');
+add_action('cron_base', 'cron_email');
+
+if(is_admin())
+{
+	DEFINE('EMAILS2SHOW', 50);
+
+	register_activation_hook(__FILE__, 'activate_email');
+	register_uninstall_hook(__FILE__, 'uninstall_email');
+
+	add_action('admin_menu', 'menu_email');
+	add_action('deleted_user', 'deleted_user_email');
+}
+
+load_plugin_textdomain('lang_email', false, dirname(plugin_basename(__FILE__)).'/lang/');
+
+require_once("include/roundcube/lib/html2text.php");
+require_once("include/roundcube/lib/tnef_decoder.php");
+require_once("include/roundcube/rcube_charset.php");
+require_once("include/roundcube/rcube_imap_generic.php");
+require_once("include/roundcube/rcube_imap.php");
+require_once("include/roundcube/rcube_message.php");
+
+define('RCMAIL_CHARSET', get_bloginfo('charset'));
+define('DEFAULT_MAIL_CHARSET', 'ISO-8859-1');
+define('RCMAIL_PREFER_HTML', false);
+
+function activate_email()
+{
+	global $wpdb;
+
+	$default_charset = DB_CHARSET != '' ? DB_CHARSET : "utf8";
+
+	$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email (
+		emailID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+		emailPublic ENUM('0', '1') NOT NULL DEFAULT '0',
+		emailRoles VARCHAR(100),
+		emailVerified ENUM('-1', '0', '1') NOT NULL DEFAULT '0',
+		emailServer VARCHAR(30),
+		emailPort SMALLINT,
+		emailUsername VARCHAR(30),
+		emailPassword VARCHAR(100),
+		emailAddress VARCHAR(50),
+		emailName VARCHAR(60),
+		emailCreated DATETIME,
+		userID INT UNSIGNED,
+		emailDeleted ENUM('0','1') NOT NULL DEFAULT '0',
+		emailDeletedDate DATETIME DEFAULT NULL,
+		emailDeletedID INT UNSIGNED DEFAULT NULL,
+		PRIMARY KEY (emailID),
+		KEY userID (userID)
+	) DEFAULT CHARSET=".$default_charset);
+
+	$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email_users (
+		emailID INT UNSIGNED,
+		userID INT UNSIGNED,
+		KEY emailID (emailID),
+		KEY userID (userID)
+	) DEFAULT CHARSET=".$default_charset);
+
+	$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email_folder (
+		folderID INT unsigned NOT NULL AUTO_INCREMENT,
+		folderID2 INT unsigned DEFAULT NULL,
+		emailID INT unsigned NOT NULL DEFAULT '0',
+		folderType INT unsigned NOT NULL DEFAULT '0',
+		folderName VARCHAR(100) DEFAULT NULL,
+		folderCreated DATETIME DEFAULT NULL,
+		userID INT unsigned DEFAULT NULL,
+		folderDeleted ENUM('0','1') NOT NULL DEFAULT '0',
+		folderDeletedDate DATETIME DEFAULT NULL,
+		folderDeletedID INT unsigned DEFAULT NULL,
+		PRIMARY KEY (folderID),
+		KEY emailID (emailID),
+		KEY userID (userID),
+		KEY folderType (folderType)
+	) DEFAULT CHARSET=".$default_charset);
+
+	$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email_message (
+		messageID INT unsigned NOT NULL AUTO_INCREMENT,
+		folderID INT unsigned DEFAULT NULL,
+		messageTextID VARCHAR(100) DEFAULT NULL,
+		messageMd5 VARCHAR(32) DEFAULT NULL,
+		messageRead ENUM('0','1') NOT NULL DEFAULT '0',
+		messageFrom VARCHAR(100) DEFAULT NULL,
+		messageFromName VARCHAR(100) DEFAULT NULL,
+		messageTo TEXT,
+		messageCc TEXT,
+		messageReplyTo VARCHAR(100) DEFAULT NULL,
+		messageName VARCHAR(200) DEFAULT NULL,
+		messageText TEXT,
+		messageText2 TEXT,
+		messageSize INT unsigned NOT NULL DEFAULT '0',
+		messageCreated DATETIME DEFAULT NULL,
+		messageReceived DATETIME DEFAULT NULL,
+		userID INT unsigned DEFAULT NULL,
+		messageDeleted ENUM('0','1') NOT NULL DEFAULT '0',
+		messageDeletedDate DATETIME DEFAULT NULL,
+		messageDeletedID INT unsigned DEFAULT NULL,
+		PRIMARY KEY (messageID),
+		KEY folderID (folderID),
+		KEY messageDeleted (messageDeleted),
+		KEY messageCreated (messageCreated)
+	) DEFAULT CHARSET=".$default_charset);
+
+	$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email_message_attachment (
+		messageID INT unsigned NOT NULL,
+		fileID INT unsigned DEFAULT NULL,
+		KEY messageID (messageID),
+		KEY fileID (fileID)
+	) DEFAULT CHARSET=".$default_charset);
+
+	$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email_spam (
+		spamID INT unsigned NOT NULL AUTO_INCREMENT,
+		emailID INT UNSIGNED,
+		messageFrom VARCHAR(100) DEFAULT NULL,
+		spamCount INT UNSIGNED DEFAULT NULL,
+		KEY spamID (spamID),
+		KEY emailID (emailID)
+	) DEFAULT CHARSET=".$default_charset);
+
+	$arr_update_tables = array();
+
+	$arr_update_tables[$wpdb->base_prefix."email"] = array(
+		'emailVerified' => "ALTER TABLE [table] ADD [column] ENUM('-1', '0', '1') NOT NULL DEFAULT '0' AFTER emailID",
+		'emailPublic' => "ALTER TABLE [table] ADD [column] ENUM('0', '1') NOT NULL DEFAULT '0' AFTER emailID",
+		'emailRoles' => "ALTER TABLE [table] ADD [column] VARCHAR(100) AFTER emailPublic",
+	);
+
+	add_columns($arr_update_tables);
+
+	$arr_update_existing_columns = array();
+
+	$arr_update_existing_columns[$wpdb->base_prefix."email_message"] = array(
+		'messageHeader' => "ALTER TABLE [table] DROP [column]",
+		'messageRecieved' => "ALTER TABLE [table] CHANGE [column] messageReceived DATETIME DEFAULT NULL",
+	);
+
+	update_columns($arr_update_existing_columns);
+
+	$arr_insert_tables = array();
+
+	//$arr_insert_tables[] = "INSERT IGNORE INTO ".$wpdb->base_prefix."query_check VALUES('1','1','".__("Number", 'lang_email')."','int','[0-9]')";
+
+	run_queries($arr_insert_tables);
+
+	delete_base(array(
+		'table' => "email_folder",
+		'field_prefix' => "folder",
+		'child_tables' => array(
+			'email_message' => array(
+				'action' => "trash",
+				'field_prefix' => "message",
+			),
+		),
+	));
+
+	delete_base(array(
+		'table' => "email_message",
+		'field_prefix' => "message",
+		'child_tables' => array(
+			'email_message_attachment' => array(
+				'action' => "delete",
+			),
+		),
+	));
+
+	delete_base(array(
+		'table' => "email",
+		'field_prefix' => "email",
+		'child_tables' => array(
+			'email_folder' => array(
+				'action' => "trash",
+				'field_prefix' => "folder",
+			),
+			'email_users' => array(
+				'action' => "delete",
+			),
+			'email_spam' => array(
+				'action' => "delete",
+			),
+		),
+	));
+
+	/*if(function_exists('is_plugin_active') && is_plugin_active("mf_media_categories/index.php"))
+	{
+		$taxonomy = 'category';
+
+		$term_attachment = create_term_if_not_exists(array('taxonomy' => $taxonomy, 'term_slug' => 'email_attachment', 'term_name' => __("E-mail attachments", 'lang_email')));
+		//$term_uploaded = create_term_if_not_exists(array('taxonomy' => $taxonomy, 'term_slug' => 'file_uploaded', 'term_name' => __("Uploaded file", 'lang_email')));
+
+		$result = $wpdb->get_results("SELECT ID, messageID FROM ".$wpdb->posts." LEFT JOIN ".$wpdb->base_prefix."email_message_attachment ON ".$wpdb->posts.".ID = ".$wpdb->base_prefix."email_message_attachment.fileID WHERE post_type = 'attachment' GROUP BY ID");
+
+		foreach($result as $r)
+		{
+			$post_id = $r->ID;
+			$intMessageID = $r->messageID;
+
+			if($intMessageID > 0)
+			{
+				wp_set_object_terms($post_id, array((int)$term_attachment['term_id']), $taxonomy, false);
+			}
+
+			else
+			{
+				wp_set_post_categories($post_id, array(get_option('default_category')));
+
+				//wp_set_object_terms($post_id, array((int)$term_uploaded['term_id']), $taxonomy, true);
+			}
+		}
+	}*/
+}
+
+function uninstall_email()
+{
+	mf_uninstall_plugin(array(
+		'tables' => array('email', 'email_users', 'email_folders', 'email_message', 'email_message_attachment', 'email_spam'),
+	));
+}

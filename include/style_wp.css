@@ -1,0 +1,94 @@
+.fa-arrows
+{
+	cursor: move !important;
+}
+
+#email_column
+{
+	flex: 5 1 0;
+}
+
+.flex_vertical
+{
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	flex-direction: column;
+	height: 90vh;
+}
+
+	.flex_vertical > *
+	{
+		overflow-y: scroll;
+	}
+
+		.flex_vertical > *:first-child{}
+
+		.flex_vertical > *:last-child
+		{
+			flex: 1 0 70%;
+			min-width: 70%;
+		}
+
+		#txtEmail
+		{
+			background: #fff;
+		}
+
+			#txtEmail > ul
+			{
+				margin: 0em;
+				padding: .8em;
+			}
+
+			#txtEmail > div
+			{
+				margin: .8em;
+			}
+
+				#message_container .nav-tab-wrapper
+				{
+					margin: 0 0 1em;
+					padding: 0;
+				}
+
+#lost_connection
+{
+	display: none;
+	font-size: 2em;
+	position: absolute;
+	text-align: center;
+	top: 0;
+	width: 100%;
+	z-index: 1000;
+}
+
+	#lost_connection span
+	{
+		background: rgba(0, 0, 0, .5);
+		border-radius: 5em;
+		color: #ccc;
+		display: block;
+		margin: 25% 5%;
+		padding: 4%;
+	}
+
+		#lost_connection a
+		{
+			color: #ccc;
+		}
+
+#lost_connection, #saving, #loading
+{
+	background: rgba(0, 0, 0, .5);
+	color: #ccc;
+	display: none;
+	font-size: 4em;
+	left: 0;
+	position: fixed;
+	text-align: center;
+	top: 0;
+	width: 100%;
+	z-index: 1000;
+}
