@@ -1,13 +1,15 @@
 <?php
 /*
 Plugin Name: MF Email
-Plugin URI: 
+Plugin URI: https://github.com/frostkom/mf_email
 Description: 
-Version: 3.3.7
+Version: 3.3.9
 Author: Martin Fors
 Author URI: http://frostkom.se
 Text Domain: lang_email
 Domain Path: /lang
+
+GitHub Plugin URI: frostkom/mf_email
 */
 
 include_once("include/classes.php");
@@ -196,7 +198,7 @@ function activate_email()
 		),
 	));
 
-	/*if(function_exists('is_plugin_active') && is_plugin_active("mf_media_categories/index.php"))
+	/*if(function_exists('is_plugin_active') && is_plugin_active("mf_media/index.php"))
 	{
 		$taxonomy = 'category';
 
