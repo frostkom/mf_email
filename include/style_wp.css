@@ -5,6 +5,9 @@
 
 #email_column
 {
+	-webkit-box-flex: 5 1 0;
+	-webkit-flex: 5 1 0;
+	-ms-flex: 5 1 0;
 	flex: 5 1 0;
 }
 
@@ -27,6 +30,9 @@
 
 		.flex_vertical > *:last-child
 		{
+			-webkit-box-flex: 1 0 70%;
+			-webkit-flex: 1 0 70%;
+			-ms-flex: 1 0 70%;
 			flex: 1 0 70%;
 			min-width: 70%;
 		}

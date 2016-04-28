@@ -1,11 +1,11 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: MF Slideshow\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-01 13:39+0100\n"
+"POT-Creation-Date: 2016-04-27 15:38+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
-"Language-Team: Martin Fors\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -372,12 +372,12 @@ msgstr "Välj här"
 msgid "Cc"
 msgstr "Kopia"
 
-#: ../send/index.php:314
-#: ../send/index.php:318
+#: ../send/index.php:312
+#: ../send/index.php:316
 msgid "Send"
 msgstr "Skicka"
 
-#: ../send/index.php:320
+#: ../send/index.php:318
 msgid "Save draft"
 msgstr "Spara utkast"
 
