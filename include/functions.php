@@ -607,6 +607,9 @@ function cron_email()
 
 									if($intMessageID > 0 && $intFileID > 0)
 									{
+										$taxonomy = 'category';
+										$post_id = $intFileID;
+
 										$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email_message_attachment SET messageID = '%d', fileID = '%d'", $intMessageID, $intFileID));
 
 										$term_attachment = create_term_if_not_exists(array('taxonomy' => $taxonomy, 'term_slug' => 'email_attachment', 'term_name' => __("E-mail attachments", 'lang_email')));

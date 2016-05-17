@@ -48,6 +48,11 @@
 				padding: .8em;
 			}
 
+				#txtEmail > ul a
+				{
+					text-decoration: none;
+				}
+
 			#txtEmail > div
 			{
 				margin: .8em;

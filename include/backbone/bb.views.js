@@ -86,7 +86,7 @@ var EmailView = Backbone.View.extend(
 		{
 			for(var i = 0; i < count_temp; i++)
 			{
-				html += _.template(jQuery('#template_folder_item').html(), response[i]);
+				html += _.template(jQuery('#template_folder_item').html())(response[i]);
 			}
 
 			jQuery('#txtFolders tbody').html(html);
@@ -96,7 +96,7 @@ var EmailView = Backbone.View.extend(
 
 		else
 		{
-			html = _.template(jQuery('#template_folder_message').html(), "");
+			html = _.template(jQuery('#template_folder_message').html())("");
 
 			jQuery('#txtFolders tbody').html(html);
 		}
@@ -114,7 +114,7 @@ var EmailView = Backbone.View.extend(
 		{
 			for(var i = 0; i < count_temp; i++)
 			{
-				html += _.template(jQuery('#template_email_item').html(), response[i]);
+				html += _.template(jQuery('#template_email_item').html())(response[i]);
 			}
 
 			if(limit_start == 0)
@@ -131,7 +131,7 @@ var EmailView = Backbone.View.extend(
 
 			if(limit_amount >= script_email_bb_views.emails2show)
 			{
-				html = _.template(jQuery('#template_email_more').html(), {'folderName': this.model.get("folderName"), 'limit_start': parseInt(limit_start) + parseInt(script_email_bb_views.emails2show)});
+				html = _.template(jQuery('#template_email_more').html())({'folderName': this.model.get("folderName"), 'limit_start': parseInt(limit_start) + parseInt(script_email_bb_views.emails2show)});
 
 				jQuery('#txtEmails tbody').append(html);
 			}
@@ -142,7 +142,7 @@ var EmailView = Backbone.View.extend(
 
 		else
 		{
-			html = _.template(jQuery('#template_email_message').html(), "");
+			html = _.template(jQuery('#template_email_message').html())("");
 
 			jQuery('#txtEmails tbody').html(html);
 		}
@@ -151,7 +151,7 @@ var EmailView = Backbone.View.extend(
 	show_render_row: function()
 	{
 		var response = this.model.get("render_row"),
-			html = _.template(jQuery('#template_email_item').html(), response);
+			html = _.template(jQuery('#template_email_item').html())(response);
 
 		jQuery('#message' + response.messageID).replaceWith(html);
 
@@ -162,7 +162,7 @@ var EmailView = Backbone.View.extend(
 	show_email: function()
 	{
 		var response = this.model.get("email"),
-			html = _.template(jQuery('#template_email_show').html(), response);
+			html = _.template(jQuery('#template_email_show').html())(response);
 
 		this.mark_current_message(response.messageID);
 

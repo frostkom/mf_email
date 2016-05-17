@@ -262,7 +262,8 @@ echo "<div class='wrap'>
 							$arr_data_from = array();
 							$arr_data_from[''] = "-- ".__("Choose here", 'lang_email')." --";
 
-							if($user_email != '')
+							//What was I thinking here? It's gotta be an ID...
+							/*if($user_email != '')
 							{
 								$arr_data_from[$user_name."|".$user_email] = $user_name." (".$user_email.")";
 							}
@@ -270,7 +271,7 @@ echo "<div class='wrap'>
 							if($admin_email != '' && $admin_email != $user_email)
 							{
 								$arr_data_from[$admin_name."|".$admin_email] = $admin_name." (".$admin_email.")";
-							}
+							}*/
 
 							$result = $wpdb->get_results("SELECT ".$wpdb->base_prefix."email.emailID, emailName, emailAddress FROM ".$wpdb->base_prefix."email_users RIGHT JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE (emailPublic = '1' OR emailRoles LIKE '%".get_current_user_role()."%' OR ".$wpdb->base_prefix."email.userID = '".get_current_user_id()."' OR ".$wpdb->base_prefix."email_users.userID = '".get_current_user_id()."') AND emailDeleted = '0' ORDER BY emailName ASC, emailAddress ASC");
 

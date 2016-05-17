@@ -109,7 +109,7 @@ echo "<div class='wrap'>
 
 	echo get_list_navigation($resultPagination);
 
-	$result = $wpdb->get_results("SELECT emailID, emailPublic, emailRoles, emailVerified, emailServer, emailPort, emailUsername, emailAddress, emailName, userID, emailDeleted FROM ".$wpdb->base_prefix."email_users RIGHT JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE (emailPublic = '1' OR emailRoles LIKE '%".get_current_user_role()."%' OR ".$wpdb->base_prefix."email.userID = '".get_current_user_id()."' OR ".$wpdb->base_prefix."email_users.userID = '".get_current_user_id()."')".$query_xtra." GROUP BY emailID ORDER BY emailDeleted ASC, ".$wpdb->base_prefix."email.userID ASC, emailUsername ASC LIMIT ".esc_sql($intLimitStart).", ".esc_sql($intLimitAmount));
+	$result = $wpdb->get_results("SELECT emailID, emailPublic, emailRoles, emailVerified, emailServer, emailPort, emailUsername, emailAddress, emailName, ".$wpdb->base_prefix."email.userID, emailDeleted FROM ".$wpdb->base_prefix."email_users RIGHT JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE (emailPublic = '1' OR emailRoles LIKE '%".get_current_user_role()."%' OR ".$wpdb->base_prefix."email.userID = '".get_current_user_id()."' OR ".$wpdb->base_prefix."email_users.userID = '".get_current_user_id()."')".$query_xtra." GROUP BY emailID ORDER BY emailDeleted ASC, ".$wpdb->base_prefix."email.userID ASC, emailUsername ASC LIMIT ".esc_sql($intLimitStart).", ".esc_sql($intLimitAmount));
 
 	echo "<table class='widefat striped'>";
 

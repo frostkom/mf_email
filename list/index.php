@@ -191,15 +191,19 @@ echo "<script type='text/template' id='template_folder_item'>
 		{ %>
 			<li><strong>".__('Copy', 'lang_email').":</strong> <%= messageCc %></li>
 		<% } %>
-		<% _.each(messageAttachment, function(attachment)
-		{ %> 
-			<li>
-				<a href='<%= attachment.url %>' rel='external'>
-					<%= attachment.title %>
-				</a>
-			</li>
-		<% }); %>
-		<li><a href='?page=mf_email/send/index.php&intMessageID=<%= messageID %>&answer'>&laquo; ".__('Answer', 'lang_email')."</a> <a href='?page=mf_email/send/index.php&intMessageID=<%= messageID %>&forward'>".__('Forward', 'lang_email')." &raquo;</a></li>
+		<li><a href='?page=mf_email/send/index.php&intMessageID=<%= messageID %>&answer' class='button'>&laquo; ".__('Answer', 'lang_email')."</a> <a href='?page=mf_email/send/index.php&intMessageID=<%= messageID %>&forward' class='button'>".__('Forward', 'lang_email')." &raquo;</a></li>
+		<% if(messageAttachment.length > 0)
+		{ %>
+			<li>&nbsp;</li>
+			<% _.each(messageAttachment, function(attachment)
+			{ %> 
+				<li>
+					<a href='<%= attachment.url %>' rel='external'>
+						<%= attachment.title %>
+					</a>
+				</li>
+			<% });
+		} %>
 	</ul>
 	<div id='message_container'>
 		<% if(messageText2)

@@ -282,9 +282,12 @@ if($arr_input[0] == "email")
 
 			foreach($result as $r)
 			{
+				$post_title = $r->post_title;
+				$post_guid = $r->guid;
+
 				$arr_attachments[] = array(
-					'title' => $r->post_title,
-					'url' => $r->guid
+					'title' => get_file_icon($post_guid)."&nbsp;".$post_title, //.".".get_file_suffix($post_guid)
+					'url' => $post_guid
 				);
 			}
 

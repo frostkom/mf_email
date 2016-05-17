@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-27 15:38+0100\n"
+"POT-Creation-Date: 2016-05-11 08:48+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -231,23 +231,23 @@ msgstr "Lägg till ny mapp"
 msgid "Inserted"
 msgstr "Inlagd"
 
-#: ../include/functions.php:612
+#: ../include/functions.php:615
 msgid "E-mail attachments"
 msgstr "Bifogade filer"
 
-#: ../include/functions.php:616
+#: ../include/functions.php:619
 msgid "The attachment was saved"
 msgstr "Bifogade filer sparades"
 
-#: ../include/functions.php:623
+#: ../include/functions.php:626
 msgid "The email was not able to be saved"
 msgstr "E-postkontot kunde inte sparas"
 
-#: ../include/functions.php:630
+#: ../include/functions.php:633
 msgid "The e-mail already exists"
 msgstr "Meddelandet finns redan"
 
-#: ../include/functions.php:670
+#: ../include/functions.php:673
 msgid "Connection failed"
 msgstr "Tappade uppkopplingen"
 
@@ -303,19 +303,19 @@ msgstr "Från"
 msgid "Copy"
 msgstr "Kopiera"
 
-#: ../list/index.php:202
+#: ../list/index.php:194
 msgid "Answer"
-msgstr "Svar"
+msgstr "Svara"
 
-#: ../list/index.php:202
+#: ../list/index.php:194
 msgid "Forward"
 msgstr "Vidarebefordra"
 
-#: ../list/index.php:208
+#: ../list/index.php:212
 msgid "Plain"
 msgstr "Oformaterad"
 
-#: ../list/index.php:209
+#: ../list/index.php:213
 msgid "HTML"
 msgstr ""
 
