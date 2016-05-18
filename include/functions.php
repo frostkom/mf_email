@@ -1,5 +1,30 @@
 <?php
 
+function get_user_notifications_email($arr_notifications, $notification_showed)
+{
+	global $wpdb;
+
+	$showed_notification = get_user_meta(get_current_user_id(), 'mf_email_notification', true);
+
+	$arr_email_accounts_permission = get_email_accounts_permission();
+	$query_permission = " AND emailID IN ('".implode("','", $arr_email_accounts_permission)."')";
+
+	$intUnread = $wpdb->get_var("SELECT COUNT(messageID) FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) WHERE messageRead = '0' AND folderType != '3' AND messageCreated > %s".$query_permission, $notification_showed);
+
+	if($intUnread > 0)
+	{
+		$arr_notifications[] = array(
+			'title' => $intUnread > 1 ? sprintf(__("There are %d new emails in your inbox", 'lang_email'), $intUnread) : __("There is one new email in your inbox", 'lang_email'),
+			'tag' => 'email',
+			//'text' => "",
+			//'icon' => "",
+			'link' => admin_url('?page=mf_email/list/index.php'),
+		);
+	}
+
+	return $arr_notifications;
+}
+
 function deleted_user_email($user_id)
 {
 	global $wpdb;
