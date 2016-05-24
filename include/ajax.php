@@ -147,7 +147,6 @@ if($arr_input[0] == "email")
 			$is_draggable = $intFolderType == 0 || $intFolderType == 6;
 
 			$class = "";
-
 			if($intMessageRead == 0){	$class .= ($class != '' ? " " : "")."strong";}
 			if($is_draggable){			$class .= ($class != '' ? " " : "")."draggable";}
 
@@ -186,7 +185,8 @@ if($arr_input[0] == "email")
 
 		$intMessageID = $arr_input[2];
 
-		$result = $wpdb->get_results($wpdb->prepare("SELECT messageID, messageRead, messageFrom, messageFromName, messageTo, messageName, messageText, messageSize, messageCreated, messageReceived, messageDeleted, folderType FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) WHERE messageID = '%d'".$query_permission." ORDER BY messageCreated DESC", $intMessageID));
+		//$result = $wpdb->get_results($wpdb->prepare("SELECT messageID, messageRead, messageFrom, messageFromName, messageTo, messageName, messageSize, messageCreated, messageReceived, messageDeleted, folderType, emailAddress FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) INNER JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE folderName = %s".$query_permission." ORDER BY messageCreated DESC LIMIT ".$intFolderLimitStart." , ".$intFolderLimitAmount, $strFolderName));
+		$result = $wpdb->get_results($wpdb->prepare("SELECT messageID, messageRead, messageFrom, messageFromName, messageTo, messageName, messageText, messageSize, messageCreated, messageReceived, messageDeleted, folderType, emailAddress FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) INNER JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE messageID = '%d'".$query_permission." ORDER BY messageCreated DESC", $intMessageID));
 
 		foreach($result as $r)
 		{
@@ -201,21 +201,14 @@ if($arr_input[0] == "email")
 			$strMessageReceived = format_date($r->messageReceived);
 			$intMessageDeleted = $r->messageDeleted;
 			$intFolderType = $r->folderType;
+			$strEmailAddress = $r->emailAddress;
 
 			$email_outgoing = $strMessageFrom != '' ? false : true;
 			$is_draggable = $intFolderType == 0 || $intFolderType == 6;
 
 			$class = "";
-
-			if($intMessageRead == 0)
-			{
-				$class .= ($class != '' ? " " : "")."strong";
-			}
-
-			if($is_draggable)
-			{
-				$class .= ($class != '' ? " " : "")."draggable";
-			}
+			if($intMessageRead == 0){	$class .= ($class != '' ? " " : "")."strong";}
+			if($is_draggable){			$class .= ($class != '' ? " " : "")."draggable";}
 
 			$resultAttachment = $wpdb->get_results($wpdb->prepare("SELECT fileID FROM ".$wpdb->base_prefix."email_message_attachment WHERE messageID = '%d'", $intMessageID));
 			$has_attachment = $wpdb->num_rows > 0;
@@ -229,8 +222,8 @@ if($arr_input[0] == "email")
 				'messageAttachment' => $has_attachment,
 				'messageDraggable' => $is_draggable,
 				'messageOutgoing' => $email_outgoing,
-				//'emailAddress' => $strEmailAddress,
-				'messageFrom' => "<a href='mailto:".$strMessageFrom."'>".$strMessageFrom."</a>",
+				'emailAddress' => $strEmailAddress,
+				'messageFrom' => $strMessageFrom,
 				'messageTo' => $strMessageTo,
 				'messageFromName' => $strMessageFromName,
 				'messageToName' => $strMessageTo,

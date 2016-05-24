@@ -100,12 +100,12 @@ echo "<script type='text/template' id='template_folder_item'>
 			{ %>
 				<i class='fa fa-arrows'></i>
 			<% } %>
-			<div class='row-actions'>
-				<% if(messageAttachment)
-				{ %>
+			<% if(messageAttachment)
+			{ %>
+				<div class='row-actions'>
 					<i class='fa fa-paperclip'></i>
-				<% } %>
-			</div>
+				</div>
+			<% } %>
 		</td>
 		<td>"
 			."<% if(messageDeleted == 0)
@@ -172,9 +172,12 @@ echo "<script type='text/template' id='template_folder_item'>
 		</td>
 		<td>
 			<%= messageCreated %>
-			<div class='row-actions'>
-				<%= messageReceived %>
-			</div>
+			<% if(messageReceived != messageCreated)
+			{ %>
+				<div class='row-actions'>
+					<%= messageReceived %>
+				</div>
+			<% } %>
 		</td>
 	</tr>
 </script>

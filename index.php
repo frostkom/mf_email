@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: 
-Version: 4.2.1
+Version: 4.3.4
 Author: Martin Fors
 Author URI: http://frostkom.se
 Text Domain: lang_email
@@ -26,7 +26,7 @@ if(is_admin())
 	register_uninstall_hook(__FILE__, 'uninstall_email');
 
 	add_action('admin_menu', 'menu_email');
-	add_filter('get_user_notifications', 'get_user_notifications_email', 10, 2);
+	add_filter('get_user_notifications', 'get_user_notifications_email', 10, 1);
 	add_action('deleted_user', 'deleted_user_email');
 }
 
