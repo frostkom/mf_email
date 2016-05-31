@@ -64,11 +64,14 @@
 					padding: 0;
 				}
 
-#lost_connection
+#lost_connection, #saving, #loading
 {
+	background: rgba(0, 0, 0, .5);
+	color: #ccc;
 	display: none;
-	font-size: 2em;
-	position: absolute;
+	font-size: 4em;
+	left: 0;
+	position: fixed;
 	text-align: center;
 	top: 0;
 	width: 100%;
@@ -89,17 +92,3 @@
 		{
 			color: #ccc;
 		}
-
-#lost_connection, #saving, #loading
-{
-	background: rgba(0, 0, 0, .5);
-	color: #ccc;
-	display: none;
-	font-size: 4em;
-	left: 0;
-	position: fixed;
-	text-align: center;
-	top: 0;
-	width: 100%;
-	z-index: 1000;
-}
