@@ -419,6 +419,7 @@ if($arr_input[0] == "email")
 			$json_output[] = $strMessageTo;
 		}
 
+		$json_output['amount'] = $wpdb->num_rows;
 		$json_output['success'] = true;
 	}
 }

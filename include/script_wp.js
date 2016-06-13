@@ -26,7 +26,10 @@ jQuery(function($)
 				},
 				success: function(data)
 				{
-					response(data);
+					if(data.amount > 0)
+					{
+						response(data);
+					}
 				}
 			});
 		},

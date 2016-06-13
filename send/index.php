@@ -241,6 +241,67 @@ else if($strMessageCc == '' && $strMessageBcc == '' && $strMessageSubject == '' 
 	}
 }
 
+$current_user = wp_get_current_user();
+
+$user_name = $current_user->display_name;
+$user_email = $current_user->user_email;
+$admin_name = get_bloginfo('name');
+$admin_email = get_bloginfo('admin_email');
+
+$arr_data_from = array();
+$arr_data_from[''] = "-- ".__("Choose here", 'lang_email')." --";
+
+$result = $wpdb->get_results("SELECT ".$wpdb->base_prefix."email.emailID, emailName, emailAddress FROM ".$wpdb->base_prefix."email_users RIGHT JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE (emailPublic = '1' OR emailRoles LIKE '%".get_current_user_role()."%' OR ".$wpdb->base_prefix."email.userID = '".get_current_user_id()."' OR ".$wpdb->base_prefix."email_users.userID = '".get_current_user_id()."') AND emailDeleted = '0' ORDER BY emailName ASC, emailAddress ASC");
+
+foreach($result as $r)
+{
+	$intEmailID2 = $r->emailID;
+	$strEmailName = $r->emailName;
+	$strEmailAddress = $r->emailAddress;
+
+	$strEmailName = $strEmailName != '' ? $strEmailName." &lt;".$strEmailAddress."&gt;" : $strEmailAddress;
+
+	$arr_data_from[$intEmailID2] = $strEmailName;
+}
+
+if(count($arr_data_from) <= 1)
+{
+	$obj_email = new mf_email();
+	$obj_email->fetch_request();
+
+	if($user_email != '')
+	{
+		//$arr_data_from[$user_name."|".$user_email] = $user_name." (".$user_email.")";
+
+		$obj_email->name = $user_name;
+		$obj_email->address = $user_email;
+		$obj_email->users = array(get_current_user_id());
+
+		$obj_email->create_account();
+
+		if($obj_email->id > 0)
+		{
+			$arr_data_from[$obj_email->id] = $user_name." &lt;".$user_email."&gt;";
+		}
+	}
+
+	if($admin_email != '' && $admin_email != $user_email)
+	{
+		//$arr_data_from[$admin_name."|".$admin_email] = $admin_name." (".$admin_email.")";
+
+		$obj_email->public = 1;
+		$obj_email->name = $admin_name;
+		$obj_email->address = $admin_email;
+
+		$obj_email->create_account();
+
+		if($obj_email->id > 0)
+		{
+			$arr_data_from[$obj_email->id] = $admin_name." &lt;".$admin_email."&gt;";
+		}
+	}
+}
+
 echo "<div class='wrap'>
 	<h2>".__("E-mail", 'lang_email')."</h2>"
 	.get_notification()
@@ -250,43 +311,8 @@ echo "<div class='wrap'>
 				<div id='post-body-content'>
 					<div class='postbox'>
 						<h3 class='hndle'>".__("Message", 'lang_email')."</h3>
-						<div class='inside'>";
-
-							$current_user = wp_get_current_user();
-
-							$user_name = $current_user->display_name;
-							$user_email = $current_user->user_email;
-							$admin_name = get_bloginfo('name');
-							$admin_email = get_bloginfo('admin_email');
-
-							$arr_data_from = array();
-							$arr_data_from[''] = "-- ".__("Choose here", 'lang_email')." --";
-
-							//What was I thinking here? It's gotta be an ID...
-							/*if($user_email != '')
-							{
-								$arr_data_from[$user_name."|".$user_email] = $user_name." (".$user_email.")";
-							}
-
-							if($admin_email != '' && $admin_email != $user_email)
-							{
-								$arr_data_from[$admin_name."|".$admin_email] = $admin_name." (".$admin_email.")";
-							}*/
-
-							$result = $wpdb->get_results("SELECT ".$wpdb->base_prefix."email.emailID, emailName, emailAddress FROM ".$wpdb->base_prefix."email_users RIGHT JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE (emailPublic = '1' OR emailRoles LIKE '%".get_current_user_role()."%' OR ".$wpdb->base_prefix."email.userID = '".get_current_user_id()."' OR ".$wpdb->base_prefix."email_users.userID = '".get_current_user_id()."') AND emailDeleted = '0' ORDER BY emailName ASC, emailAddress ASC");
-
-							foreach($result as $r)
-							{
-								$intEmailID2 = $r->emailID;
-								$strEmailName = $r->emailName;
-								$strEmailAddress = $r->emailAddress;
-
-								$strEmailName = $strEmailName != '' ? $strEmailName." &lt;".$strEmailAddress."&gt;" : $strEmailAddress;
-
-								$arr_data_from[$intEmailID2] = $strEmailName;
-							}
-
-							echo show_select(array('data' => $arr_data_from, 'name' => 'intEmailID', 'compare' => $intEmailID, 'text' => __('From', 'lang_email'), 'required' => 1))
+						<div class='inside'>"
+							.show_select(array('data' => $arr_data_from, 'name' => 'intEmailID', 'compare' => $intEmailID, 'text' => __('From', 'lang_email'), 'required' => 1))
 							."<div class='flex_flow'>
 								<div class='search_container'>"
 									.show_textarea(array('name' => 'strMessageTo', 'text' => __('To', 'lang_email'), 'value' => $strMessageTo, 'autogrow' => 1, 'xtra' => "autofocus"))

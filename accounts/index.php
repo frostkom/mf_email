@@ -161,7 +161,7 @@ echo "<div class='wrap'>
 
 					if($intEmailDeleted == 1)
 					{
-						$class .= ($class != '' ? " " : "")."deleted";
+						$class .= ($class != '' ? " " : "")."inactive";
 					}
 
 					echo "<tr".($class != '' ? " class='".$class."'" : "").">
@@ -233,7 +233,7 @@ echo "<div class='wrap'>
 
 									if($intUserID == get_current_user_id())
 									{
-										echo " | <a href='".wp_nonce_url("?page=mf_email/accounts/index.php&btnEmailDelete&intEmailID=".$intEmailID, 'email_delete')."'>".__("Delete", 'lang_email')."</a>";
+										echo " | <a href='".wp_nonce_url("?page=mf_email/accounts/index.php&btnEmailDelete&intEmailID=".$intEmailID, 'email_delete')."' rel='confirm'>".__("Delete", 'lang_email')."</a>";
 									}
 								}
 
