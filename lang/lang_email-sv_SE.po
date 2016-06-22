@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-11 08:48+0100\n"
+"POT-Creation-Date: 2016-06-22 11:32+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -52,8 +52,8 @@ msgid "An e-mail with a confirmation link has been sent to %s"
 msgstr "Ett meddelande med bekräftelselänk har skickats till %s"
 
 #: ../accounts/index.php:96
-#: ../create/index.php:72
-#: ../include/functions.php:402
+#: ../create/index.php:9
+#: ../include/functions.php:425
 msgid "Accounts"
 msgstr "Konton"
 
@@ -62,7 +62,7 @@ msgid "Add New"
 msgstr "Lägg till ny"
 
 #: ../accounts/index.php:116
-#: ../create/index.php:123
+#: ../create/index.php:36
 msgid "Public"
 msgstr "Publik"
 
@@ -71,7 +71,7 @@ msgid "Roles"
 msgstr "Roller"
 
 #: ../accounts/index.php:118
-#: ../create/index.php:151
+#: ../create/index.php:40
 msgid "Users"
 msgstr "Användare"
 
@@ -84,24 +84,24 @@ msgid "Address"
 msgstr "Adress"
 
 #: ../accounts/index.php:121
-#: ../create/index.php:162
+#: ../create/index.php:51
 #: ../folder/index.php:83
 msgid "Name"
 msgstr "Namn"
 
 #: ../accounts/index.php:122
-#: ../create/index.php:154
+#: ../create/index.php:43
 msgid "Server"
 msgstr "Server"
 
 #: ../accounts/index.php:123
-#: ../create/index.php:158
+#: ../create/index.php:47
 msgid "Username"
 msgstr "Användarnamn"
 
 #: ../accounts/index.php:130
 #: ../list/index.php:89
-#: ../list/index.php:183
+#: ../list/index.php:186
 msgid "There is nothing to show"
 msgstr "Det finns inget att visa"
 
@@ -124,37 +124,33 @@ msgstr "Radera"
 msgid "Recover"
 msgstr "Återställ"
 
-#: ../create/index.php:48
-msgid "The e-mail account could not be created"
-msgstr "E-postkontot kunde inte skapas"
-
-#: ../create/index.php:75
+#: ../create/index.php:12
 #: ../folder/index.php:46
 msgid "Add"
 msgstr "Lägg till"
 
-#: ../create/index.php:124
-#: ../create/index.php:136
+#: ../create/index.php:37
+#: ../create/index.php:39
 msgid "or"
 msgstr "eller"
 
-#: ../create/index.php:135
+#: ../create/index.php:38
 msgid "Permission"
 msgstr "Behörighet"
 
-#: ../create/index.php:155
+#: ../create/index.php:44
 msgid "Port"
 msgstr "Port"
 
-#: ../create/index.php:159
+#: ../create/index.php:48
 msgid "Password"
 msgstr "Lösenord"
 
-#: ../create/index.php:161
+#: ../create/index.php:50
 msgid "E-mail Address"
 msgstr "E-postadress"
 
-#: ../create/index.php:163
+#: ../create/index.php:52
 #: ../folder/index.php:84
 msgid "Save"
 msgstr "Spara"
@@ -176,78 +172,91 @@ msgid "Account"
 msgstr "Konto"
 
 #: ../include/ajax.php:15
-#: ../include/functions.php:239
 #: ../include/functions.php:262
-#: ../include/functions.php:564
+#: ../include/functions.php:285
+#: ../include/functions.php:576
 #: ../list/index.php:17
 msgid "Inbox"
 msgstr "Inkorg"
 
 #: ../include/ajax.php:139
 #: ../include/ajax.php:198
-#: ../include/ajax.php:264
+#: ../include/ajax.php:257
 msgid "No subject"
 msgstr "Inget ämne"
 
-#: ../include/functions.php:88
+#: ../include/classes.php:61
+msgid "The e-mail account could not be created"
+msgstr "E-postkontot kunde inte skapas"
+
+#: ../include/functions.php:15
+#, php-format
+msgid "There are %d new emails in your inbox"
+msgstr "Det finns %d nya epost i din inkorg"
+
+#: ../include/functions.php:15
+msgid "There is one new email in your inbox"
+msgstr "Det finns ett nytt meddelande i din inkorg"
+
+#: ../include/functions.php:111
 msgid "You have to edit the function to be public instead of private"
 msgstr "Du måste ändra funktion från private till public"
 
-#: ../include/functions.php:232
+#: ../include/functions.php:255
 msgid "Trash"
 msgstr "Papperskorg"
 
-#: ../include/functions.php:255
-#: ../include/functions.php:559
+#: ../include/functions.php:278
+#: ../include/functions.php:571
 msgid "Spam"
 msgstr "Spam"
 
-#: ../include/functions.php:370
+#: ../include/functions.php:393
 msgid "Unread"
 msgstr "Olästa"
 
-#: ../include/functions.php:398
-#: ../include/functions.php:400
+#: ../include/functions.php:421
+#: ../include/functions.php:423
 #: ../list/index.php:36
-#: ../send/index.php:245
+#: ../send/index.php:306
 msgid "E-mail"
 msgstr "E-post"
 
-#: ../include/functions.php:401
+#: ../include/functions.php:424
 #: ../list/index.php:37
 msgid "Send new"
 msgstr "Skicka nytt"
 
-#: ../include/functions.php:403
+#: ../include/functions.php:426
 msgid "Add new account"
 msgstr "Lägg till nytt konto"
 
-#: ../include/functions.php:404
+#: ../include/functions.php:427
 #: ../list/index.php:44
 msgid "Add new folder"
 msgstr "Lägg till ny mapp"
 
-#: ../include/functions.php:576
+#: ../include/functions.php:588
 msgid "Inserted"
 msgstr "Inlagd"
 
-#: ../include/functions.php:615
+#: ../include/functions.php:627
 msgid "E-mail attachments"
 msgstr "Bifogade filer"
 
-#: ../include/functions.php:619
+#: ../include/functions.php:631
 msgid "The attachment was saved"
 msgstr "Bifogade filer sparades"
 
-#: ../include/functions.php:626
+#: ../include/functions.php:638
 msgid "The email was not able to be saved"
 msgstr "E-postkontot kunde inte sparas"
 
-#: ../include/functions.php:633
+#: ../include/functions.php:645
 msgid "The e-mail already exists"
 msgstr "Meddelandet finns redan"
 
-#: ../include/functions.php:673
+#: ../include/functions.php:684
 msgid "Connection failed"
 msgstr "Tappade uppkopplingen"
 
@@ -287,35 +296,35 @@ msgstr "Markera som spam"
 msgid "Restore"
 msgstr "Återställ"
 
-#: ../list/index.php:188
+#: ../list/index.php:191
 #: ../send/index.php:223
-#: ../send/index.php:305
+#: ../send/index.php:332
 msgid "Subject"
 msgstr "Ämne"
 
-#: ../list/index.php:189
+#: ../list/index.php:192
 #: ../send/index.php:221
-#: ../send/index.php:288
+#: ../send/index.php:315
 msgid "From"
 msgstr "Från"
 
-#: ../list/index.php:192
+#: ../list/index.php:195
 msgid "Copy"
 msgstr "Kopiera"
 
-#: ../list/index.php:194
+#: ../list/index.php:197
 msgid "Answer"
 msgstr "Svara"
 
-#: ../list/index.php:194
+#: ../list/index.php:197
 msgid "Forward"
 msgstr "Vidarebefordra"
 
-#: ../list/index.php:212
+#: ../list/index.php:215
 msgid "Plain"
 msgstr "Oformaterad"
 
-#: ../list/index.php:213
+#: ../list/index.php:216
 msgid "HTML"
 msgstr ""
 
@@ -348,7 +357,7 @@ msgid "Original message"
 msgstr "Ursprungligt meddelande"
 
 #: ../send/index.php:222
-#: ../send/index.php:291
+#: ../send/index.php:318
 msgid "To"
 msgstr "Till"
 
@@ -361,23 +370,23 @@ msgid "End original message"
 msgstr "Slut på ursprungligt meddelande"
 
 #: ../send/index.php:252
-msgid "Message"
-msgstr "Meddelande"
-
-#: ../send/index.php:263
 msgid "Choose here"
 msgstr "Välj här"
 
-#: ../send/index.php:295
+#: ../send/index.php:313
+msgid "Message"
+msgstr "Meddelande"
+
+#: ../send/index.php:322
 msgid "Cc"
 msgstr "Kopia"
 
-#: ../send/index.php:312
-#: ../send/index.php:316
+#: ../send/index.php:339
+#: ../send/index.php:343
 msgid "Send"
 msgstr "Skicka"
 
-#: ../send/index.php:318
+#: ../send/index.php:345
 msgid "Save draft"
 msgstr "Spara utkast"
 
