@@ -26,8 +26,6 @@
 		overflow-y: scroll;
 	}
 
-		.flex_vertical > *:first-child{}
-
 		.flex_vertical > *:last-child
 		{
 			-webkit-box-flex: 1 0 70%;

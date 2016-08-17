@@ -136,105 +136,108 @@ else if($strMessageCc == '' && $strMessageBcc == '' && $strMessageSubject == '' 
 	else if($intMessageID > 0)
 	{
 		$result = $wpdb->get_results("SELECT ".$wpdb->base_prefix."email.emailID, emailAddress, messageFrom, messageFromName, messageTo, messageCc, messageReplyTo, messageName, messageText, messageCreated, ".$wpdb->base_prefix."email_message.userID FROM ".$wpdb->base_prefix."email_users RIGHT JOIN ".$wpdb->base_prefix."email USING (emailID) INNER JOIN ".$wpdb->base_prefix."email_folder USING (emailID) INNER JOIN ".$wpdb->base_prefix."email_message USING (folderID) WHERE ".$wpdb->base_prefix."email_message.messageID = '".esc_sql($intMessageID)."' AND (emailPublic = '1' OR emailRoles LIKE '%".get_current_user_role()."%' OR ".$wpdb->base_prefix."email.userID = '".get_current_user_id()."' OR ".$wpdb->base_prefix."email_users.userID = '".get_current_user_id()."') LIMIT 0, 1");
-		$r = $result[0];
-		$intEmailID = $r->emailID;
-		$strEmailAddress = $r->emailAddress;
-		$strMailFrom = $r->messageFrom;
-		$strMailFromName = $r->messageFromName;
-		$strMailTo = $r->messageTo;
-		$strMessageText = $r->messageText;
-		$dteMessageCreated = $r->messageCreated;
-		$intUserID2 = $r->userID;
-
-		if($intMessageForward == 0)
+		
+		foreach($result as $r)
 		{
-			$arrMessageReplyTo_temp = get_email_address_from_text($r->messageReplyTo);
-
-			if($arrMessageReplyTo_temp != '' && is_array($arrMessageReplyTo_temp))
-			{
-				foreach($arrMessageReplyTo_temp as $strMessageReplyTo_temp)
-				{
-					$strMessageTo .= " ".$strMessageReplyTo_temp;
-				}
-			}
-
-			if($strMessageTo == '')
-			{
-				$strMessageFrom_temp = $strMailFrom;
-
-				if($strMessageFrom_temp != '')
-				{
-					$strMessageTo .= " ".$strMessageFrom_temp;
-				}
-			}
-
-			if($intMessageAnswer == 1)
-			{
-				$arrMessageTo_temp = get_email_address_from_text($strMailTo);
-
-				if(is_array($arrMessageTo_temp))
-				{
-					foreach($arrMessageTo_temp as $strMessageTo_temp)
-					{
-						$strMessageCc .= " ".$strMessageTo_temp;
-					}
-				}
-
-				else
-				{
-					$strMessageCc .= " ".$arrMessageTo_temp;
-				}
-
-				$arrMessageCc_temp = get_email_address_from_text($r->messageCc);
-
-				if(is_array($arrMessageCc_temp))
-				{
-					foreach($arrMessageCc_temp as $strMessageCc_temp)
-					{
-						$strMessageCc .= " ".$strMessageCc_temp;
-					}
-				}
-
-				else
-				{
-					$strMessageCc .= " ".$arrMessageCc_temp;
-				}
-			}
-
-			$strMessageTo = trim(str_replace($strEmailAddress, "", $strMessageTo));
-			$strMessageCc = trim(str_replace($strEmailAddress, "", $strMessageCc));
-		}
-
-		if($intMessageForward == 1 || $intMessageAnswer == 1)
-		{
-			$subject_prefix = $intMessageForward == 1 ? "Fwd: " : "Re: ";
-
-			$email_outgoing = $intUserID2 == '' || $strMailFrom != '' ? false : true;
-
-			$strFrom = $email_outgoing == false ? $strMailFromName." <".$strMailFrom.">" : $strEmailAddress;
-			$strTo = $email_outgoing == false ? $strEmailAddress." (".$strMailTo.")" : $strMailTo;
-
+			$intEmailID = $r->emailID;
+			$strEmailAddress = $r->emailAddress;
+			$strMailFrom = $r->messageFrom;
+			$strMailFromName = $r->messageFromName;
+			$strMailTo = $r->messageTo;
 			$strMessageSubject_old = $r->messageName;
-			$strMessageSubject = (substr($strMessageSubject_old, 0, strlen($subject_prefix)) != $subject_prefix ? $subject_prefix : "").$strMessageSubject_old;
+			$strMessageText = $r->messageText;
+			$dteMessageCreated = $r->messageCreated;
+			$intUserID2 = $r->userID;
 
-			$strMessageText = "<p></p><p>-------------------- ".__("Original message", 'lang_email')." --------------------</p>"
-			."<p>".__("From", 'lang_email').": ".$strFrom."</p>"
-			."<p>".__("To", 'lang_email').": ".$strTo."</p>"
-			."<p>".__("Subject", 'lang_email').": ".$strMessageSubject."</p>"
-			."<p>".__("Date", 'lang_email').": ".$dteMessageCreated."</p>"
-			."<p>"."-------------------</p>"
-			."<p>".preg_replace('#^(.*?)$#m', '<br>&gt; \1', strip_tags($strMessageText, '<br>'))."</p>"
-			."<p>------------------ ".__("End original message", 'lang_email')." ------------------</p>";
-
-			if($intMessageForward == 1)
+			if($intMessageForward == 0)
 			{
-				$result = $wpdb->get_results($wpdb->prepare("SELECT fileID FROM ".$wpdb->base_prefix."email_message_attachment WHERE messageID = '%d'", $intMessageID));
+				$arrMessageReplyTo_temp = get_email_address_from_text($r->messageReplyTo);
 
-				foreach($result as $r)
+				if($arrMessageReplyTo_temp != '' && is_array($arrMessageReplyTo_temp))
 				{
-					list($file_name, $file_url) = get_attachment_data_by_id($r->fileID);
+					foreach($arrMessageReplyTo_temp as $strMessageReplyTo_temp)
+					{
+						$strMessageTo .= " ".$strMessageReplyTo_temp;
+					}
+				}
 
-					$strMessageAttachment .= ($strMessageAttachment != '' ? "," : "").$file_name."|".$file_url;
+				if($strMessageTo == '')
+				{
+					$strMessageFrom_temp = $strMailFrom;
+
+					if($strMessageFrom_temp != '')
+					{
+						$strMessageTo .= " ".$strMessageFrom_temp;
+					}
+				}
+
+				if($intMessageAnswer == 1)
+				{
+					$arrMessageTo_temp = get_email_address_from_text($strMailTo);
+
+					if(is_array($arrMessageTo_temp))
+					{
+						foreach($arrMessageTo_temp as $strMessageTo_temp)
+						{
+							$strMessageCc .= " ".$strMessageTo_temp;
+						}
+					}
+
+					else
+					{
+						$strMessageCc .= " ".$arrMessageTo_temp;
+					}
+
+					$arrMessageCc_temp = get_email_address_from_text($r->messageCc);
+
+					if(is_array($arrMessageCc_temp))
+					{
+						foreach($arrMessageCc_temp as $strMessageCc_temp)
+						{
+							$strMessageCc .= " ".$strMessageCc_temp;
+						}
+					}
+
+					else
+					{
+						$strMessageCc .= " ".$arrMessageCc_temp;
+					}
+				}
+
+				$strMessageTo = trim(str_replace($strEmailAddress, "", $strMessageTo));
+				$strMessageCc = trim(str_replace($strEmailAddress, "", $strMessageCc));
+			}
+
+			if($intMessageForward == 1 || $intMessageAnswer == 1)
+			{
+				$subject_prefix = $intMessageForward == 1 ? "Fwd: " : "Re: ";
+
+				$email_outgoing = $intUserID2 == '' || $strMailFrom != '' ? false : true;
+
+				$strFrom = $email_outgoing == false ? $strMailFromName." <".$strMailFrom.">" : $strEmailAddress;
+				$strTo = $email_outgoing == false ? $strEmailAddress." (".$strMailTo.")" : $strMailTo;
+
+				$strMessageSubject = (substr($strMessageSubject_old, 0, strlen($subject_prefix)) != $subject_prefix ? $subject_prefix : "").$strMessageSubject_old;
+
+				$strMessageText = "<p></p><p>-------------------- ".__("Original message", 'lang_email')." --------------------</p>"
+				."<p>".__("From", 'lang_email').": ".$strFrom."</p>"
+				."<p>".__("To", 'lang_email').": ".$strTo."</p>"
+				."<p>".__("Subject", 'lang_email').": ".$strMessageSubject."</p>"
+				."<p>".__("Date", 'lang_email').": ".$dteMessageCreated."</p>"
+				."<p>"."-------------------</p>"
+				."<p>".preg_replace('#^(.*?)$#m', '<br>&gt; \1', strip_tags($strMessageText, '<br>'))."</p>"
+				."<p>------------------ ".__("End original message", 'lang_email')." ------------------</p>";
+
+				if($intMessageForward == 1)
+				{
+					$result = $wpdb->get_results($wpdb->prepare("SELECT fileID FROM ".$wpdb->base_prefix."email_message_attachment WHERE messageID = '%d'", $intMessageID));
+
+					foreach($result as $r)
+					{
+						list($file_name, $file_url) = get_attachment_data_by_id($r->fileID);
+
+						$strMessageAttachment .= ($strMessageAttachment != '' ? "," : "").$file_name."|".$file_url;
+					}
 				}
 			}
 		}

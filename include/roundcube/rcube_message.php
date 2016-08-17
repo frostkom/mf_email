@@ -209,17 +209,23 @@ class rcube_message
     function first_text_part(&$part=null)
     {
         // no message structure, return complete body
-        if (empty($this->parts))
-            return $this->body;
+        if(empty($this->parts) && isset($this->body))
+		{
+			return $this->body;
+		}
 
         // check all message parts
-        foreach ($this->mime_parts as $mime_id => $part) {
+        foreach ($this->mime_parts as $mime_id => $part)
+		{
             $mimetype = $part->ctype_primary . '/' . $part->ctype_secondary;
 
-            if ($mimetype == 'text/plain') {
+            if($mimetype == 'text/plain')
+			{
                 return $this->imap->get_message_part($this->uid, $mime_id, $part);
             }
-            else if ($mimetype == 'text/html') {
+
+            else if($mimetype == 'text/html')
+			{
                 $out = $this->imap->get_message_part($this->uid, $mime_id, $part);
 
                 // remove special chars encoding
