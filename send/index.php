@@ -136,7 +136,7 @@ else if($strMessageCc == '' && $strMessageBcc == '' && $strMessageSubject == '' 
 	else if($intMessageID > 0)
 	{
 		$result = $wpdb->get_results("SELECT ".$wpdb->base_prefix."email.emailID, emailAddress, messageFrom, messageFromName, messageTo, messageCc, messageReplyTo, messageName, messageText, messageCreated, ".$wpdb->base_prefix."email_message.userID FROM ".$wpdb->base_prefix."email_users RIGHT JOIN ".$wpdb->base_prefix."email USING (emailID) INNER JOIN ".$wpdb->base_prefix."email_folder USING (emailID) INNER JOIN ".$wpdb->base_prefix."email_message USING (folderID) WHERE ".$wpdb->base_prefix."email_message.messageID = '".esc_sql($intMessageID)."' AND (emailPublic = '1' OR emailRoles LIKE '%".get_current_user_role()."%' OR ".$wpdb->base_prefix."email.userID = '".get_current_user_id()."' OR ".$wpdb->base_prefix."email_users.userID = '".get_current_user_id()."') LIMIT 0, 1");
-		
+
 		foreach($result as $r)
 		{
 			$intEmailID = $r->emailID;
@@ -315,7 +315,7 @@ echo "<div class='wrap'>
 					<div class='postbox'>
 						<h3 class='hndle'>".__("Message", 'lang_email')."</h3>
 						<div class='inside'>"
-							.show_select(array('data' => $arr_data_from, 'name' => 'intEmailID', 'compare' => $intEmailID, 'text' => __('From', 'lang_email'), 'required' => 1))
+							.show_select(array('data' => $arr_data_from, 'name' => 'intEmailID', 'value' => $intEmailID, 'text' => __('From', 'lang_email'), 'required' => 1))
 							."<div class='flex_flow'>
 								<div class='search_container'>"
 									.show_textarea(array('name' => 'strMessageTo', 'text' => __('To', 'lang_email'), 'value' => $strMessageTo, 'autogrow' => 1, 'xtra' => "autofocus"))

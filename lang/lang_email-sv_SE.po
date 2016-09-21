@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-06-22 11:32+0100\n"
+"POT-Creation-Date: 2016-09-10 16:55+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -53,7 +53,7 @@ msgstr "Ett meddelande med bekräftelselänk har skickats till %s"
 
 #: ../accounts/index.php:96
 #: ../create/index.php:9
-#: ../include/functions.php:425
+#: ../include/functions.php:429
 msgid "Accounts"
 msgstr "Konton"
 
@@ -174,7 +174,7 @@ msgstr "Konto"
 #: ../include/ajax.php:15
 #: ../include/functions.php:262
 #: ../include/functions.php:285
-#: ../include/functions.php:576
+#: ../include/functions.php:588
 #: ../list/index.php:17
 msgid "Inbox"
 msgstr "Inkorg"
@@ -207,7 +207,7 @@ msgid "Trash"
 msgstr "Papperskorg"
 
 #: ../include/functions.php:278
-#: ../include/functions.php:571
+#: ../include/functions.php:583
 msgid "Spam"
 msgstr "Spam"
 
@@ -216,47 +216,42 @@ msgid "Unread"
 msgstr "Olästa"
 
 #: ../include/functions.php:421
-#: ../include/functions.php:423
-#: ../list/index.php:36
-#: ../send/index.php:306
-msgid "E-mail"
-msgstr "E-post"
-
-#: ../include/functions.php:424
-#: ../list/index.php:37
-msgid "Send new"
-msgstr "Skicka nytt"
+msgid "Email"
+msgstr "Epost"
 
 #: ../include/functions.php:426
-msgid "Add new account"
+msgid "Send New"
+msgstr "Skicka nytt"
+
+#: ../include/functions.php:432
+msgid "Add New Account"
 msgstr "Lägg till nytt konto"
 
-#: ../include/functions.php:427
-#: ../list/index.php:44
-msgid "Add new folder"
+#: ../include/functions.php:435
+msgid "Add New Folder"
 msgstr "Lägg till ny mapp"
 
-#: ../include/functions.php:588
+#: ../include/functions.php:600
 msgid "Inserted"
 msgstr "Inlagd"
 
-#: ../include/functions.php:627
+#: ../include/functions.php:639
 msgid "E-mail attachments"
 msgstr "Bifogade filer"
 
-#: ../include/functions.php:631
+#: ../include/functions.php:643
 msgid "The attachment was saved"
 msgstr "Bifogade filer sparades"
 
-#: ../include/functions.php:638
+#: ../include/functions.php:650
 msgid "The email was not able to be saved"
 msgstr "E-postkontot kunde inte sparas"
 
-#: ../include/functions.php:645
+#: ../include/functions.php:657
 msgid "The e-mail already exists"
 msgstr "Meddelandet finns redan"
 
-#: ../include/functions.php:684
+#: ../include/functions.php:696
 msgid "Connection failed"
 msgstr "Tappade uppkopplingen"
 
@@ -271,6 +266,19 @@ msgstr "Mappen skapades"
 #: ../list/index.php:31
 msgid "The folder was updated"
 msgstr "Mappen uppdaterades"
+
+#: ../list/index.php:36
+#: ../send/index.php:309
+msgid "E-mail"
+msgstr "E-post"
+
+#: ../list/index.php:37
+msgid "Send new"
+msgstr "Skicka nytt"
+
+#: ../list/index.php:44
+msgid "Add new folder"
+msgstr "Lägg till ny mapp"
 
 #: ../list/index.php:55
 msgid "Lost Connection"
@@ -297,14 +305,14 @@ msgid "Restore"
 msgstr "Återställ"
 
 #: ../list/index.php:191
-#: ../send/index.php:223
-#: ../send/index.php:332
+#: ../send/index.php:225
+#: ../send/index.php:335
 msgid "Subject"
 msgstr "Ämne"
 
 #: ../list/index.php:192
-#: ../send/index.php:221
-#: ../send/index.php:315
+#: ../send/index.php:223
+#: ../send/index.php:318
 msgid "From"
 msgstr "Från"
 
@@ -352,41 +360,41 @@ msgstr "Utkast"
 msgid "The draft has been saved"
 msgstr "Utkastet har sparats"
 
-#: ../send/index.php:220
+#: ../send/index.php:222
 msgid "Original message"
 msgstr "Ursprungligt meddelande"
 
-#: ../send/index.php:222
-#: ../send/index.php:318
+#: ../send/index.php:224
+#: ../send/index.php:321
 msgid "To"
 msgstr "Till"
 
-#: ../send/index.php:224
+#: ../send/index.php:226
 msgid "Date"
 msgstr "Datum"
 
-#: ../send/index.php:227
+#: ../send/index.php:229
 msgid "End original message"
 msgstr "Slut på ursprungligt meddelande"
 
-#: ../send/index.php:252
+#: ../send/index.php:255
 msgid "Choose here"
 msgstr "Välj här"
 
-#: ../send/index.php:313
+#: ../send/index.php:316
 msgid "Message"
 msgstr "Meddelande"
 
-#: ../send/index.php:322
+#: ../send/index.php:325
 msgid "Cc"
 msgstr "Kopia"
 
-#: ../send/index.php:339
-#: ../send/index.php:343
+#: ../send/index.php:342
+#: ../send/index.php:346
 msgid "Send"
 msgstr "Skicka"
 
-#: ../send/index.php:345
+#: ../send/index.php:348
 msgid "Save draft"
 msgstr "Spara utkast"
 

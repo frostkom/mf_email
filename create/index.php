@@ -35,9 +35,9 @@ echo "<div class='wrap'>
 				echo "<div class='flex_flow'>"
 					.show_checkbox(array('name' => "intEmailPublic", 'text' => __("Public", 'lang_email'), 'value' => 1, 'compare' => $obj_email->public))
 					."<h3>".__("or", 'lang_email')."</h3>"
-					.show_select(array('data' => get_roles_for_select(array('use_capability' => false)), 'name' => 'arrEmailRoles[]', 'text' => __("Permission", 'lang_email'), 'compare' => $obj_email->roles))
+					.show_select(array('data' => get_roles_for_select(array('use_capability' => false)), 'name' => 'arrEmailRoles[]', 'text' => __("Permission", 'lang_email'), 'value' => $obj_email->roles))
 					."<h3>".__("or", 'lang_email')."</h3>"
-					.show_select(array('data' => $arr_data_users, 'name' => 'arrEmailUsers[]', 'text' => __("Users", 'lang_email'), 'compare' => $obj_email->users))
+					.show_select(array('data' => $arr_data_users, 'name' => 'arrEmailUsers[]', 'text' => __("Users", 'lang_email'), 'value' => $obj_email->users))
 				."</div>
 				<div class='flex_flow'>"
 					.show_textfield(array('name' => "strEmailServer", 'text' => __("Server", 'lang_email'), 'value' => $obj_email->server, 'placeholder' => "mail.".$placeholder_server))

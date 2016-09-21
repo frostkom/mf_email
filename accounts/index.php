@@ -246,12 +246,12 @@ echo "<div class='wrap'>
 						</td>
 						<td>".$strEmailName."</td>
 						<td>";
-						
+
 							if($strEmailServer != '')
 							{
 								echo $strEmailServer.":".$intEmailPort;
 							}
-							
+
 						echo "</td>
 						<td>".$strEmailUsername."</td>
 					</tr>";

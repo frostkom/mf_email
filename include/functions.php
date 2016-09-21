@@ -418,24 +418,36 @@ function menu_email()
 
 		$count_message = count_unread_email();
 
-		add_menu_page("", __("E-mail", 'lang_email').$count_message, $menu_capability, $menu_start, '', 'dashicons-email-alt');
+		$menu_title = __("Email", 'lang_email');
+		add_menu_page("", $menu_title.$count_message, $menu_capability, $menu_start, '', 'dashicons-email-alt');
 
-		add_submenu_page($menu_start, __("E-mail", 'lang_email'), __("E-mail", 'lang_email'), $menu_capability, $menu_start);
-		add_submenu_page($menu_start, __("Send new", 'lang_email'), __("Send new", 'lang_email'), $menu_capability, $menu_root."send/index.php");
-		add_submenu_page($menu_start, __("Accounts", 'lang_email'), __("Accounts", 'lang_email'), $menu_capability, $menu_root."accounts/index.php");
-		add_submenu_page($menu_start, __("Add new account", 'lang_email'), __("Add new account", 'lang_email'), $menu_capability, $menu_root."create/index.php");
-		add_submenu_page($menu_root, __("Add new folder", 'lang_email'), __("Add new folder", 'lang_email'), $menu_capability, $menu_root."folder/index.php");
+		add_submenu_page($menu_start, $menu_title, $menu_title, $menu_capability, $menu_start);
+
+		$menu_title = __("Send New", 'lang_email');
+		add_submenu_page($menu_start, $menu_title, $menu_title, $menu_capability, $menu_root."send/index.php");
+
+		$menu_title = __("Accounts", 'lang_email');
+		add_submenu_page($menu_start, $menu_title, $menu_title, $menu_capability, $menu_root."accounts/index.php");
+
+		$menu_title = __("Add New Account", 'lang_email');
+		add_submenu_page($menu_start, $menu_title, $menu_title, $menu_capability, $menu_root."create/index.php");
+
+		$menu_title = __("Add New Folder", 'lang_email');
+		add_submenu_page($menu_root, $menu_title, $menu_title, $menu_capability, $menu_root."folder/index.php");
 	/*}
 
 	else
 	{
 		$menu_start = $menu_root."accounts/index.php";
 
-		add_menu_page("", __("E-mail", 'lang_email'), $menu_capability, $menu_start, '', 'dashicons-email-alt');
+		$menu_title = __("Email", 'lang_email');
+		add_menu_page("", $menu_title, $menu_capability, $menu_start, '', 'dashicons-email-alt');
 
-		add_submenu_page($menu_start, __("Accounts", 'lang_email'), __("Accounts", 'lang_email'), $menu_capability, $menu_start);
+		$menu_title = __("Accounts", 'lang_email');
+		add_submenu_page($menu_start, $menu_title, $menu_title, $menu_capability, $menu_start);
 
-		add_submenu_page($menu_start, __("Add new account", 'lang_email'), __("Add new account", 'lang_email'), $menu_capability, $menu_root."create/index.php");
+		$menu_title = __("Add new account", 'lang_email');
+		add_submenu_page($menu_start, $menu_title, $menu_title, $menu_capability, $menu_root."create/index.php");
 	}*/
 }
 
