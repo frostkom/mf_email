@@ -1,5 +1,7 @@
 <?php
 
+$obj_email = new mf_email();
+
 $intMessageID = check_var('intMessageID');
 $intMessageDraftID = check_var('intMessageDraftID');
 $intMessageAnswer = isset($_GET['answer']) ? 1 : 0;
@@ -8,7 +10,6 @@ $intMessageForward = isset($_GET['forward']) ? 1 : 0;
 $intEmailID = check_var('intEmailID');
 $strMessageTo = check_var('strMessageTo');
 $strMessageCc = check_var('strMessageCc');
-$strMessageBcc = check_var('strMessageBcc');
 $strMessageSubject = check_var('strMessageSubject');
 $strMessageText = check_var('strMessageText', 'raw');
 $strMessageAttachment = check_var('strMessageAttachment');
@@ -25,6 +26,9 @@ if(isset($_POST['btnMessageSend']) && wp_verify_nonce($_POST['_wpnonce'], 'messa
 		{
 			$strEmailName = $r->emailName;
 			$strEmailAddress = $r->emailAddress;
+
+			$strMessageTo = $obj_email->validate_email_string($strMessageTo);
+			$strMessageCc = $obj_email->validate_email_string($strMessageCc);
 
 			$mail_headers = "From: ".$strEmailName." <".$strEmailAddress.">\r\n";
 			$mail_headers .= "Cc: ".$strMessageCc."\r\n";
@@ -117,7 +121,7 @@ else if($intGroupMessageID > 0)
 	}
 }
 
-else if($strMessageCc == '' && $strMessageBcc == '' && $strMessageSubject == '' && $strMessageText == '')
+else if($strMessageCc == '' && $strMessageSubject == '' && $strMessageText == '')
 {
 	if($intMessageDraftID > 0)
 	{
@@ -280,7 +284,12 @@ if(count($arr_data_from) <= 1)
 		$obj_email->address = $user_email;
 		$obj_email->users = array(get_current_user_id());
 
-		$obj_email->create_account();
+		$obj_email->id = $this->check_if_account_exists();
+
+		if(!($obj_email->id > 0))
+		{
+			$obj_email->create_account();
+		}
 
 		if($obj_email->id > 0)
 		{
@@ -296,7 +305,12 @@ if(count($arr_data_from) <= 1)
 		$obj_email->name = $admin_name;
 		$obj_email->address = $admin_email;
 
-		$obj_email->create_account();
+		$obj_email->id = $this->check_if_account_exists();
+
+		if(!($obj_email->id > 0))
+		{
+			$obj_email->create_account();
+		}
 
 		if($obj_email->id > 0)
 		{
@@ -325,14 +339,8 @@ echo "<div class='wrap'>
 									.show_textarea(array('name' => 'strMessageCc', 'text' => __('Cc', 'lang_email'), 'value' => $strMessageCc, 'autogrow' => 1))
 									."<span id='txtMessageCc'></span>
 								</div>
-							</div>";
-
-							/*<div class='search_container'>"
-								.show_textarea(array('name' => 'strMessageBcc', 'text' => __('Bcc'), 'value' => $strMessageBcc, 'autogrow' => 1))
-								."<span id='txtMessageBcc'></span>
-							</div>*/
-
-							echo show_textfield(array('name' => 'strMessageSubject', 'text' => __('Subject', 'lang_email'), 'value' => $strMessageSubject, 'required' => 1))
+							</div>"
+							.show_textfield(array('name' => 'strMessageSubject', 'text' => __('Subject', 'lang_email'), 'value' => $strMessageSubject, 'required' => 1))
 							.mf_editor($strMessageText, "strMessageText")
 						."</div>
 					</div>

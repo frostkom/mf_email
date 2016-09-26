@@ -49,16 +49,24 @@ class mf_email
 
 			else
 			{
-				$this->create_account();
-
-				if($this->id > 0)
+				if($this->check_if_account_exists() > 0)
 				{
-					$type = "created";
+					$error_text = __("The email account already exists", 'lang_email');
 				}
 
 				else
 				{
-					$error_text = __("The e-mail account could not be created", 'lang_email');
+					$this->create_account();
+
+					if($this->id > 0)
+					{
+						$type = "created";
+					}
+
+					else
+					{
+						$error_text = __("The email account could not be created", 'lang_email');
+					}
 				}
 			}
 
@@ -128,6 +136,26 @@ class mf_email
 		}*/
 	}
 
+	function validate_email_string($in)
+	{
+		$out = "";
+
+		$arr_emails = explode(" ", $in);
+
+		foreach($arr_emails as $email)
+		{
+			$email = trim($email, ",");
+			$email = trim($email, ";");
+
+			if($email != '') //is_domain_valid($email)
+			{
+				$out .= ($out != '' ? ", " : "").$email;
+			}
+		}
+
+		return $out;
+	}
+
 	function get_message_info()
 	{
 		global $wpdb;
@@ -190,6 +218,15 @@ class mf_email
 
 			$this->password_encrypted = $encryption->encrypt($this->password, md5($this->address));
 		}
+	}
+
+	function check_if_account_exists()
+	{
+		global $wpdb;
+
+		$intEmailID = $wpdb->get_var($wpdb->prepare("SELECT emailID FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s", $this->address));
+
+		return $intEmailID;
 	}
 
 	function create_account()
