@@ -17,6 +17,9 @@
 	display: -ms-flexbox;
 	display: -webkit-flex;
 	display: flex;
+	-moz-box-direction: column;
+	-webkit-box-direction: column;
+	-ms-flexbox-direction: column;
 	flex-direction: column;
 	height: 90vh;
 }
