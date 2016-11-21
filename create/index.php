@@ -49,7 +49,7 @@ echo "<div class='wrap'>
 				."</div>"
 				.show_textfield(array('name' => "strEmailAddress", 'text' => __("E-mail Address", 'lang_email'), 'value' => $obj_email->address, 'placeholder' => $placeholder_address))
 				.show_textfield(array('name' => "strEmailName", 'text' => __("Name", 'lang_email'), 'value' => $obj_email->name, 'placeholder' => $placeholder_name))
-				.show_submit(array('name' => 'btnEmailCreate', 'text' => __("Save", 'lang_email')))
+				.show_button(array('name' => 'btnEmailCreate', 'text' => __("Save", 'lang_email')))
 				.input_hidden(array('name' => "intEmailID", 'value' => $obj_email->id))
 				.wp_nonce_field('email_create', '_wpnonce', true, false)
 			."</form>

@@ -34,7 +34,7 @@ if(isset($_POST['btnMessageSend']) && wp_verify_nonce($_POST['_wpnonce'], 'messa
 			$mail_headers .= "Cc: ".$strMessageCc."\r\n";
 
 			$mail_content = apply_filters('the_content', stripslashes($strMessageText));
-			$mail_attachment = get_attachment_to_send($strMessageAttachment);
+			list($mail_attachment, $rest) = get_attachment_to_send($strMessageAttachment);
 
 			add_filter('wp_mail_content_type', 'set_html_content_type');
 
@@ -52,9 +52,11 @@ if(isset($_POST['btnMessageSend']) && wp_verify_nonce($_POST['_wpnonce'], 'messa
 
 						foreach($arr_attachments as $attachment)
 						{
-							list($file_name, $file_url) = explode("|", $attachment);
+							list($file_name, $file_url, $file_id) = explode("|", $attachment);
 
-							if($file_url != '')
+							if($file_id > 0){}
+
+							else if($file_url != '')
 							{
 								$file_url_check = WP_CONTENT_DIR.str_replace(site_url()."/wp-content", "", $file_url);
 
@@ -62,23 +64,23 @@ if(isset($_POST['btnMessageSend']) && wp_verify_nonce($_POST['_wpnonce'], 'messa
 								{
 									$query = $wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_type = 'attachment' AND post_title = %s", $file_name);
 
-									$intFileID = $wpdb->get_var($query);
-
-									if($intFileID > 0)
-									{
-										$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email_message_attachment SET messageID = '%d', fileID = '%d'", $intMessageID, $intFileID));
-									}
-
-									else
-									{
-										$error_text = __("Could not save the attached file to DB, but it was successfully sent", 'lang_email')." (".$query.")";
-									}
+									$file_id = $wpdb->get_var($query);
 								}
 
 								else
 								{
 									$error_text = __("The file does not seem to exist", 'lang_email')." (".$file_url_check.")";
 								}
+							}
+
+							if($file_id > 0)
+							{
+								$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email_message_attachment SET messageID = '%d', fileID = '%d'", $intMessageID, $file_id));
+							}
+
+							else
+							{
+								$error_text = __("Could not save the attached file to DB, but it was successfully sent", 'lang_email');
 							}
 						}
 					}
@@ -240,7 +242,7 @@ else if($strMessageCc == '' && $strMessageSubject == '' && $strMessageText == ''
 					{
 						list($file_name, $file_url) = get_attachment_data_by_id($r->fileID);
 
-						$strMessageAttachment .= ($strMessageAttachment != '' ? "," : "").$file_name."|".$file_url;
+						$strMessageAttachment .= ($strMessageAttachment != '' ? "," : "").$file_name."|".$file_url."|".$r->fileID;
 					}
 				}
 			}
@@ -351,9 +353,9 @@ echo "<div class='wrap'>
 						<div class='inside'>"
 							.get_media_button(array('name' => "strMessageAttachment", 'value' => $strMessageAttachment))
 							."<div>"
-								.show_submit(array('name' => 'btnMessageSend', 'text' => __('Send', 'lang_email')))
+								.show_button(array('name' => 'btnMessageSend', 'text' => __('Send', 'lang_email')))
 								."&nbsp;"
-								.show_submit(array('name' => 'btnMessageDraft', 'text' => __('Save draft', 'lang_email'), 'class' => "button"))
+								.show_button(array('name' => 'btnMessageDraft', 'text' => __('Save draft', 'lang_email'), 'class' => "button"))
 								.wp_nonce_field('message_send', '_wpnonce', true, false)
 								.input_hidden(array('name' => "intMessageDraftID", 'value' => $intMessageDraftID))
 							."</div>
