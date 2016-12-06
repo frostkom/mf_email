@@ -136,7 +136,7 @@ if($arr_input[0] == "email")
 			$strMessageFrom = $r->messageFrom;
 			$strMessageFromName = $r->messageFromName != '' ? $r->messageFromName : $strMessageFrom;
 			$strMessageTo = $r->messageTo;
-			$strMessageName = $r->messageName != '' ? $r->messageName : "(".__('No subject', 'lang_email').")";
+			$strMessageName = $r->messageName != '' ? $r->messageName : "(".__("No subject", 'lang_email').")";
 			$strMessageCreated = format_date($r->messageCreated);
 			$strMessageReceived = format_date($r->messageReceived);
 			$intMessageDeleted = $r->messageDeleted;
@@ -195,7 +195,7 @@ if($arr_input[0] == "email")
 			$strMessageFrom = $r->messageFrom;
 			$strMessageFromName = $r->messageFromName != '' ? $r->messageFromName : $strMessageFrom;
 			$strMessageTo = $r->messageTo;
-			$strMessageName = $r->messageName != '' ? $r->messageName : "(".__('No subject', 'lang_email').")";
+			$strMessageName = $r->messageName != '' ? $r->messageName : "(".__("No subject", 'lang_email').")";
 			$strMessageText_orig = $r->messageText;
 			$strMessageCreated = format_date($r->messageCreated);
 			$strMessageReceived = format_date($r->messageReceived);
@@ -254,7 +254,7 @@ if($arr_input[0] == "email")
 			$strMailTo = $r->messageTo;
 			$strMailCc = $r->messageCc;
 			$strPop3Address = $r->emailAddress;
-			$strMailName = $r->messageName != '' ? $r->messageName : "(".__('No subject', 'lang_email').")";
+			$strMailName = $r->messageName != '' ? $r->messageName : "(".__("No subject", 'lang_email').")";
 			$strMessageText = $r->messageText;
 			$strMessageText2 = $r->messageText2;
 			$strMailCreated = $r->messageCreated;

@@ -86,11 +86,11 @@ echo "<script type='text/template' id='template_folder_item'>
 </script>
 
 <script type='text/template' id='template_folder_message'>
-	<tr><td colspan='2'>".__('There is nothing to show', 'lang_email')."</td></tr>
+	<tr><td colspan='2'>".__("There is nothing to show", 'lang_email')."</td></tr>
 </script>
 
 <script type='text/template' id='template_email_more'>
-	<tr class='show_more'><td colspan='5'><a href='#email/emails/<%= folderName %>/<%= limit_start %>'>".__('Show more', 'lang_email')."</a></td></tr>
+	<tr class='show_more'><td colspan='5'><a href='#email/emails/<%= folderName %>/<%= limit_start %>'>".__("Show more", 'lang_email')."</a></td></tr>
 </script>
 
 <script type='text/template' id='template_email_item'>
@@ -183,18 +183,18 @@ echo "<script type='text/template' id='template_folder_item'>
 </script>
 
 <script type='text/template' id='template_email_message'>
-	<tr><td colspan=''>".__('There is nothing to show', 'lang_email')."</td></tr>
+	<tr><td colspan=''>".__("There is nothing to show", 'lang_email')."</td></tr>
 </script>
 
 <script type='text/template' id='template_email_show'>
 	<ul class='alternate'>
-		<li><strong>".__('Subject', 'lang_email').":</strong> <%= messageName %></li>
-		<li><strong>".__('From', 'lang_email').":</strong> <%= messageFrom %> -> <%= messageTo %></li>
+		<li><strong>".__("Subject", 'lang_email').":</strong> <%= messageName %></li>
+		<li><strong>".__("From", 'lang_email').":</strong> <%= messageFrom %> -> <%= messageTo %></li>
 		<% if(messageCc != '')
 		{ %>
-			<li><strong>".__('Copy', 'lang_email').":</strong> <%= messageCc %></li>
+			<li><strong>".__("Cc", 'lang_email').":</strong> <%= messageCc %></li>
 		<% } %>
-		<li><a href='?page=mf_email/send/index.php&intMessageID=<%= messageID %>&answer' class='button'>&laquo; ".__('Answer', 'lang_email')."</a> <a href='?page=mf_email/send/index.php&intMessageID=<%= messageID %>&forward' class='button'>".__('Forward', 'lang_email')." &raquo;</a></li>
+		<li><a href='?page=mf_email/send/index.php&intMessageID=<%= messageID %>&answer' class='button'>&laquo; ".__("Answer", 'lang_email')."</a> <a href='?page=mf_email/send/index.php&intMessageID=<%= messageID %>&forward' class='button'>".__("Forward", 'lang_email')." &raquo;</a></li>
 		<% if(messageAttachment.length > 0)
 		{ %>
 			<li>&nbsp;</li>

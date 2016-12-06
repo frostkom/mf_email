@@ -79,7 +79,7 @@ echo "<div class='wrap'>
 					$arr_data[$intEmailID2] = $strEmailName;
 				}
 
-				echo show_select(array('data' => $arr_data, 'name' => 'intEmailID', 'value' => $intEmailID, 'text' => __('Account', 'lang_email')))
+				echo show_select(array('data' => $arr_data, 'name' => 'intEmailID', 'value' => $intEmailID, 'text' => __("Account", 'lang_email')))
 				.show_textfield(array('name' => "strFolderName", 'text' => __("Name", 'lang_email'), 'value' => $strFolderName))
 				.show_button(array('name' => 'btnFolderCreate', 'text' => __("Save", 'lang_email')))
 				.input_hidden(array('name' => "intFolderID", 'value' => $intFolderID))

@@ -252,14 +252,14 @@ function set_mail_info($data, &$json_output)
 		{
 			$query_xtra .= ", messageDeletedDate = NOW(), messageDeletedID = '".get_current_user_id()."', messageRead = '1'";
 
-			$intFolderID = get_folder_ids(__('Trash', 'lang_email'), 2, $intEmailID);
+			$intFolderID = get_folder_ids(__("Trash", 'lang_email'), 2, $intEmailID);
 		}
 
 		else
 		{
 			$query_xtra .= ", messageDeletedDate = '', messageDeletedID = ''";
 
-			$intFolderID = get_folder_ids(__('Inbox', 'lang_email'), 6, $intEmailID);
+			$intFolderID = get_folder_ids(__("Inbox", 'lang_email'), 6, $intEmailID);
 		}
 
 		$query_xtra .= ($query_xtra == '' ? "" : ", ")."folderID = '".esc_sql($intFolderID)."'";
@@ -275,14 +275,14 @@ function set_mail_info($data, &$json_output)
 		{
 			$query_xtra .= ", messageDeletedDate = NOW(), messageDeletedID = '".get_current_user_id()."', messageRead = '1'";
 
-			$intFolderID = get_folder_ids(__('Spam', 'lang_email'), 3, $intEmailID);
+			$intFolderID = get_folder_ids(__("Spam", 'lang_email'), 3, $intEmailID);
 		}
 
 		else
 		{
 			$query_xtra .= ", messageDeletedDate = '', messageDeletedID = ''";
 
-			$intFolderID = get_folder_ids(__('Inbox', 'lang_email'), 6, $intEmailID);
+			$intFolderID = get_folder_ids(__("Inbox", 'lang_email'), 6, $intEmailID);
 		}
 
 		$query_xtra .= ($query_xtra == '' ? "" : ", ")."folderID = '".esc_sql($intFolderID)."'";
@@ -580,12 +580,12 @@ function cron_email()
 
 						if($intSpamID > 0)
 						{
-							$intFolderID = get_folder_ids(__('Spam', 'lang_email'), 3, $intEmailID);
+							$intFolderID = get_folder_ids(__("Spam", 'lang_email'), 3, $intEmailID);
 						}
 
 						else
 						{
-							$intFolderID = get_folder_ids(__('Inbox', 'lang_email'), 6, $intEmailID);
+							$intFolderID = get_folder_ids(__("Inbox", 'lang_email'), 6, $intEmailID);
 						}
 
 						list($intMessageID, $affected_rows) = save_email(array('folder_id' => $intFolderID, 'text_id' => $strMessageTextID, 'md5' => $strMessageMd5, 'from' => $strMessageFrom, 'from_name' => $strMessageFromName, 'to' => $strMessageTo, 'cc' => $strMessageCc, 'subject' => $strMessageSubject, 'content' => $strMessageTextPlain, 'content_html' => $strMessageTextHTML, 'created' => $strMessageCreated));

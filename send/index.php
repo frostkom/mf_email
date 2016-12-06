@@ -40,7 +40,7 @@ if(isset($_POST['btnMessageSend']) && wp_verify_nonce($_POST['_wpnonce'], 'messa
 
 			if(wp_mail($strMessageTo, $strMessageSubject, $mail_content, $mail_headers, $mail_attachment))
 			{
-				$intFolderID = get_folder_ids(__('Sent', 'lang_email'), 4, $intEmailID);
+				$intFolderID = get_folder_ids(__("Sent", 'lang_email'), 4, $intEmailID);
 
 				list($intMessageID, $affected_rows) = save_email(array('read' => 1, 'folder_id' => $intFolderID, 'to' => $strMessageTo, 'cc' => $strMessageCc, 'subject' => $strMessageSubject, 'content_html' => $strMessageText));
 
@@ -102,13 +102,13 @@ if(isset($_POST['btnMessageSend']) && wp_verify_nonce($_POST['_wpnonce'], 'messa
 
 else if(isset($_POST['btnMessageDraft']) && wp_verify_nonce($_POST['_wpnonce'], 'message_send'))
 {
-	$intFolderID = get_folder_ids(__('Draft', 'lang_email'), 5, $intEmailID);
+	$intFolderID = get_folder_ids(__("Draft", 'lang_email'), 5, $intEmailID);
 
 	list($intMessageID, $affected_rows) = save_email(array('id' => $intMessageDraftID, 'folder_id' => $intFolderID, 'to' => $strMessageTo, 'cc' => $strMessageCc, 'subject' => $strMessageSubject, 'content_html' => $strMessageText));
 
 	if($affected_rows > 0)
 	{
-		$done_text = __('The draft has been saved', 'lang_email');
+		$done_text = __("The draft has been saved", 'lang_email');
 	}
 }
 
@@ -331,18 +331,18 @@ echo "<div class='wrap'>
 					<div class='postbox'>
 						<h3 class='hndle'>".__("Message", 'lang_email')."</h3>
 						<div class='inside'>"
-							.show_select(array('data' => $arr_data_from, 'name' => 'intEmailID', 'value' => $intEmailID, 'text' => __('From', 'lang_email'), 'required' => 1))
+							.show_select(array('data' => $arr_data_from, 'name' => 'intEmailID', 'value' => $intEmailID, 'text' => __("From", 'lang_email'), 'required' => 1))
 							."<div class='flex_flow'>
 								<div class='search_container'>"
-									.show_textarea(array('name' => 'strMessageTo', 'text' => __('To', 'lang_email'), 'value' => $strMessageTo, 'autogrow' => 1, 'xtra' => "autofocus"))
+									.show_textarea(array('name' => 'strMessageTo', 'text' => __("To", 'lang_email'), 'value' => $strMessageTo, 'autogrow' => 1, 'xtra' => "autofocus"))
 									."<span id='txtMessageTo'></span>
 								</div>
 								<div class='search_container'>"
-									.show_textarea(array('name' => 'strMessageCc', 'text' => __('Cc', 'lang_email'), 'value' => $strMessageCc, 'autogrow' => 1))
+									.show_textarea(array('name' => 'strMessageCc', 'text' => __("Cc", 'lang_email'), 'value' => $strMessageCc, 'autogrow' => 1))
 									."<span id='txtMessageCc'></span>
 								</div>
 							</div>"
-							.show_textfield(array('name' => 'strMessageSubject', 'text' => __('Subject', 'lang_email'), 'value' => $strMessageSubject, 'required' => 1))
+							.show_textfield(array('name' => 'strMessageSubject', 'text' => __("Subject", 'lang_email'), 'value' => $strMessageSubject, 'required' => 1))
 							.mf_editor($strMessageText, "strMessageText")
 						."</div>
 					</div>
@@ -353,9 +353,9 @@ echo "<div class='wrap'>
 						<div class='inside'>"
 							.get_media_button(array('name' => "strMessageAttachment", 'value' => $strMessageAttachment))
 							."<div>"
-								.show_button(array('name' => 'btnMessageSend', 'text' => __('Send', 'lang_email')))
+								.show_button(array('name' => 'btnMessageSend', 'text' => __("Send", 'lang_email')))
 								."&nbsp;"
-								.show_button(array('name' => 'btnMessageDraft', 'text' => __('Save draft', 'lang_email'), 'class' => "button"))
+								.show_button(array('name' => 'btnMessageDraft', 'text' => __("Save draft", 'lang_email'), 'class' => "button"))
 								.wp_nonce_field('message_send', '_wpnonce', true, false)
 								.input_hidden(array('name' => "intMessageDraftID", 'value' => $intMessageDraftID))
 							."</div>
