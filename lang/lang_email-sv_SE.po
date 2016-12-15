@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-26 09:55+0100\n"
+"POT-Creation-Date: 2016-12-15 11:31+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -272,7 +272,7 @@ msgid "The folder was updated"
 msgstr "Mappen uppdaterades"
 
 #: ../list/index.php:36
-#: ../send/index.php:323
+#: ../send/index.php:325
 msgid "E-mail"
 msgstr "E-post"
 
@@ -309,20 +309,21 @@ msgid "Restore"
 msgstr "Återställ"
 
 #: ../list/index.php:191
-#: ../send/index.php:229
-#: ../send/index.php:343
+#: ../send/index.php:231
+#: ../send/index.php:345
 msgid "Subject"
 msgstr "Ämne"
 
 #: ../list/index.php:192
-#: ../send/index.php:227
-#: ../send/index.php:332
+#: ../send/index.php:229
+#: ../send/index.php:334
 msgid "From"
 msgstr "Från"
 
 #: ../list/index.php:195
-msgid "Copy"
-msgstr "Kopiera"
+#: ../send/index.php:341
+msgid "Cc"
+msgstr "Kopia"
 
 #: ../list/index.php:197
 msgid "Answer"
@@ -344,63 +345,62 @@ msgstr "HTML"
 msgid "Sent"
 msgstr "Skickat"
 
-#: ../send/index.php:74
-msgid "Could not save the attached file to DB, but it was successfully sent"
-msgstr "Det gick inte att spara den bifogade filen i databasen, men det skickades till mottagaren"
-
-#: ../send/index.php:80
+#: ../send/index.php:72
 msgid "The file does not seem to exist"
 msgstr "Filen verkar inte finnas"
 
-#: ../send/index.php:97
+#: ../send/index.php:83
+msgid "Could not save the attached file to DB, but it was successfully sent"
+msgstr "Det gick inte att spara den bifogade filen i databasen, men det skickades till mottagaren"
+
+#: ../send/index.php:99
 msgid "You have to enter all required fields"
 msgstr "Var vänlig fyll i alla obligatoriska fält"
 
-#: ../send/index.php:103
+#: ../send/index.php:105
 msgid "Draft"
 msgstr "Utkast"
 
-#: ../send/index.php:109
+#: ../send/index.php:111
 msgid "The draft has been saved"
 msgstr "Utkastet har sparats"
 
-#: ../send/index.php:226
+#: ../send/index.php:228
 msgid "Original message"
 msgstr "Ursprungligt meddelande"
 
-#: ../send/index.php:228
-#: ../send/index.php:335
+#: ../send/index.php:230
+#: ../send/index.php:337
 msgid "To"
 msgstr "Till"
 
-#: ../send/index.php:230
+#: ../send/index.php:232
 msgid "Date"
 msgstr "Datum"
 
-#: ../send/index.php:233
+#: ../send/index.php:235
 msgid "End original message"
 msgstr "Slut på ursprungligt meddelande"
 
-#: ../send/index.php:259
+#: ../send/index.php:261
 msgid "Choose here"
 msgstr "Välj här"
 
-#: ../send/index.php:330
+#: ../send/index.php:332
 msgid "Message"
 msgstr "Meddelande"
 
-#: ../send/index.php:339
-msgid "Cc"
-msgstr "Kopia"
-
-#: ../send/index.php:350
-#: ../send/index.php:354
+#: ../send/index.php:352
+#: ../send/index.php:356
 msgid "Send"
 msgstr "Skicka"
 
-#: ../send/index.php:356
+#: ../send/index.php:358
 msgid "Save draft"
 msgstr "Spara utkast"
+
+#~ msgid "Copy"
+#~ msgstr "Kopiera"
 
 #~ msgid "Uploaded file"
 #~ msgstr "Uppladdad fil"

@@ -286,7 +286,7 @@ if(count($arr_data_from) <= 1)
 		$obj_email->address = $user_email;
 		$obj_email->users = array(get_current_user_id());
 
-		$obj_email->id = $this->check_if_account_exists();
+		$obj_email->id = $obj_email->check_if_account_exists();
 
 		if(!($obj_email->id > 0))
 		{
@@ -307,7 +307,7 @@ if(count($arr_data_from) <= 1)
 		$obj_email->name = $admin_name;
 		$obj_email->address = $admin_email;
 
-		$obj_email->id = $this->check_if_account_exists();
+		$obj_email->id = $obj_email->check_if_account_exists();
 
 		if(!($obj_email->id > 0))
 		{
