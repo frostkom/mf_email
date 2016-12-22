@@ -343,7 +343,7 @@ echo "<div class='wrap'>
 								</div>
 							</div>"
 							.show_textfield(array('name' => 'strMessageSubject', 'text' => __("Subject", 'lang_email'), 'value' => $strMessageSubject, 'required' => 1))
-							.mf_editor($strMessageText, "strMessageText")
+							.show_wp_editor(array('name' => 'strMessageText', 'value' => $strMessageText))
 						."</div>
 					</div>
 				</div>
