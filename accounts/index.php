@@ -83,9 +83,12 @@ else if(isset($_REQUEST['btnEmailVerify']) && $intEmailID > 0 && wp_verify_nonce
 				$mail_subject = sprintf(__("Please confirm your e-mail %s for use on %s", 'lang_email'), $strEmailAddress, $site_name);
 				$mail_content = sprintf(__("We've gotten a request to confirm the address %s from a user at %s (<a href='%s'>%s</a>). If this is a valid request please click <a href='%s'>here</a> to confirm the use of your e-mail address to send messages", 'lang_email'), $strEmailAddress, $site_name, $site_url, $confirm_url);
 
-				wp_mail($mail_to, $mail_subject, $mail_content, $mail_headers);
+				$sent = send_email(array('to' => $mail_to, 'subject' => $mail_subject, 'content' => $mail_content, 'headers' => $mail_headers));
 
-				$done_text = sprintf(__("An e-mail with a confirmation link has been sent to %s", 'lang_email'), $strEmailAddress); //." (".$mail_to.", ".$mail_headers.", ".$mail_subject.", ".$mail_content.")"
+				if($sent)
+				{
+					$done_text = sprintf(__("An e-mail with a confirmation link has been sent to %s", 'lang_email'), $strEmailAddress);
+				}
 			}
 		}
 	}
