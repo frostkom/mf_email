@@ -36,7 +36,7 @@ if(isset($_POST['btnMessageSend']) && wp_verify_nonce($_POST['_wpnonce'], 'messa
 			$mail_content = apply_filters('the_content', stripslashes($strMessageText));
 			list($mail_attachment, $rest) = get_attachment_to_send($strMessageAttachment);
 
-			$sent = send_email(array('to' => $strMessageTo, 'subject' => $strMessageSubject, 'content' => $mail_content, 'headers' => $mail_headers, 'attachment' => $mail_attachment))
+			$sent = send_email(array('to' => $strMessageTo, 'subject' => $strMessageSubject, 'content' => $mail_content, 'headers' => $mail_headers, 'attachment' => $mail_attachment));
 
 			if($sent)
 			{
