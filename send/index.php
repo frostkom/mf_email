@@ -91,6 +91,11 @@ if(isset($_POST['btnMessageSend']) && wp_verify_nonce($_POST['_wpnonce'], 'messa
 					}
 				}
 			}
+
+			else
+			{
+				$error_text = __("Unfortunately, I could not send the email for you. Please try again. If the problem persists, please contact my admin", 'lang_email');
+			}
 		}
 	}
 

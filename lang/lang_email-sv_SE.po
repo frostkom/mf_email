@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-15 11:31+0100\n"
+"POT-Creation-Date: 2017-01-30 14:43+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -46,81 +46,81 @@ msgstr "Var god bekräfta din e-post %s för användning på %s"
 msgid "We've gotten a request to confirm the address %s from a user at %s (<a href='%s'>%s</a>). If this is a valid request please click <a href='%s'>here</a> to confirm the use of your e-mail address to send messages"
 msgstr "Vi har fått ett önskemål om att bekräfta adressen %s från en användare på %s (<a href='%s'>%s</a>). Om detta är okej, klicka <a href='%s'>här</a> för att bekräfta att meddelanden får skickas från din adress"
 
-#: ../accounts/index.php:88
+#: ../accounts/index.php:90
 #, php-format
 msgid "An e-mail with a confirmation link has been sent to %s"
 msgstr "Ett meddelande med bekräftelselänk har skickats till %s"
 
-#: ../accounts/index.php:96
+#: ../accounts/index.php:99
 #: ../create/index.php:9
 #: ../include/functions.php:429
 msgid "Accounts"
 msgstr "Konton"
 
-#: ../accounts/index.php:97
+#: ../accounts/index.php:100
 msgid "Add New"
 msgstr "Lägg till ny"
 
-#: ../accounts/index.php:116
+#: ../accounts/index.php:119
 #: ../create/index.php:36
 msgid "Public"
 msgstr "Publik"
 
-#: ../accounts/index.php:117
+#: ../accounts/index.php:120
 msgid "Roles"
 msgstr "Roller"
 
-#: ../accounts/index.php:118
+#: ../accounts/index.php:121
 #: ../create/index.php:40
 msgid "Users"
 msgstr "Användare"
 
-#: ../accounts/index.php:119
+#: ../accounts/index.php:122
 msgid "Verified"
 msgstr "Veriferad"
 
-#: ../accounts/index.php:120
+#: ../accounts/index.php:123
 msgid "Address"
 msgstr "Adress"
 
-#: ../accounts/index.php:121
+#: ../accounts/index.php:124
 #: ../create/index.php:51
 #: ../folder/index.php:83
 msgid "Name"
 msgstr "Namn"
 
-#: ../accounts/index.php:122
+#: ../accounts/index.php:125
 #: ../create/index.php:43
 msgid "Server"
 msgstr "Server"
 
-#: ../accounts/index.php:123
+#: ../accounts/index.php:126
 #: ../create/index.php:47
 msgid "Username"
 msgstr "Användarnamn"
 
-#: ../accounts/index.php:130
+#: ../accounts/index.php:133
 #: ../list/index.php:89
 #: ../list/index.php:186
 msgid "There is nothing to show"
 msgstr "Det finns inget att visa"
 
-#: ../accounts/index.php:207
+#: ../accounts/index.php:210
 msgid "Verify Account"
 msgstr "Verifiera e-postkontot"
 
-#: ../accounts/index.php:232
+#: ../accounts/index.php:235
 #: ../list/index.php:76
 msgid "Edit"
 msgstr "Redigera"
 
-#: ../accounts/index.php:236
+#: ../accounts/index.php:239
 #: ../list/index.php:81
 #: ../list/index.php:131
 msgid "Delete"
 msgstr "Radera"
 
-#: ../accounts/index.php:242
+#: ../accounts/index.php:245
 msgid "Recover"
 msgstr "Återställ"
 
@@ -272,7 +272,7 @@ msgid "The folder was updated"
 msgstr "Mappen uppdaterades"
 
 #: ../list/index.php:36
-#: ../send/index.php:325
+#: ../send/index.php:330
 msgid "E-mail"
 msgstr "E-post"
 
@@ -309,19 +309,19 @@ msgid "Restore"
 msgstr "Återställ"
 
 #: ../list/index.php:191
-#: ../send/index.php:231
-#: ../send/index.php:345
+#: ../send/index.php:236
+#: ../send/index.php:350
 msgid "Subject"
 msgstr "Ämne"
 
 #: ../list/index.php:192
-#: ../send/index.php:229
-#: ../send/index.php:334
+#: ../send/index.php:234
+#: ../send/index.php:339
 msgid "From"
 msgstr "Från"
 
 #: ../list/index.php:195
-#: ../send/index.php:341
+#: ../send/index.php:346
 msgid "Cc"
 msgstr "Kopia"
 
@@ -353,49 +353,53 @@ msgstr "Filen verkar inte finnas"
 msgid "Could not save the attached file to DB, but it was successfully sent"
 msgstr "Det gick inte att spara den bifogade filen i databasen, men det skickades till mottagaren"
 
-#: ../send/index.php:99
+#: ../send/index.php:97
+msgid "Unfortunately, I could not send the email for you. Please try again. If the problem persists, please contact my admin"
+msgstr "Tyvärr kunde jag inte skicka meddelandet åt dig. Var vänlig försök igen. Om problemet kvarstår, kontakta min admin"
+
+#: ../send/index.php:104
 msgid "You have to enter all required fields"
 msgstr "Var vänlig fyll i alla obligatoriska fält"
 
-#: ../send/index.php:105
+#: ../send/index.php:110
 msgid "Draft"
 msgstr "Utkast"
 
-#: ../send/index.php:111
+#: ../send/index.php:116
 msgid "The draft has been saved"
 msgstr "Utkastet har sparats"
 
-#: ../send/index.php:228
+#: ../send/index.php:233
 msgid "Original message"
 msgstr "Ursprungligt meddelande"
 
-#: ../send/index.php:230
-#: ../send/index.php:337
+#: ../send/index.php:235
+#: ../send/index.php:342
 msgid "To"
 msgstr "Till"
 
-#: ../send/index.php:232
+#: ../send/index.php:237
 msgid "Date"
 msgstr "Datum"
 
-#: ../send/index.php:235
+#: ../send/index.php:240
 msgid "End original message"
 msgstr "Slut på ursprungligt meddelande"
 
-#: ../send/index.php:261
+#: ../send/index.php:266
 msgid "Choose here"
 msgstr "Välj här"
 
-#: ../send/index.php:332
+#: ../send/index.php:337
 msgid "Message"
 msgstr "Meddelande"
 
-#: ../send/index.php:352
-#: ../send/index.php:356
+#: ../send/index.php:357
+#: ../send/index.php:361
 msgid "Send"
 msgstr "Skicka"
 
-#: ../send/index.php:358
+#: ../send/index.php:363
 msgid "Save draft"
 msgstr "Spara utkast"
 
