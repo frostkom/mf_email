@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: 
-Version: 4.6.8
+Version: 4.6.10
 Author: Martin Fors
 Author URI: http://frostkom.se
 Text Domain: lang_email
@@ -155,12 +155,6 @@ function activate_email()
 
 	update_columns($arr_update_existing_columns);
 
-	$arr_insert_tables = array();
-
-	//$arr_insert_tables[] = "INSERT IGNORE INTO ".$wpdb->base_prefix."query_check VALUES('1','1','".__("Number", 'lang_email')."','int','[0-9]')";
-
-	run_queries($arr_insert_tables);
-
 	delete_base(array(
 		'table' => "email_folder",
 		'field_prefix' => "folder",
@@ -198,34 +192,6 @@ function activate_email()
 			),
 		),
 	));
-
-	/*if(function_exists('is_plugin_active') && is_plugin_active("mf_media/index.php"))
-	{
-		$taxonomy = 'category';
-
-		$term_attachment = create_term_if_not_exists(array('taxonomy' => $taxonomy, 'term_slug' => 'email_attachment', 'term_name' => __("E-mail attachments", 'lang_email')));
-		//$term_uploaded = create_term_if_not_exists(array('taxonomy' => $taxonomy, 'term_slug' => 'file_uploaded', 'term_name' => __("Uploaded file", 'lang_email')));
-
-		$result = $wpdb->get_results("SELECT ID, messageID FROM ".$wpdb->posts." LEFT JOIN ".$wpdb->base_prefix."email_message_attachment ON ".$wpdb->posts.".ID = ".$wpdb->base_prefix."email_message_attachment.fileID WHERE post_type = 'attachment' GROUP BY ID");
-
-		foreach($result as $r)
-		{
-			$post_id = $r->ID;
-			$intMessageID = $r->messageID;
-
-			if($intMessageID > 0)
-			{
-				wp_set_object_terms($post_id, array((int)$term_attachment['term_id']), $taxonomy, false);
-			}
-
-			else
-			{
-				wp_set_post_categories($post_id, array(get_option('default_category')));
-
-				//wp_set_object_terms($post_id, array((int)$term_uploaded['term_id']), $taxonomy, true);
-			}
-		}
-	}*/
 }
 
 function uninstall_email()

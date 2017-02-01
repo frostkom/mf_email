@@ -199,15 +199,7 @@ class mf_email
 
 		$result = $wpdb->get_results($wpdb->prepare("SELECT spamID FROM ".$wpdb->base_prefix."email_spam WHERE emailID = '%d' AND messageFrom = %s", $this->id, $data['from']));
 
-		if($wpdb->num_rows > 0)
-		{
-			return true;
-		}
-
-		else
-		{
-			return false;
-		}
+		return $wpdb->num_rows > 0 ? true : false;
 	}
 
 	function encrypt_password()
