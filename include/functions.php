@@ -406,10 +406,10 @@ function menu_email()
 	$menu_start = $menu_root."list/index.php";
 	$menu_capability = "edit_posts";
 
-	/*$obj_email = new mf_email();
+	$obj_email = new mf_email();
 
-	if($obj_email->has_accounts() > 0)
-	{*/
+	if($obj_email->has_accounts())
+	{
 		if(current_user_can($menu_capability))
 		{
 			wp_enqueue_script('jquery-ui-autocomplete');
@@ -434,21 +434,21 @@ function menu_email()
 
 		$menu_title = __("Add New Folder", 'lang_email');
 		add_submenu_page($menu_root, $menu_title, $menu_title, $menu_capability, $menu_root."folder/index.php");
-	/*}
+	}
 
 	else
 	{
-		$menu_start = $menu_root."accounts/index.php";
+		$menu_start = $menu_root."create/index.php";
 
 		$menu_title = __("Email", 'lang_email');
 		add_menu_page("", $menu_title, $menu_capability, $menu_start, '', 'dashicons-email-alt');
 
-		$menu_title = __("Accounts", 'lang_email');
-		add_submenu_page($menu_start, $menu_title, $menu_title, $menu_capability, $menu_start);
+		//$menu_title = __("Accounts", 'lang_email');
+		//add_submenu_page($menu_start, $menu_title, $menu_title, $menu_capability, $menu_start);
 
-		$menu_title = __("Add new account", 'lang_email');
+		$menu_title = __("Add new Account", 'lang_email');
 		add_submenu_page($menu_start, $menu_title, $menu_title, $menu_capability, $menu_root."create/index.php");
-	}*/
+	}
 }
 
 //Extension for RCube

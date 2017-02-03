@@ -156,6 +156,20 @@ class mf_email
 		return $out;
 	}
 
+	function has_accounts()
+	{
+		$result = $this->get_account_amount();
+
+		return (count($result) > 0 ? true : false);
+	}
+
+	function get_account_amount($query_xtra = '')
+	{
+		global $wpdb;
+
+		return $wpdb->get_results("SELECT emailID FROM ".$wpdb->base_prefix."email_users RIGHT JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE (emailPublic = '1' OR emailRoles LIKE '%".get_current_user_role()."%' OR ".$wpdb->base_prefix."email.userID = '".get_current_user_id()."' OR ".$wpdb->base_prefix."email_users.userID = '".get_current_user_id()."')".$query_xtra." GROUP BY emailID");
+	}
+
 	function get_message_info()
 	{
 		global $wpdb;

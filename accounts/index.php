@@ -1,5 +1,7 @@
 <?php
 
+$obj_email = new mf_email();
+
 $intEmailID = check_var('intEmailID');
 $paged = check_var('paged', 'int', true, '0');
 $strSearch = check_var('s', 'char');
@@ -108,9 +110,7 @@ echo "<div class='wrap'>
 		$query_xtra .= ($query_xtra != '' ? " AND " : " WHERE ")."emailUsername LIKE '%".esc_sql($strSearch)."%'";
 	}
 
-	$resultPagination = $wpdb->get_results("SELECT emailID FROM ".$wpdb->base_prefix."email".$query_xtra." GROUP BY emailID");
-
-	echo get_list_navigation($resultPagination);
+	echo get_list_navigation($obj_email->get_account_amount($query_xtra));
 
 	$result = $wpdb->get_results("SELECT emailID, emailPublic, emailRoles, emailVerified, emailServer, emailPort, emailUsername, emailAddress, emailName, ".$wpdb->base_prefix."email.userID, emailDeleted FROM ".$wpdb->base_prefix."email_users RIGHT JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE (emailPublic = '1' OR emailRoles LIKE '%".get_current_user_role()."%' OR ".$wpdb->base_prefix."email.userID = '".get_current_user_id()."' OR ".$wpdb->base_prefix."email_users.userID = '".get_current_user_id()."')".$query_xtra." GROUP BY emailID ORDER BY emailDeleted ASC, ".$wpdb->base_prefix."email.userID ASC, emailUsername ASC LIMIT ".esc_sql($intLimitStart).", ".esc_sql($intLimitAmount));
 
