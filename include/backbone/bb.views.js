@@ -176,14 +176,6 @@ var EmailView = Backbone.View.extend(
 			if(currentMessageID > 0)
 			{
 				jQuery('#email_column').addClass('flex_vertical');
-
-				/*var offset_container = jQuery('#txtEmails').offset().top,
-				offset_element = jQuery('#message' + currentMessageID).offset().top;
-
-				jQuery('#txtEmails').animate(
-				{
-					scrollTop: offset_element// - offset_container
-				}, 750, 'swing');*/
 			}
 
 			else

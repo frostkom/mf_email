@@ -1,11 +1,3 @@
-var doc_height = jQuery(document).height();
-
-jQuery('#lost_connection, #saving, #loading').css(
-{
-	'height': doc_height,
-	'line-height': doc_height + 'px'
-});
-
 jQuery.fn.callAPI = function(o)
 {
 	var op = jQuery.extend(
@@ -27,7 +19,7 @@ jQuery.fn.callAPI = function(o)
 		{
 			setTimeout(function()
 			{
-				jQuery("#saving, #loading").hide();
+				jQuery("#loading").hide();
 				jQuery("#lost_connection").show();
 			}, 2000);
 		}
