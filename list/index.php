@@ -52,8 +52,8 @@ echo "<div class='wrap'>
 	</div>
 </div>";
 
-echo "<div id='lost_connection'><span>".__("Lost Connection", 'lang_email')."</span></div>
-<div id='loading'><span><i class='fa fa-spinner fa-spin fa-2x'></i></span></div>";
+echo "<div id='overlay_lost_connection'><span>".__("Lost Connection", 'lang_email')."</span></div>
+<div id='overlay_loading'><span><i class='fa fa-spinner fa-spin fa-2x'></i></span></div>";
 
 echo "<script type='text/template' id='template_folder_item'>
 	<tr id='folder<%= folderID %>' class='<%= folderClass %>'>";

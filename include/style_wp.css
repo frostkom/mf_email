@@ -65,7 +65,7 @@
 					padding: 0;
 				}
 
-#lost_connection, #loading
+#overlay_lost_connection, #overlay_loading
 {
 	background: rgba(0, 0, 0, .5);
 	bottom: 0;
@@ -80,7 +80,7 @@
 	z-index: 1002;
 }
 
-	#lost_connection span, #loading span
+	#overlay_lost_connection span, #overlay_loading span
 	{
 		display: inline-block;
 		margin-top: 50vh;

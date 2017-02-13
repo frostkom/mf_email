@@ -8,19 +8,19 @@ jQuery.fn.callAPI = function(o)
 		send_type: 'post',
 		onBeforeSend: function()
 		{
-			jQuery("#loading").show();
+			jQuery("#overlay_loading").show();
 		},
 		onSuccess: function(data){},
 		onAfterSend: function()
 		{
-			jQuery("#loading").hide();
+			jQuery("#overlay_loading").hide();
 		},
 		onError: function(data)
 		{
 			setTimeout(function()
 			{
-				jQuery("#loading").hide();
-				jQuery("#lost_connection").show();
+				jQuery("#overlay_loading").hide();
+				jQuery("#overlay_lost_connection").show();
 			}, 2000);
 		}
 	}, o);
@@ -43,12 +43,12 @@ jQuery.fn.callAPI = function(o)
 
 			if(data.mysqli_error && data.mysqli_error == true)
 			{
-				jQuery("#lost_connection").show();
+				jQuery("#overlay_lost_connection").show();
 			}
 
 			else
 			{
-				jQuery("#lost_connection").hide();
+				jQuery("#overlay_lost_connection").hide();
 			}
 		},
 		error: function(data)
