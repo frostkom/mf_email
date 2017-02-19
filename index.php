@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: 
-Version: 4.7.4
+Version: 4.7.5
 Author: Martin Fors
 Author URI: http://frostkom.se
 Text Domain: lang_email
@@ -15,8 +15,8 @@ GitHub Plugin URI: frostkom/mf_email
 include_once("include/classes.php");
 include_once("include/functions.php");
 
-add_action('cron_base', 'activate_email');
-add_action('cron_base', 'cron_email');
+add_action('cron_base', 'activate_email', mt_rand(1, 10));
+add_action('cron_base', 'cron_email', mt_rand(1, 10));
 
 if(is_admin())
 {
