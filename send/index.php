@@ -52,7 +52,7 @@ if(isset($_POST['btnMessageSend']) && wp_verify_nonce($_POST['_wpnonce'], 'messa
 
 						foreach($arr_attachments as $attachment)
 						{
-							list($file_name, $file_url, $file_id) = explode("|", $attachment);
+							@list($file_name, $file_url, $file_id) = explode("|", $attachment);
 
 							if($file_id > 0){}
 
