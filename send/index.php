@@ -361,8 +361,8 @@ echo "<div class='wrap'>
 								.show_button(array('name' => 'btnMessageSend', 'text' => __("Send", 'lang_email')))
 								."&nbsp;"
 								.show_button(array('name' => 'btnMessageDraft', 'text' => __("Save draft", 'lang_email'), 'class' => "button"))
-								.wp_nonce_field('message_send', '_wpnonce', true, false)
 								.input_hidden(array('name' => "intMessageDraftID", 'value' => $intMessageDraftID))
+								.wp_nonce_field('message_send', '_wpnonce', true, false)
 							."</div>
 						</div>
 					</div>

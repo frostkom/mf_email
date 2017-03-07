@@ -4,7 +4,7 @@ $intFolderID = check_var('intFolderID');
 $intEmailID = check_var('intEmailID');
 $strFolderName = check_var('strFolderName');
 
-if(isset($_POST['btnFolderCreate']) && wp_verify_nonce($_POST['_wpnonce'], 'folder_create'))
+if(isset($_POST['btnFolderCreate']) && wp_verify_nonce($_POST['_wpnonce'], 'folder_create_'.$intFolderID))
 {
 	if($intFolderID > 0)
 	{
@@ -83,7 +83,7 @@ echo "<div class='wrap'>
 				.show_textfield(array('name' => "strFolderName", 'text' => __("Name", 'lang_email'), 'value' => $strFolderName))
 				.show_button(array('name' => 'btnFolderCreate', 'text' => __("Save", 'lang_email')))
 				.input_hidden(array('name' => "intFolderID", 'value' => $intFolderID))
-				.wp_nonce_field('folder_create', '_wpnonce', true, false)
+				.wp_nonce_field('folder_create_'.$intFolderID, '_wpnonce', true, false)
 			."</form>
 		</div>
 	</div>

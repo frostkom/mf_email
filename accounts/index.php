@@ -9,7 +9,7 @@ $strSearch = check_var('s', 'char');
 $intLimitAmount = 20;
 $intLimitStart = $paged * $intLimitAmount;
 
-if(isset($_REQUEST['btnEmailDelete']) && $intEmailID > 0 && wp_verify_nonce($_REQUEST['_wpnonce'], 'email_delete'))
+if(isset($_REQUEST['btnEmailDelete']) && $intEmailID > 0 && wp_verify_nonce($_REQUEST['_wpnonce'], 'email_delete_'.$intEmailID))
 {
 	$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailDeleted = '1', emailDeletedID = '%d', emailDeletedDate = NOW() WHERE emailID = '%d' AND userID = '%d'", get_current_user_id(), $intEmailID, get_current_user_id()));
 
@@ -24,14 +24,14 @@ if(isset($_REQUEST['btnEmailDelete']) && $intEmailID > 0 && wp_verify_nonce($_RE
 	}
 }
 
-else if(isset($_REQUEST['btnEmailConfirm']) && $intEmailID > 0 && wp_verify_nonce($_REQUEST['_wpnonce'], 'email_confirm'))
+else if(isset($_REQUEST['btnEmailConfirm']) && $intEmailID > 0 && wp_verify_nonce($_REQUEST['_wpnonce'], 'email_confirm_'.$intEmailID))
 {
 	$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailVerified = '1' WHERE emailID = '%d'", $intEmailID));
 
 	$done_text = __("The e-mail account was confirmed", 'lang_email');
 }
 
-else if(isset($_REQUEST['btnEmailVerify']) && $intEmailID > 0 && wp_verify_nonce($_REQUEST['_wpnonce'], 'email_verify'))
+else if(isset($_REQUEST['btnEmailVerify']) && $intEmailID > 0 && wp_verify_nonce($_REQUEST['_wpnonce'], 'email_verify_'.$intEmailID))
 {
 	$result = $wpdb->get_results($wpdb->prepare("SELECT emailVerified, emailServer, emailPort, emailUsername, emailPassword, emailAddress FROM ".$wpdb->base_prefix."email WHERE emailID = '%d'", $intEmailID));
 
@@ -78,7 +78,7 @@ else if(isset($_REQUEST['btnEmailVerify']) && $intEmailID > 0 && wp_verify_nonce
 
 				$site_name = get_bloginfo('name');
 				$site_url = get_site_url();
-				$confirm_url = wp_nonce_url($site_url.$_SERVER['PHP_SELF']."?page=mf_email/accounts/index.php&btnEmailConfirm&intEmailID=".$intEmailID, 'email_confirm');
+				$confirm_url = wp_nonce_url($site_url.$_SERVER['PHP_SELF']."?page=mf_email/accounts/index.php&btnEmailConfirm&intEmailID=".$intEmailID, 'email_confirm_'.$intEmailID);
 
 				$mail_to = $strEmailAddress;
 				$mail_headers = "From: ".$user_data->display_name." <".$user_data->user_email.">\r\n";
@@ -207,7 +207,7 @@ echo "<div class='wrap'>
 								case 0:
 									echo "<i class='fa fa-lg fa-question'></i>
 									<div class='row-actions'>
-										<a href='".wp_nonce_url("?page=mf_email/accounts/index.php&btnEmailVerify&intEmailID=".$intEmailID, 'email_verify')."'>".__("Verify Account", 'lang_email')."</a>
+										<a href='".wp_nonce_url("?page=mf_email/accounts/index.php&btnEmailVerify&intEmailID=".$intEmailID, 'email_verify_'.$intEmailID)."'>".__("Verify Account", 'lang_email')."</a>
 									</div>";
 								break;
 
@@ -236,7 +236,7 @@ echo "<div class='wrap'>
 
 									if($intUserID == get_current_user_id())
 									{
-										echo " | <a href='".wp_nonce_url("?page=mf_email/accounts/index.php&btnEmailDelete&intEmailID=".$intEmailID, 'email_delete')."' rel='confirm'>".__("Delete", 'lang_email')."</a>";
+										echo " | <a href='".wp_nonce_url("?page=mf_email/accounts/index.php&btnEmailDelete&intEmailID=".$intEmailID, 'email_delete_'.$intEmailID)."' rel='confirm'>".__("Delete", 'lang_email')."</a>";
 									}
 								}
 
