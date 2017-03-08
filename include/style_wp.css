@@ -84,5 +84,6 @@
 	{
 		display: inline-block;
 		margin-top: 50vh;
+		-webkit-transform: translateY(-50%);
 		transform: translateY(-50%);
 	}
