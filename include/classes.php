@@ -38,7 +38,7 @@ class mf_email
 
 		$out = "";
 
-		if(isset($_POST['btnEmailCreate']) && wp_verify_nonce($_POST['_wpnonce'], 'email_create'))
+		if(isset($_POST['btnEmailCreate']) && wp_verify_nonce($_POST['_wpnonce'], 'email_create_'.$this->id))
 		{
 			if($this->id > 0)
 			{

@@ -51,7 +51,7 @@ echo "<div class='wrap'>
 				.show_textfield(array('name' => "strEmailName", 'text' => __("Name", 'lang_email'), 'value' => $obj_email->name, 'placeholder' => $placeholder_name))
 				.show_button(array('name' => 'btnEmailCreate', 'text' => __("Save", 'lang_email')))
 				.input_hidden(array('name' => "intEmailID", 'value' => $obj_email->id))
-				.wp_nonce_field('email_create', '_wpnonce', true, false)
+				.wp_nonce_field('email_create_'.$obj_email->id, '_wpnonce', true, false)
 			."</form>
 		</div>
 	</div>
