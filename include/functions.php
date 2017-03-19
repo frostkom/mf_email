@@ -446,7 +446,7 @@ function menu_email()
 		//$menu_title = __("Accounts", 'lang_email');
 		//add_submenu_page($menu_start, $menu_title, $menu_title, $menu_capability, $menu_start);
 
-		$menu_title = __("Add new Account", 'lang_email');
+		$menu_title = __("Add New Account", 'lang_email');
 		add_submenu_page($menu_start, $menu_title, $menu_title, $menu_capability, $menu_root."create/index.php");
 	}
 }

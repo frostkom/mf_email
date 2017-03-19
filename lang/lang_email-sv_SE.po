@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-01 11:23+0100\n"
+"POT-Creation-Date: 2017-03-19 12:12+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -16,50 +16,50 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPath-1: ..\n"
 
-#: ../accounts/index.php:16
+#: ../accounts/index.php:18
 msgid "The e-mail account was deleted"
 msgstr "E-postkontot raderades"
 
-#: ../accounts/index.php:21
+#: ../accounts/index.php:23
 msgid "The e-mail account could not be deleted"
 msgstr "E-postkontot kunde inte raderas"
 
-#: ../accounts/index.php:29
+#: ../accounts/index.php:31
 msgid "The e-mail account was confirmed"
 msgstr "E-postkontot bekräftades"
 
-#: ../accounts/index.php:62
+#: ../accounts/index.php:64
 msgid "The e-mail account passed verification"
 msgstr "E-postkontot klarade verifieringen och kan nu användas"
 
-#: ../accounts/index.php:69
+#: ../accounts/index.php:71
 msgid "The e-mail account didn't pass the verification"
 msgstr "E-postkontot godkändes inte. Något är fel på inloggningsuppgifterna till e-postservern"
 
-#: ../accounts/index.php:83
+#: ../accounts/index.php:85
 #, php-format
 msgid "Please confirm your e-mail %s for use on %s"
 msgstr "Var god bekräfta din e-post %s för användning på %s"
 
-#: ../accounts/index.php:84
+#: ../accounts/index.php:86
 #, php-format
 msgid "We've gotten a request to confirm the address %s from a user at %s (<a href='%s'>%s</a>). If this is a valid request please click <a href='%s'>here</a> to confirm the use of your e-mail address to send messages"
 msgstr "Vi har fått ett önskemål om att bekräfta adressen %s från en användare på %s (<a href='%s'>%s</a>). Om detta är okej, klicka <a href='%s'>här</a> för att bekräfta att meddelanden får skickas från din adress"
 
-#: ../accounts/index.php:90
+#: ../accounts/index.php:92
 #, php-format
 msgid "An e-mail with a confirmation link has been sent to %s"
 msgstr "Ett meddelande med bekräftelselänk har skickats till %s"
 
-#: ../accounts/index.php:99
+#: ../accounts/index.php:101
 #: ../create/index.php:9
 #: ../include/functions.php:429
 msgid "Accounts"
 msgstr "Konton"
 
-#: ../accounts/index.php:100
+#: ../accounts/index.php:102
 msgid "Add New"
-msgstr "Lägg till ny"
+msgstr "Skapa ny"
 
 #: ../accounts/index.php:119
 #: ../create/index.php:36
@@ -100,8 +100,8 @@ msgid "Username"
 msgstr "Användarnamn"
 
 #: ../accounts/index.php:133
-#: ../list/index.php:89
-#: ../list/index.php:186
+#: ../list/index.php:88
+#: ../list/index.php:185
 msgid "There is nothing to show"
 msgstr "Det finns inget att visa"
 
@@ -110,13 +110,13 @@ msgid "Verify Account"
 msgstr "Verifiera e-postkontot"
 
 #: ../accounts/index.php:235
-#: ../list/index.php:76
+#: ../list/index.php:75
 msgid "Edit"
 msgstr "Redigera"
 
 #: ../accounts/index.php:239
-#: ../list/index.php:81
-#: ../list/index.php:131
+#: ../list/index.php:80
+#: ../list/index.php:130
 msgid "Delete"
 msgstr "Radera"
 
@@ -220,6 +220,7 @@ msgid "Unread"
 msgstr "Olästa"
 
 #: ../include/functions.php:421
+#: ../include/functions.php:443
 msgid "Email"
 msgstr "Epost"
 
@@ -228,12 +229,14 @@ msgid "Send New"
 msgstr "Skicka nytt"
 
 #: ../include/functions.php:432
+#: ../include/functions.php:449
 msgid "Add New Account"
-msgstr "Lägg till nytt konto"
+msgstr "Skapa nytt konto"
 
 #: ../include/functions.php:435
+#: ../list/index.php:44
 msgid "Add New Folder"
-msgstr "Lägg till ny mapp"
+msgstr "Skapa ny mapp"
 
 #: ../include/functions.php:600
 msgid "Inserted"
@@ -280,64 +283,52 @@ msgstr "E-post"
 msgid "Send new"
 msgstr "Skicka nytt"
 
-#: ../list/index.php:44
-msgid "Add new folder"
-msgstr "Lägg till ny mapp"
-
 #: ../list/index.php:55
 msgid "Lost Connection"
 msgstr "Tappade uppkopplingen"
 
-#: ../list/index.php:56
-msgid "Saving"
-msgstr "Sparar"
-
-#: ../list/index.php:57
-msgid "Loading"
-msgstr "Laddar"
-
-#: ../list/index.php:93
+#: ../list/index.php:92
 msgid "Show more"
 msgstr "Visa fler"
 
-#: ../list/index.php:132
+#: ../list/index.php:131
 msgid "Mark as Spam"
 msgstr "Markera som spam"
 
-#: ../list/index.php:137
+#: ../list/index.php:136
 msgid "Restore"
 msgstr "Återställ"
 
-#: ../list/index.php:191
+#: ../list/index.php:190
 #: ../send/index.php:236
 #: ../send/index.php:350
 msgid "Subject"
 msgstr "Ämne"
 
-#: ../list/index.php:192
+#: ../list/index.php:191
 #: ../send/index.php:234
 #: ../send/index.php:339
 msgid "From"
 msgstr "Från"
 
-#: ../list/index.php:195
+#: ../list/index.php:194
 #: ../send/index.php:346
 msgid "Cc"
 msgstr "Kopia"
 
-#: ../list/index.php:197
+#: ../list/index.php:196
 msgid "Answer"
 msgstr "Svara"
 
-#: ../list/index.php:197
+#: ../list/index.php:196
 msgid "Forward"
 msgstr "Vidarebefordra"
 
-#: ../list/index.php:215
+#: ../list/index.php:214
 msgid "Plain"
 msgstr "Oformaterad"
 
-#: ../list/index.php:216
+#: ../list/index.php:215
 msgid "HTML"
 msgstr "HTML"
 

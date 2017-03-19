@@ -41,7 +41,7 @@ echo "<div class='wrap'>
 		<div>
 			<table id='txtFolders' class='widefat striped'><tbody></tbody></table>
 			<br>
-			<a class='add-new-h2' href='?page=mf_email/folder/index.php'>".__("Add new folder", 'lang_email')."</a>
+			<a class='add-new-h2' href='?page=mf_email/folder/index.php'>".__("Add New Folder", 'lang_email')."</a>
 		</div>
 		<div id='email_column'>
 			<div id='txtEmails'>

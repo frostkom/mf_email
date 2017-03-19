@@ -20,9 +20,9 @@ echo "<div class='wrap'>
 				list($rest, $placeholder_server) = explode("@", $placeholder_address);
 
 				$users = get_users(array(
-					'orderby'      => 'display_name',
-					'order'        => 'ASC',
-					'fields'       => array('ID', 'display_name'), //'all'
+					'orderby' => 'display_name',
+					'order' => 'ASC',
+					'fields' => array('ID', 'display_name'), //'all'
 				));
 
 				$arr_data_users = array();
