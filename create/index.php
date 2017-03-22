@@ -1,6 +1,6 @@
 <?php
 
-$obj_email = new mf_email();
+$obj_email = new mf_email(array('type' => 'account_create'));
 $obj_email->fetch_request();
 echo $obj_email->save_data();
 $obj_email->get_from_db();

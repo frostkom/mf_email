@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: 
-Version: 4.8.1
+Version: 5.0.1
 Author: Martin Fors
 Author URI: http://frostkom.se
 Text Domain: lang_email
@@ -51,6 +51,7 @@ function activate_email()
 
 	$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email (
 		emailID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+		blogID TINYINT UNSIGNED NOT NULL DEFAULT '0',
 		emailPublic ENUM('0', '1') NOT NULL DEFAULT '0',
 		emailRoles VARCHAR(100),
 		emailVerified ENUM('-1', '0', '1') NOT NULL DEFAULT '0',
@@ -142,6 +143,7 @@ function activate_email()
 		'emailVerified' => "ALTER TABLE [table] ADD [column] ENUM('-1', '0', '1') NOT NULL DEFAULT '0' AFTER emailID",
 		'emailPublic' => "ALTER TABLE [table] ADD [column] ENUM('0', '1') NOT NULL DEFAULT '0' AFTER emailID",
 		'emailRoles' => "ALTER TABLE [table] ADD [column] VARCHAR(100) AFTER emailPublic",
+		'blogID' => "ALTER TABLE [table] ADD [column] TINYINT UNSIGNED NOT NULL DEFAULT '0' AFTER emailID",
 	);
 
 	add_columns($arr_update_tables);

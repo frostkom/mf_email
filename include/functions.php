@@ -418,9 +418,10 @@ function menu_email()
 
 		$count_message = count_unread_email();
 
-		$menu_title = __("Email", 'lang_email');
+		$menu_title = __("E-mail", 'lang_email');
 		add_menu_page("", $menu_title.$count_message, $menu_capability, $menu_start, '', 'dashicons-email-alt');
 
+		$menu_title = __("Inbox", 'lang_email');
 		add_submenu_page($menu_start, $menu_title, $menu_title, $menu_capability, $menu_start);
 
 		$menu_title = __("Send New", 'lang_email');
@@ -438,13 +439,13 @@ function menu_email()
 
 	else
 	{
-		$menu_start = $menu_root."create/index.php";
+		$menu_start = $menu_root."accounts/index.php";
 
-		$menu_title = __("Email", 'lang_email');
+		$menu_title = __("E-mail", 'lang_email');
 		add_menu_page("", $menu_title, $menu_capability, $menu_start, '', 'dashicons-email-alt');
 
-		//$menu_title = __("Accounts", 'lang_email');
-		//add_submenu_page($menu_start, $menu_title, $menu_title, $menu_capability, $menu_start);
+		$menu_title = __("Accounts", 'lang_email');
+		add_submenu_page($menu_start, $menu_title, $menu_title, $menu_capability, $menu_start);
 
 		$menu_title = __("Add New Account", 'lang_email');
 		add_submenu_page($menu_start, $menu_title, $menu_title, $menu_capability, $menu_root."create/index.php");
@@ -454,7 +455,7 @@ function menu_email()
 //Extension for RCube
 function raise_error($error)
 {
-	echo var_export($error, true)."<br>";
+	do_log(__("Email error", 'lang_email').": ".var_export($error, true));
 }
 
 function email_connect($data)
@@ -465,9 +466,9 @@ function email_connect($data)
 
 	$connection = new rcube_imap();
 	$connection->set_debug(false);
-	$connection->connect($data['server'], $data['username'], $data['password'], $data['port']);
+	$is_connected = $connection->connect($data['server'], $data['username'], $data['password'], $data['port']);
 
-	return $connection;
+	return $is_connected;
 }
 
 function cron_email()

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-19 12:12+0100\n"
+"POT-Creation-Date: 2017-03-22 15:48+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -16,118 +16,25 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPath-1: ..\n"
 
-#: ../accounts/index.php:18
-msgid "The e-mail account was deleted"
-msgstr "E-postkontot raderades"
-
-#: ../accounts/index.php:23
-msgid "The e-mail account could not be deleted"
-msgstr "E-postkontot kunde inte raderas"
-
-#: ../accounts/index.php:31
-msgid "The e-mail account was confirmed"
-msgstr "E-postkontot bekräftades"
-
-#: ../accounts/index.php:64
-msgid "The e-mail account passed verification"
-msgstr "E-postkontot klarade verifieringen och kan nu användas"
-
-#: ../accounts/index.php:71
-msgid "The e-mail account didn't pass the verification"
-msgstr "E-postkontot godkändes inte. Något är fel på inloggningsuppgifterna till e-postservern"
-
-#: ../accounts/index.php:85
-#, php-format
-msgid "Please confirm your e-mail %s for use on %s"
-msgstr "Var god bekräfta din e-post %s för användning på %s"
-
-#: ../accounts/index.php:86
-#, php-format
-msgid "We've gotten a request to confirm the address %s from a user at %s (<a href='%s'>%s</a>). If this is a valid request please click <a href='%s'>here</a> to confirm the use of your e-mail address to send messages"
-msgstr "Vi har fått ett önskemål om att bekräfta adressen %s från en användare på %s (<a href='%s'>%s</a>). Om detta är okej, klicka <a href='%s'>här</a> för att bekräfta att meddelanden får skickas från din adress"
-
-#: ../accounts/index.php:92
-#, php-format
-msgid "An e-mail with a confirmation link has been sent to %s"
-msgstr "Ett meddelande med bekräftelselänk har skickats till %s"
-
-#: ../accounts/index.php:101
+#: ../accounts/index.php:10
 #: ../create/index.php:9
-#: ../include/functions.php:429
+#: ../include/functions.php:430
 msgid "Accounts"
 msgstr "Konton"
 
-#: ../accounts/index.php:102
+#: ../accounts/index.php:11
 msgid "Add New"
 msgstr "Skapa ny"
-
-#: ../accounts/index.php:119
-#: ../create/index.php:36
-msgid "Public"
-msgstr "Publik"
-
-#: ../accounts/index.php:120
-msgid "Roles"
-msgstr "Roller"
-
-#: ../accounts/index.php:121
-#: ../create/index.php:40
-msgid "Users"
-msgstr "Användare"
-
-#: ../accounts/index.php:122
-msgid "Verified"
-msgstr "Veriferad"
-
-#: ../accounts/index.php:123
-msgid "Address"
-msgstr "Adress"
-
-#: ../accounts/index.php:124
-#: ../create/index.php:51
-#: ../folder/index.php:83
-msgid "Name"
-msgstr "Namn"
-
-#: ../accounts/index.php:125
-#: ../create/index.php:43
-msgid "Server"
-msgstr "Server"
-
-#: ../accounts/index.php:126
-#: ../create/index.php:47
-msgid "Username"
-msgstr "Användarnamn"
-
-#: ../accounts/index.php:133
-#: ../list/index.php:88
-#: ../list/index.php:185
-msgid "There is nothing to show"
-msgstr "Det finns inget att visa"
-
-#: ../accounts/index.php:210
-msgid "Verify Account"
-msgstr "Verifiera e-postkontot"
-
-#: ../accounts/index.php:235
-#: ../list/index.php:75
-msgid "Edit"
-msgstr "Redigera"
-
-#: ../accounts/index.php:239
-#: ../list/index.php:80
-#: ../list/index.php:130
-msgid "Delete"
-msgstr "Radera"
-
-#: ../accounts/index.php:245
-msgid "Recover"
-msgstr "Återställ"
 
 #: ../create/index.php:12
 #: ../folder/index.php:46
 msgid "Add"
 msgstr "Lägg till"
+
+#: ../create/index.php:36
+#: ../include/classes.php:421
+msgid "Public"
+msgstr "Publik"
 
 #: ../create/index.php:37
 #: ../create/index.php:39
@@ -138,9 +45,24 @@ msgstr "eller"
 msgid "Permission"
 msgstr "Behörighet"
 
+#: ../create/index.php:40
+#: ../include/classes.php:423
+msgid "Users"
+msgstr "Användare"
+
+#: ../create/index.php:43
+#: ../include/classes.php:427
+msgid "Server"
+msgstr "Server"
+
 #: ../create/index.php:44
 msgid "Port"
 msgstr "Port"
+
+#: ../create/index.php:47
+#: ../include/classes.php:428
+msgid "Username"
+msgstr "Användarnamn"
 
 #: ../create/index.php:48
 msgid "Password"
@@ -149,6 +71,12 @@ msgstr "Lösenord"
 #: ../create/index.php:50
 msgid "E-mail Address"
 msgstr "E-postadress"
+
+#: ../create/index.php:51
+#: ../folder/index.php:83
+#: ../include/classes.php:426
+msgid "Name"
+msgstr "Namn"
 
 #: ../create/index.php:52
 #: ../folder/index.php:84
@@ -174,29 +102,117 @@ msgstr "Konto"
 #: ../include/ajax.php:15
 #: ../include/functions.php:262
 #: ../include/functions.php:285
-#: ../include/functions.php:588
+#: ../include/functions.php:424
+#: ../include/functions.php:589
 #: ../list/index.php:17
 msgid "Inbox"
 msgstr "Inkorg"
 
-#: ../include/ajax.php:139
-#: ../include/ajax.php:198
-#: ../include/ajax.php:257
+#: ../include/ajax.php:138
+#: ../include/ajax.php:196
+#: ../include/ajax.php:255
 msgid "No subject"
 msgstr "Inget ämne"
 
-#: ../include/classes.php:54
-msgid "The email account already exists"
-msgstr "Epostkontot finns redan"
+#: ../include/classes.php:64
+msgid "The email account was not updated"
+msgstr "Kontot uppdaterades inte"
 
-#: ../include/classes.php:68
+#: ../include/classes.php:73
+msgid "The email account already exists"
+msgstr "E-postkontot finns redan"
+
+#: ../include/classes.php:87
 msgid "The email account could not be created"
-msgstr "Epostkontot kunde inte skapas"
+msgstr "E-postkontot kunde inte skapas"
+
+#: ../include/classes.php:119
+msgid "The e-mail account was deleted"
+msgstr "E-postkontot raderades"
+
+#: ../include/classes.php:124
+msgid "The e-mail account could not be deleted"
+msgstr "E-postkontot kunde inte raderas"
+
+#: ../include/classes.php:132
+msgid "The e-mail account was confirmed"
+msgstr "E-postkontot bekräftades"
+
+#: ../include/classes.php:165
+msgid "The e-mail account passed verification"
+msgstr "E-postkontot klarade verifieringen och kan nu användas"
+
+#: ../include/classes.php:172
+msgid "The e-mail account didn't pass the verification"
+msgstr "E-postkontot godkändes inte. Något är fel på inloggningsuppgifterna till e-postservern"
+
+#: ../include/classes.php:186
+#, php-format
+msgid "Please confirm your e-mail %s for use on %s"
+msgstr "Var god bekräfta din e-post %s för användning på %s"
+
+#: ../include/classes.php:187
+#, php-format
+msgid "We've gotten a request to confirm the address %s from a user at %s (<a href='%s'>%s</a>). If this is a valid request please click <a href='%s'>here</a> to confirm the use of your e-mail address to send messages"
+msgstr "Vi har fått ett önskemål om att bekräfta adressen %s från en användare på %s (<a href='%s'>%s</a>). Om detta är okej, klicka <a href='%s'>här</a> för att bekräfta att meddelanden får skickas från din adress"
+
+#: ../include/classes.php:193
+#, php-format
+msgid "An e-mail with a confirmation link has been sent to %s"
+msgstr "Ett meddelande med bekräftelselänk har skickats till %s"
+
+#: ../include/classes.php:202
+msgid "The account was created"
+msgstr "Kontot skapades"
+
+#: ../include/classes.php:207
+msgid "The account was updated"
+msgstr "Kontot uppdaterades"
+
+#: ../include/classes.php:414
+msgid "All"
+msgstr "Alla"
+
+#: ../include/classes.php:415
+#: ../include/functions.php:255
+msgid "Trash"
+msgstr "Papperskorg"
+
+#: ../include/classes.php:422
+msgid "Roles"
+msgstr "Roller"
+
+#: ../include/classes.php:424
+msgid "Verified"
+msgstr "Veriferad"
+
+#: ../include/classes.php:425
+msgid "Address"
+msgstr "Adress"
+
+#: ../include/classes.php:499
+msgid "Verify Account"
+msgstr "Verifiera e-postkontot"
+
+#: ../include/classes.php:528
+#: ../list/index.php:75
+msgid "Edit"
+msgstr "Redigera"
+
+#: ../include/classes.php:532
+#: ../list/index.php:80
+#: ../list/index.php:130
+msgid "Delete"
+msgstr "Radera"
+
+#: ../include/classes.php:538
+msgid "Recover"
+msgstr "Återställ"
 
 #: ../include/functions.php:15
 #, php-format
 msgid "There are %d new emails in your inbox"
-msgstr "Det finns %d nya epost i din inkorg"
+msgstr "Det finns %d nya e-post i din inkorg"
 
 #: ../include/functions.php:15
 msgid "There is one new email in your inbox"
@@ -206,12 +222,8 @@ msgstr "Det finns ett nytt meddelande i din inkorg"
 msgid "You have to edit the function to be public instead of private"
 msgstr "Du måste ändra funktion från private till public"
 
-#: ../include/functions.php:255
-msgid "Trash"
-msgstr "Papperskorg"
-
 #: ../include/functions.php:278
-#: ../include/functions.php:583
+#: ../include/functions.php:584
 msgid "Spam"
 msgstr "Spam"
 
@@ -220,45 +232,51 @@ msgid "Unread"
 msgstr "Olästa"
 
 #: ../include/functions.php:421
-#: ../include/functions.php:443
-msgid "Email"
-msgstr "Epost"
+#: ../include/functions.php:444
+#: ../list/index.php:36
+#: ../send/index.php:330
+msgid "E-mail"
+msgstr "E-post"
 
-#: ../include/functions.php:426
+#: ../include/functions.php:427
 msgid "Send New"
 msgstr "Skicka nytt"
 
-#: ../include/functions.php:432
-#: ../include/functions.php:449
+#: ../include/functions.php:433
+#: ../include/functions.php:450
 msgid "Add New Account"
 msgstr "Skapa nytt konto"
 
-#: ../include/functions.php:435
+#: ../include/functions.php:436
 #: ../list/index.php:44
 msgid "Add New Folder"
 msgstr "Skapa ny mapp"
 
-#: ../include/functions.php:600
+#: ../include/functions.php:458
+msgid "Email error"
+msgstr "E-postfel"
+
+#: ../include/functions.php:601
 msgid "Inserted"
 msgstr "Inlagd"
 
-#: ../include/functions.php:639
+#: ../include/functions.php:640
 msgid "E-mail attachments"
 msgstr "Bifogade filer"
 
-#: ../include/functions.php:643
+#: ../include/functions.php:644
 msgid "The attachment was saved"
 msgstr "Bifogade filer sparades"
 
-#: ../include/functions.php:650
+#: ../include/functions.php:651
 msgid "The email was not able to be saved"
 msgstr "E-postkontot kunde inte sparas"
 
-#: ../include/functions.php:657
+#: ../include/functions.php:658
 msgid "The e-mail already exists"
 msgstr "Meddelandet finns redan"
 
-#: ../include/functions.php:696
+#: ../include/functions.php:697
 msgid "Connection failed"
 msgstr "Tappade uppkopplingen"
 
@@ -274,11 +292,6 @@ msgstr "Mappen skapades"
 msgid "The folder was updated"
 msgstr "Mappen uppdaterades"
 
-#: ../list/index.php:36
-#: ../send/index.php:330
-msgid "E-mail"
-msgstr "E-post"
-
 #: ../list/index.php:37
 msgid "Send new"
 msgstr "Skicka nytt"
@@ -286,6 +299,11 @@ msgstr "Skicka nytt"
 #: ../list/index.php:55
 msgid "Lost Connection"
 msgstr "Tappade uppkopplingen"
+
+#: ../list/index.php:88
+#: ../list/index.php:185
+msgid "There is nothing to show"
+msgstr "Det finns inget att visa"
 
 #: ../list/index.php:92
 msgid "Show more"
