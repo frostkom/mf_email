@@ -478,9 +478,9 @@ class mf_email_account_table extends mf_list_table
 
 				foreach($resultUsers as $r)
 				{
-					$user_data = get_userdata($r->userID);
+					//$user_data = get_userdata($r->userID);
 
-					$strEmailUsers .= ($strEmailUsers != '' ? ", " : "").$user_data->display_name;
+					$strEmailUsers .= ($strEmailUsers != '' ? ", " : "").get_user_info(array('id' => $r->userID));
 				}
 
 				if($strEmailUsers != '')
