@@ -19,7 +19,7 @@ $json_output = "";
 
 if($arr_input[0] == "email")
 {
-	$query_permission = " AND emailID IN ('".implode("','", get_email_accounts_permission())."') AND (blogID = '".$wpdb->blogid."' OR blogID = '0')";
+	$query_where = " AND emailID IN ('".implode("','", get_email_accounts_permission())."')";
 
 	if($arr_input[1] == "folders")
 	{
@@ -28,17 +28,17 @@ if($arr_input[0] == "email")
 
 		if($strFolderAction == "delete")
 		{
-			$intTotal = $wpdb->get_var($wpdb->prepare("SELECT COUNT(messageID) FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) WHERE folderName = %s".$query_permission, $strFolderName));
+			$intTotal = $wpdb->get_var($wpdb->prepare("SELECT COUNT(messageID) FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) WHERE folderName = %s".$query_where, $strFolderName));
 
 			if($intTotal == 0)
 			{
-				$query = $wpdb->prepare("UPDATE ".$wpdb->base_prefix."email_folder SET folderDeleted = '1', folderDeletedDate = NOW(), folderDeletedID = '%d' WHERE folderName = %s".$query_permission, get_current_user_id(), $strFolderName);
+				$query = $wpdb->prepare("UPDATE ".$wpdb->base_prefix."email_folder SET folderDeleted = '1', folderDeletedDate = NOW(), folderDeletedID = '%d' WHERE folderName = %s".$query_where, get_current_user_id(), $strFolderName);
 
 				$wpdb->query($query);
 
 				if($wpdb->rows_affected > 0)
 				{
-					$intFolderID = $wpdb->get_var($wpdb->prepare("SELECT folderID FROM ".$wpdb->base_prefix."email_folder WHERE folderName = %s".$query_permission, $strFolderName));
+					$intFolderID = $wpdb->get_var($wpdb->prepare("SELECT folderID FROM ".$wpdb->base_prefix."email_folder WHERE folderName = %s".$query_where, $strFolderName));
 
 					$json_output['success'] = true;
 					$json_output['remove_id'] = "folder".$intFolderID;
@@ -60,7 +60,7 @@ if($arr_input[0] == "email")
 		{
 			$json_output['folders'] = array();
 
-			$result = $wpdb->get_results("SELECT folderID, folderType, folderName FROM ".$wpdb->base_prefix."email_folder WHERE (folderID2 = '0' OR folderID2 IS null) AND folderDeleted = '0'".$query_permission." GROUP BY folderName ORDER BY folderType DESC, folderName ASC");
+			$result = $wpdb->get_results("SELECT folderID, folderType, folderName FROM ".$wpdb->base_prefix."email_folder WHERE (folderID2 = '0' OR folderID2 IS null) AND folderDeleted = '0'".$query_where." GROUP BY folderName ORDER BY folderType DESC, folderName ASC");
 
 			foreach($result as $r)
 			{
@@ -68,8 +68,8 @@ if($arr_input[0] == "email")
 				$intFolderType = $r->folderType;
 				$strFolderName2 = $r->folderName;
 
-				$intTotal = $wpdb->get_var($wpdb->prepare("SELECT COUNT(messageID) FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) WHERE folderName = %s".$query_permission, $strFolderName2));
-				$intUnread = $wpdb->get_var($wpdb->prepare("SELECT COUNT(messageID) FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) WHERE folderName = %s AND messageRead = '0'".$query_permission, $strFolderName2));
+				$intTotal = $wpdb->get_var($wpdb->prepare("SELECT COUNT(messageID) FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) WHERE folderName = %s".$query_where, $strFolderName2));
+				$intUnread = $wpdb->get_var($wpdb->prepare("SELECT COUNT(messageID) FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) WHERE folderName = %s AND messageRead = '0'".$query_where, $strFolderName2));
 
 				$is_active = $strFolderName == $intFolderID2 || $strFolderName == $strFolderName2 ? 1 : 0;
 
@@ -124,7 +124,7 @@ if($arr_input[0] == "email")
 		$json_output['limit_start'] = $intFolderLimitStart = isset($arr_input[3]) && $arr_input[3] > 0 ? $arr_input[3] : 0;
 		$json_output['limit_amount'] = $intFolderLimitAmount = EMAILS2SHOW;
 
-		$result = $wpdb->get_results($wpdb->prepare("SELECT messageID, messageRead, messageFrom, messageFromName, messageTo, messageName, messageSize, messageCreated, messageReceived, messageDeleted, folderType, emailAddress FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) INNER JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE folderName = %s".$query_permission." ORDER BY messageCreated DESC LIMIT ".$intFolderLimitStart." , ".$intFolderLimitAmount, $strFolderName));
+		$result = $wpdb->get_results($wpdb->prepare("SELECT messageID, messageRead, messageFrom, messageFromName, messageTo, messageName, messageSize, messageCreated, messageReceived, messageDeleted, folderType, emailAddress FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) INNER JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE folderName = %s".$query_where." ORDER BY messageCreated DESC LIMIT ".$intFolderLimitStart." , ".$intFolderLimitAmount, $strFolderName));
 
 		$json_output['limit_amount'] = $wpdb->num_rows;
 
@@ -184,7 +184,7 @@ if($arr_input[0] == "email")
 
 		$intMessageID = $arr_input[2];
 
-		$result = $wpdb->get_results($wpdb->prepare("SELECT messageID, messageRead, messageFrom, messageFromName, messageTo, messageName, messageText, messageSize, messageCreated, messageReceived, messageDeleted, folderType, emailAddress FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) INNER JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE messageID = '%d'".$query_permission." ORDER BY messageCreated DESC", $intMessageID));
+		$result = $wpdb->get_results($wpdb->prepare("SELECT messageID, messageRead, messageFrom, messageFromName, messageTo, messageName, messageText, messageSize, messageCreated, messageReceived, messageDeleted, folderType, emailAddress FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) INNER JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE messageID = '%d'".$query_where." ORDER BY messageCreated DESC", $intMessageID));
 
 		foreach($result as $r)
 		{
@@ -238,7 +238,7 @@ if($arr_input[0] == "email")
 	{
 		$intMessageID = $arr_input[2];
 
-		$query = $wpdb->prepare("SELECT messageTextID, messageRead, messageFrom, messageFromName, messageTo, messageCc, emailAddress, messageName, messageText, messageText2, messageCreated, messageReceived, ".$wpdb->base_prefix."email_message.userID, folderType FROM ".$wpdb->base_prefix."email INNER JOIN ".$wpdb->base_prefix."email_folder USING (emailID) INNER JOIN ".$wpdb->base_prefix."email_message USING (folderID) WHERE ".$wpdb->base_prefix."email_message.messageID = '%d'".$query_permission." LIMIT 0, 1", $intMessageID);
+		$query = $wpdb->prepare("SELECT messageTextID, messageRead, messageFrom, messageFromName, messageTo, messageCc, emailAddress, messageName, messageText, messageText2, messageCreated, messageReceived, ".$wpdb->base_prefix."email_message.userID, folderType FROM ".$wpdb->base_prefix."email INNER JOIN ".$wpdb->base_prefix."email_folder USING (emailID) INNER JOIN ".$wpdb->base_prefix."email_message USING (folderID) WHERE ".$wpdb->base_prefix."email_message.messageID = '%d'".$query_where." LIMIT 0, 1", $intMessageID);
 		$result = $wpdb->get_results($query);
 		$rows = $wpdb->num_rows;
 
@@ -408,7 +408,7 @@ if($arr_input[0] == "email")
 	{
 		$strSearch = check_var('s', 'char');
 
-		$result = $wpdb->get_results("SELECT messageTo FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) INNER JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE messageTo LIKE '%".esc_sql($strSearch)."%'".$query_permission." GROUP BY messageTo ORDER BY messageCreated DESC");
+		$result = $wpdb->get_results("SELECT messageTo FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) INNER JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE messageTo LIKE '%".esc_sql($strSearch)."%'".$query_where." GROUP BY messageTo ORDER BY messageCreated DESC");
 
 		foreach($result as $r)
 		{
