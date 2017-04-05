@@ -468,7 +468,7 @@ function email_connect($data)
 	$connection->set_debug(false);
 	$is_connected = $connection->connect($data['server'], $data['username'], $data['password'], $data['port']);
 
-	return $is_connected;
+	return array($is_connected, $connection);
 }
 
 function cron_email()
@@ -501,9 +501,9 @@ function cron_email()
 
 		$strEmailPassword = $encryption->decrypt($strEmailPassword, md5($strEmailAddress));
 
-		$connection = email_connect(array('server' => $strEmailServer, 'port' => $intEmailPort, 'username' => $strEmailUsername, 'password' => $strEmailPassword));
+		list($is_connected, $connection) = email_connect(array('server' => $strEmailServer, 'port' => $intEmailPort, 'username' => $strEmailUsername, 'password' => $strEmailPassword));
 
-		if($connection == true)
+		if($is_connected == true)
 		{
 			foreach($connection->list_headers() as $header)
 			{
@@ -690,6 +690,8 @@ function cron_email()
 					}*/
 				}
 			}
+
+			$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailChecked = NOW() WHERE emailID = '%d'", $intEmailID));
 		}
 
 		else

@@ -198,7 +198,7 @@ echo "<script type='text/template' id='template_folder_item'>
 		{ %>
 			<li>&nbsp;</li>
 			<% _.each(messageAttachment, function(attachment)
-			{ %> 
+			{ %>
 				<li>
 					<a href='<%= attachment.url %>' rel='external'>
 						<%= attachment.title %>

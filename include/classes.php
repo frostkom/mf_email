@@ -156,9 +156,9 @@ class mf_email
 									$strEmailPassword = $encryption->decrypt($strEmailPassword, md5($strEmailAddress));
 								}
 
-								$connection = email_connect(array('server' => $strEmailServer, 'port' => $intEmailPort, 'username' => $strEmailUsername, 'password' => $strEmailPassword, 'close_after' => true));
+								list($is_connected, $connection) = email_connect(array('server' => $strEmailServer, 'port' => $intEmailPort, 'username' => $strEmailUsername, 'password' => $strEmailPassword, 'close_after' => true));
 
-								if($connection == true)
+								if($is_connected == true)
 								{
 									$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailVerified = '1' WHERE emailID = '%d'", $this->id));
 
@@ -426,6 +426,7 @@ class mf_email_account_table extends mf_list_table
 			'emailName' => __("Name", 'lang_email'),
 			'emailServer' => __("Server", 'lang_email'),
 			'emailUsername' => __("Username", 'lang_email'),
+			'emailChecked' => __("Status", 'lang_email'),
 		);
 
 		$this->set_columns($arr_columns);
@@ -557,6 +558,51 @@ class mf_email_account_table extends mf_list_table
 
 			case 'emailUsername':
 				$out .= $item[$column_name];
+			break;
+
+			case 'emailChecked':
+				$dteEmailChecked = $item[$column_name];
+
+				if($dteEmailChecked > DEFAULT_DATE)
+				{
+					if($dteEmailChecked < date("Y-m-d H:i:s", strtotime("-1 day")))
+					{
+						$out .= "<i class='fa fa-lg fa-ban red'></i>"
+						."<div class='row-actions'>".sprintf(__("Not been checked since %s", 'lang_email'), format_date($dteEmailChecked))."</div>";
+					}
+
+					else
+					{
+						$dteEmailReceived = $wpdb->get_var($wpdb->prepare("SELECT messageReceived FROM ".$wpdb->base_prefix."email_folder INNER JOIN ".$wpdb->base_prefix."email_message USING (folderID) WHERE emailID = '%d' ORDER BY messageReceived DESC LIMIT 0, 1", $intEmailID));
+
+						if($dteEmailReceived > DEFAULT_DATE)
+						{
+							if($dteEmailReceived < date("Y-m-d H:i:s", strtotime("-3 day")))
+							{
+								$out .= "<i class='fa fa-lg fa-ban red'></i>"
+								."<div class='row-actions'>".sprintf(__("No e-mails since %s", 'lang_email'), format_date($dteEmailReceived))."</div>";
+							}
+
+							else
+							{
+								$out .= format_date($dteEmailReceived)
+								."<div class='row-actions'>".__("Checked", 'lang_email')." ".format_date($dteEmailChecked)."</div>";
+							}
+						}
+
+						else
+						{
+							$out .= "<i class='fa fa-question-circle-o fa-lg'></i>"
+							."<div class='row-actions'>".__("No e-mails so far", 'lang_email')."</div>";
+						}
+					}
+				}
+
+				else if($item['emailVerified'] > 0)
+				{
+					$out .= "<i class='fa fa-spinner fa-spin fa-lg'></i>
+					<div class='row-actions'>".__("The e-mail has not been checked yet", 'lang_email')."</div>";
+				}
 			break;
 
 			default:

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-22 15:48+0100\n"
+"POT-Creation-Date: 2017-04-05 10:19+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -19,6 +19,7 @@ msgstr ""
 #: ../accounts/index.php:10
 #: ../create/index.php:9
 #: ../include/functions.php:430
+#: ../include/functions.php:447
 msgid "Accounts"
 msgstr "Konton"
 
@@ -190,24 +191,40 @@ msgstr "Veriferad"
 msgid "Address"
 msgstr "Adress"
 
-#: ../include/classes.php:499
+#: ../include/classes.php:429
+msgid "Status"
+msgstr "Status"
+
+#: ../include/classes.php:500
 msgid "Verify Account"
 msgstr "Verifiera e-postkontot"
 
-#: ../include/classes.php:528
+#: ../include/classes.php:529
 #: ../list/index.php:75
 msgid "Edit"
 msgstr "Redigera"
 
-#: ../include/classes.php:532
+#: ../include/classes.php:533
 #: ../list/index.php:80
 #: ../list/index.php:130
 msgid "Delete"
 msgstr "Radera"
 
-#: ../include/classes.php:538
+#: ../include/classes.php:539
 msgid "Recover"
 msgstr "Återställ"
+
+#: ../include/classes.php:573
+msgid "Checked"
+msgstr "Kollad"
+
+#: ../include/classes.php:579
+msgid "No e-mails so far"
+msgstr "Inga e-post än så länge"
+
+#: ../include/classes.php:588
+msgid "The e-mail has not been checked yet"
+msgstr "E-postkontot har inte kollats ännu"
 
 #: ../include/functions.php:15
 #, php-format
