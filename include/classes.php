@@ -34,6 +34,12 @@ class mf_email
 				$this->address = check_var('strEmailAddress');
 				$this->name = check_var('strEmailName');
 
+				$this->smtp_server = check_var('strEmailSmtpServer');
+				$this->smtp_port = check_var('intEmailSmtpPort');
+				$this->smtp_ssl = check_var('intEmailSmtpSSL');
+				$this->smtp_username = check_var('strEmailSmtpUsername');
+				$this->smtp_password = check_var('strEmailSmtpPassword');
+
 				$this->password_encrypted = "";
 			break;
 		}
@@ -221,7 +227,7 @@ class mf_email
 			case 'account_create':
 				if($this->id > 0)
 				{
-					$result = $wpdb->get_results($wpdb->prepare("SELECT emailPublic, emailRoles, emailServer, emailPort, emailUsername, emailAddress, emailName, emailDeleted FROM ".$wpdb->base_prefix."email WHERE emailID = '%d'", $this->id));
+					$result = $wpdb->get_results($wpdb->prepare("SELECT emailPublic, emailRoles, emailServer, emailPort, emailUsername, emailAddress, emailName, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpUsername, emailSmtpPassword, emailDeleted FROM ".$wpdb->base_prefix."email WHERE emailID = '%d'", $this->id));
 
 					foreach($result as $r)
 					{
@@ -233,6 +239,11 @@ class mf_email
 						//$this->password = $r->emailPassword;
 						$this->address = $r->emailAddress;
 						$this->name = $r->emailName;
+						$this->smtp_ssl = $r->emailSmtpSSL;
+						$this->smtp_server = $r->emailSmtpServer;
+						$this->smtp_port = $r->emailSmtpPort;
+						$this->smtp_username = $r->emailSmtpUsername;
+						$this->smtp_password = $r->emailSmtpPassword;
 						$this->deleted = $r->emailDeleted;
 
 						$this->users = array();
@@ -342,6 +353,13 @@ class mf_email
 
 			$this->password_encrypted = $encryption->encrypt($this->password, md5($this->address));
 		}
+
+		if($this->smtp_password != '' && $this->address != '')
+		{
+			$encryption = new mf_encryption("email");
+
+			$this->smtp_password_encrypted = $encryption->encrypt($this->smtp_password, md5($this->address));
+		}
 	}
 
 	function check_if_account_exists()
@@ -353,15 +371,35 @@ class mf_email
 		return $intEmailID;
 	}
 
+	function update_passwords()
+	{
+		global $wpdb;
+
+		if($this->password_encrypted != '')
+		{
+			$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailPassword = %s WHERE emailID = '%d' AND userID = '%d'", $this->password_encrypted, $this->id, get_current_user_id()));
+		}
+
+		if($this->smtp_password_encrypted != '')
+		{
+			$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailSmtpPassword = %s WHERE emailID = '%d' AND userID = '%d'", $this->smtp_password_encrypted, $this->id, get_current_user_id()));
+		}
+	}
+
 	function create_account()
 	{
 		global $wpdb;
 
 		$this->encrypt_password();
 
-		$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailServer = %s, emailPort = '%d', emailUsername = %s, emailPassword = %s, emailAddress = %s, emailName = %s, emailCreated = NOW(), userID = '%d'", $wpdb->blogid, $this->public, @implode(",", $this->roles), $this->server, $this->port, $this->username, $this->password_encrypted, $this->address, $this->name, get_current_user_id()));
+		$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailSmtpSSL = '%d', emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpUsername = %s, emailCreated = NOW(), userID = '%d'", $wpdb->blogid, $this->public, @implode(",", $this->roles), $this->server, $this->port, $this->username, $this->address, $this->name, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_username, get_current_user_id()));
 
 		$this->id = $wpdb->insert_id;
+
+		if($this->id > 0)
+		{
+			$this->update_passwords();
+		}
 	}
 
 	function update_account()
@@ -370,16 +408,21 @@ class mf_email
 
 		$this->encrypt_password();
 
-		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailVerified = '0', emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailDeleted = '0' WHERE emailID = '%d'", $wpdb->blogid, $this->public, @implode(",", $this->roles), $this->server, $this->port, $this->username, $this->address, $this->name, $this->id)); // AND userID = '%d', get_current_user_id()
+		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailVerified = '0', emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailSmtpSSL = '%d', emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpUsername = %s, emailDeleted = '0' WHERE emailID = '%d'", $wpdb->blogid, $this->public, @implode(",", $this->roles), $this->server, $this->port, $this->username, $this->address, $this->name, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_username, $this->id));
 
 		$rows_affected = $wpdb->rows_affected;
 
-		if($rows_affected > 0 && $this->password_encrypted != '')
+		if($rows_affected > 0)
 		{
-			$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailPassword = %s WHERE emailID = '%d' AND userID = '%d'", $this->password_encrypted, $this->id, get_current_user_id()));
+			$this->update_passwords();
+
+			return true;
 		}
 
-		return ($wpdb->rows_affected > 0 ? true : false);
+		else
+		{
+			return false;
+		}
 	}
 }
 
@@ -418,9 +461,10 @@ class mf_email_account_table extends mf_list_table
 
 		$arr_columns = array(
 			//'cb' => '<input type="checkbox">',
-			'emailPublic' => __("Public", 'lang_email'),
-			'emailRoles' => __("Roles", 'lang_email'),
-			'emailUsers' => __("Users", 'lang_email'),
+			'rights' => __("Rights", 'lang_email'),
+			//'emailPublic' => __("Public", 'lang_email'),
+			//'emailRoles' => __("Roles", 'lang_email'),
+			//'emailUsers' => __("Users", 'lang_email'),
 			'emailVerified' => __("Verified", 'lang_email'),
 			'emailAddress' => __("Address", 'lang_email'),
 			'emailName' => __("Name", 'lang_email'),
@@ -449,44 +493,35 @@ class mf_email_account_table extends mf_list_table
 
 		switch($column_name)
 		{
-			case 'emailPublic':
-				switch($item[$column_name])
+			case 'rights':
+				$intEmailPublic = $item['emailPublic'];
+				$strEmailRoles = $item['emailRoles'];
+
+				if($intEmailPublic == 1)
 				{
-					default:
-					case 0:
-						$out .= "<i class='fa fa-lg fa-close red'></i>";
-					break;
-
-					case 1:
-						$out .= "<i class='fa fa-lg fa-check green'></i>";
-					break;
+					$out .= "<i class='fa fa-lg fa-check green'></i>";
 				}
-			break;
 
-			case 'emailRoles':
-				$strEmailRoles = $item[$column_name];
-
-				if($strEmailRoles != '')
+				else if($strEmailRoles != '')
 				{
 					$out .= "<i class='fa fa-lg fa-users' title='".$strEmailRoles."'></i>";
 				}
-			break;
 
-			case 'emailUsers':
-				$strEmailUsers = "";
-
-				$resultUsers = $wpdb->get_results($wpdb->prepare("SELECT userID FROM ".$wpdb->base_prefix."email_users WHERE emailID = '%d'", $intEmailID));
-
-				foreach($resultUsers as $r)
+				else
 				{
-					//$user_data = get_userdata($r->userID);
+					$strEmailUsers = "";
 
-					$strEmailUsers .= ($strEmailUsers != '' ? ", " : "").get_user_info(array('id' => $r->userID));
-				}
+					$resultUsers = $wpdb->get_results($wpdb->prepare("SELECT userID FROM ".$wpdb->base_prefix."email_users WHERE emailID = '%d'", $intEmailID));
 
-				if($strEmailUsers != '')
-				{
-					$out .= "<i class='fa fa-lg fa-users' title='".$strEmailUsers."'></i>";
+					foreach($resultUsers as $r)
+					{
+						$strEmailUsers .= ($strEmailUsers != '' ? ", " : "").get_user_info(array('id' => $r->userID));
+					}
+
+					if($strEmailUsers != '')
+					{
+						$out .= "<i class='fa fa-lg fa-users' title='".$strEmailUsers."'></i>";
+					}
 				}
 			break;
 
@@ -497,7 +532,7 @@ class mf_email_account_table extends mf_list_table
 					case 0:
 						$out .= "<i class='fa fa-lg fa-question'></i>
 						<div class='row-actions'>
-							<a href='".wp_nonce_url("?page=mf_email/accounts/index.php&btnEmailVerify&intEmailID=".$intEmailID, 'email_verify_'.$intEmailID)."'>".__("Verify Account", 'lang_email')."</a>
+							<a href='".wp_nonce_url("?page=mf_email/accounts/index.php&btnEmailVerify&intEmailID=".$intEmailID, 'email_verify_'.$intEmailID)."'>".__("Verify", 'lang_email')."</a>
 						</div>";
 					break;
 
@@ -585,7 +620,7 @@ class mf_email_account_table extends mf_list_table
 
 							else
 							{
-								$out .= format_date($dteEmailReceived)
+								$out .= "<i class='fa fa-lg fa-check green'></i> ".format_date($dteEmailReceived)
 								."<div class='row-actions'>".__("Checked", 'lang_email')." ".format_date($dteEmailChecked)."</div>";
 							}
 						}

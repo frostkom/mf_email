@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-05 10:19+0100\n"
+"POT-Creation-Date: 2017-04-14 17:04+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -27,62 +27,78 @@ msgstr "Konton"
 msgid "Add New"
 msgstr "Skapa ny"
 
-#: ../create/index.php:12
-#: ../folder/index.php:46
-msgid "Add"
-msgstr "Lägg till"
+#: ../create/index.php:16
+msgid "Information"
+msgstr "Information"
 
-#: ../create/index.php:36
-#: ../include/classes.php:421
-msgid "Public"
-msgstr "Publik"
-
-#: ../create/index.php:37
-#: ../create/index.php:39
-msgid "or"
-msgstr "eller"
-
-#: ../create/index.php:38
-msgid "Permission"
-msgstr "Behörighet"
-
-#: ../create/index.php:40
-#: ../include/classes.php:423
-msgid "Users"
-msgstr "Användare"
-
-#: ../create/index.php:43
-#: ../include/classes.php:427
-msgid "Server"
-msgstr "Server"
-
-#: ../create/index.php:44
-msgid "Port"
-msgstr "Port"
-
-#: ../create/index.php:47
-#: ../include/classes.php:428
-msgid "Username"
-msgstr "Användarnamn"
-
-#: ../create/index.php:48
-msgid "Password"
-msgstr "Lösenord"
-
-#: ../create/index.php:50
-msgid "E-mail Address"
-msgstr "E-postadress"
-
-#: ../create/index.php:51
+#: ../create/index.php:20
 #: ../folder/index.php:83
-#: ../include/classes.php:426
+#: ../include/classes.php:470
 msgid "Name"
 msgstr "Namn"
 
+#: ../create/index.php:21
+msgid "E-mail Address"
+msgstr "E-postadress"
+
+#: ../create/index.php:27
+msgid "Incoming"
+msgstr "Inkommande"
+
+#: ../create/index.php:31
+#: ../create/index.php:46
+#: ../include/classes.php:471
+msgid "Server"
+msgstr "Server"
+
+#: ../create/index.php:32
+#: ../create/index.php:47
+msgid "Port"
+msgstr "Port"
+
+#: ../create/index.php:35
+#: ../include/classes.php:472
+msgid "Username"
+msgstr "Användarnamn"
+
+#: ../create/index.php:36
 #: ../create/index.php:52
+msgid "Password"
+msgstr "Lösenord"
+
+#: ../create/index.php:42
+msgid "Outgoing"
+msgstr "Ugående"
+
+#: ../create/index.php:48
+msgid "SSL"
+msgstr "SSL"
+
+#: ../create/index.php:51
+msgid "User"
+msgstr "Användare"
+
+#: ../create/index.php:63
 #: ../folder/index.php:84
 msgid "Save"
 msgstr "Spara"
+
+#: ../create/index.php:93
+msgid "Public"
+msgstr "Publik"
+
+#: ../create/index.php:94
+#: ../create/index.php:96
+msgid "or"
+msgstr "eller"
+
+#: ../create/index.php:95
+msgid "Permission"
+msgstr "Behörighet"
+
+#: ../create/index.php:97
+msgid "Users"
+msgstr "Användare"
 
 #: ../folder/index.php:20
 msgid "The folder could not be updated"
@@ -95,6 +111,10 @@ msgstr "Mappen gick inte att skapa"
 #: ../folder/index.php:43
 msgid "Folder"
 msgstr "Mapp"
+
+#: ../folder/index.php:46
+msgid "Add"
+msgstr "Lägg till"
 
 #: ../folder/index.php:82
 msgid "Account"
@@ -115,114 +135,124 @@ msgstr "Inkorg"
 msgid "No subject"
 msgstr "Inget ämne"
 
-#: ../include/classes.php:64
+#: ../include/classes.php:70
 msgid "The email account was not updated"
 msgstr "Kontot uppdaterades inte"
 
-#: ../include/classes.php:73
+#: ../include/classes.php:79
 msgid "The email account already exists"
 msgstr "E-postkontot finns redan"
 
-#: ../include/classes.php:87
+#: ../include/classes.php:93
 msgid "The email account could not be created"
 msgstr "E-postkontot kunde inte skapas"
 
-#: ../include/classes.php:119
+#: ../include/classes.php:125
 msgid "The e-mail account was deleted"
 msgstr "E-postkontot raderades"
 
-#: ../include/classes.php:124
+#: ../include/classes.php:130
 msgid "The e-mail account could not be deleted"
 msgstr "E-postkontot kunde inte raderas"
 
-#: ../include/classes.php:132
+#: ../include/classes.php:138
 msgid "The e-mail account was confirmed"
 msgstr "E-postkontot bekräftades"
 
-#: ../include/classes.php:165
+#: ../include/classes.php:171
 msgid "The e-mail account passed verification"
 msgstr "E-postkontot klarade verifieringen och kan nu användas"
 
-#: ../include/classes.php:172
+#: ../include/classes.php:178
 msgid "The e-mail account didn't pass the verification"
 msgstr "E-postkontot godkändes inte. Något är fel på inloggningsuppgifterna till e-postservern"
 
-#: ../include/classes.php:186
+#: ../include/classes.php:192
 #, php-format
 msgid "Please confirm your e-mail %s for use on %s"
 msgstr "Var god bekräfta din e-post %s för användning på %s"
 
-#: ../include/classes.php:187
+#: ../include/classes.php:193
 #, php-format
 msgid "We've gotten a request to confirm the address %s from a user at %s (<a href='%s'>%s</a>). If this is a valid request please click <a href='%s'>here</a> to confirm the use of your e-mail address to send messages"
 msgstr "Vi har fått ett önskemål om att bekräfta adressen %s från en användare på %s (<a href='%s'>%s</a>). Om detta är okej, klicka <a href='%s'>här</a> för att bekräfta att meddelanden får skickas från din adress"
 
-#: ../include/classes.php:193
+#: ../include/classes.php:199
 #, php-format
 msgid "An e-mail with a confirmation link has been sent to %s"
 msgstr "Ett meddelande med bekräftelselänk har skickats till %s"
 
-#: ../include/classes.php:202
+#: ../include/classes.php:208
 msgid "The account was created"
 msgstr "Kontot skapades"
 
-#: ../include/classes.php:207
+#: ../include/classes.php:213
 msgid "The account was updated"
 msgstr "Kontot uppdaterades"
 
-#: ../include/classes.php:414
+#: ../include/classes.php:457
 msgid "All"
 msgstr "Alla"
 
-#: ../include/classes.php:415
+#: ../include/classes.php:458
 #: ../include/functions.php:255
 msgid "Trash"
 msgstr "Papperskorg"
 
-#: ../include/classes.php:422
-msgid "Roles"
-msgstr "Roller"
+#: ../include/classes.php:464
+msgid "Rights"
+msgstr "Behörighet"
 
-#: ../include/classes.php:424
+#: ../include/classes.php:468
 msgid "Verified"
 msgstr "Veriferad"
 
-#: ../include/classes.php:425
+#: ../include/classes.php:469
 msgid "Address"
 msgstr "Adress"
 
-#: ../include/classes.php:429
+#: ../include/classes.php:473
 msgid "Status"
 msgstr "Status"
 
-#: ../include/classes.php:500
-msgid "Verify Account"
-msgstr "Verifiera e-postkontot"
+#: ../include/classes.php:535
+msgid "Verify"
+msgstr "Verifera"
 
-#: ../include/classes.php:529
+#: ../include/classes.php:564
 #: ../list/index.php:75
 msgid "Edit"
 msgstr "Redigera"
 
-#: ../include/classes.php:533
+#: ../include/classes.php:568
 #: ../list/index.php:80
 #: ../list/index.php:130
 msgid "Delete"
 msgstr "Radera"
 
-#: ../include/classes.php:539
+#: ../include/classes.php:574
 msgid "Recover"
 msgstr "Återställ"
 
-#: ../include/classes.php:573
+#: ../include/classes.php:606
+#, php-format
+msgid "Not been checked since %s"
+msgstr "Har inte kollats sedan %s"
+
+#: ../include/classes.php:618
+#, php-format
+msgid "No e-mails since %s"
+msgstr "Inga e-post sedan %s"
+
+#: ../include/classes.php:624
 msgid "Checked"
 msgstr "Kollad"
 
-#: ../include/classes.php:579
+#: ../include/classes.php:631
 msgid "No e-mails so far"
 msgstr "Inga e-post än så länge"
 
-#: ../include/classes.php:588
+#: ../include/classes.php:639
 msgid "The e-mail has not been checked yet"
 msgstr "E-postkontot har inte kollats ännu"
 
@@ -293,7 +323,7 @@ msgstr "E-postkontot kunde inte sparas"
 msgid "The e-mail already exists"
 msgstr "Meddelandet finns redan"
 
-#: ../include/functions.php:697
+#: ../include/functions.php:699
 msgid "Connection failed"
 msgstr "Tappade uppkopplingen"
 
@@ -429,3 +459,8 @@ msgstr "Skicka"
 msgid "Save draft"
 msgstr "Spara utkast"
 
+#~ msgid "Verify Account"
+#~ msgstr "Verifiera e-postkontot"
+
+#~ msgid "Roles"
+#~ msgstr "Roller"

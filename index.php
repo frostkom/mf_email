@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: 
-Version: 5.1.1
+Version: 5.2.0
 Author: Martin Fors
 Author URI: http://frostkom.se
 Text Domain: lang_email
@@ -63,6 +63,11 @@ function activate_email()
 		emailName VARCHAR(60),
 		emailCreated DATETIME,
 		emailChecked DATETIME,
+		emailSmtpSSL ENUM('0', '1') NOT NULL DEFAULT '0',
+		emailSmtpServer VARCHAR(100) DEFAULT NULL,
+		emailSmtpPort SMALLINT DEFAULT NULL,
+		emailSmtpUsername VARCHAR(100) DEFAULT NULL,
+		emailSmtpPassword VARCHAR(100) DEFAULT NULL,
 		userID INT UNSIGNED,
 		emailDeleted ENUM('0','1') NOT NULL DEFAULT '0',
 		emailDeletedDate DATETIME DEFAULT NULL,
@@ -146,6 +151,11 @@ function activate_email()
 		'emailRoles' => "ALTER TABLE [table] ADD [column] VARCHAR(100) AFTER emailPublic",
 		'blogID' => "ALTER TABLE [table] ADD [column] TINYINT UNSIGNED NOT NULL DEFAULT '0' AFTER emailID",
 		'emailChecked' => "ALTER TABLE [table] ADD [column] DATETIME AFTER emailCreated",
+		'emailSmtpSSL' => "ALTER TABLE [table] ADD [column] ENUM('0', '1') NOT NULL DEFAULT '0' AFTER emailChecked",
+		'emailSmtpServer' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpSSL",
+		'emailSmtpPort' => "ALTER TABLE [table] ADD [column] SMALLINT DEFAULT NULL AFTER emailSmtpHost",
+		'emailSmtpUsername' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpPort",
+		'emailSmtpPassword' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpUser",
 	);
 
 	add_columns($arr_update_tables);
