@@ -468,8 +468,8 @@ class mf_email_account_table extends mf_list_table
 			'emailVerified' => __("Verified", 'lang_email'),
 			'emailAddress' => __("Address", 'lang_email'),
 			'emailName' => __("Name", 'lang_email'),
-			'emailServer' => __("Server", 'lang_email'),
-			'emailUsername' => __("Username", 'lang_email'),
+			'emailServer' => __("Incoming", 'lang_email'),
+			'emailSmtpServer' => __("Outgoing", 'lang_email'),
 			'emailChecked' => __("Status", 'lang_email'),
 		);
 
@@ -479,7 +479,7 @@ class mf_email_account_table extends mf_list_table
 			'emailAddress',
 			'emailName',
 			'emailServer',
-			'emailUsername',
+			'emailSmtpServer',
 		));
 	}
 
@@ -583,16 +583,26 @@ class mf_email_account_table extends mf_list_table
 
 			case 'emailServer':
 				$strEmailServer = $item[$column_name];
-				$intEmailPort = $item['emailPort'];
 
 				if($strEmailServer != '')
 				{
-					$out .= $strEmailServer.":".$intEmailPort;
+					$out .= $strEmailServer.":".$item['emailPort']
+					."<div class='row-actions'>"
+						.$item['emailUsername']
+					."</div>";
 				}
 			break;
 
-			case 'emailUsername':
-				$out .= $item[$column_name];
+			case 'emailSmtpServer':
+				$strEmailSmtpServer = $item[$column_name];
+
+				if($strEmailSmtpServer != '')
+				{
+					$out .= $strEmailSmtpServer.":".$item['emailSmtpPort']
+					."<div class='row-actions'>"
+						.$item['emailSmtpUsername']
+					."</div>";
+				}
 			break;
 
 			case 'emailChecked':

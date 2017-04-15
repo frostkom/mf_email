@@ -43,7 +43,7 @@ echo "<div class='wrap'>
 						echo "</div>
 					</div>
 					<div class='postbox'>
-						<h3 class='hndle'><span>".__("Incoming", 'lang_email')." (IMAP/POP3)</span></h3>
+						<h3 class='hndle'><span>".__("Incoming", 'lang_email')." (IMAP)</span></h3>
 						<div class='inside'>";
 
 							echo "<div class='flex_flow'>"
