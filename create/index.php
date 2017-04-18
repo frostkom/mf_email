@@ -64,7 +64,7 @@ echo "<div class='wrap'>
 							echo "<div class='flex_flow'>"
 								.show_textfield(array('name' => "strEmailSmtpServer", 'text' => __("Server", 'lang_email'), 'value' => $obj_email->smtp_server))
 								.show_textfield(array('type' => 'number', 'name' => "intEmailSmtpPort", 'text' => __("Port", 'lang_email'), 'value' => $obj_email->smtp_port))
-								.show_select(array('data' => get_yes_no_for_select(array('return_integer' => true)), 'name' => "intEmailSmtpSSL", 'text' => __("SSL", 'lang_email'), 'value' => $obj_email->smtp_ssl))
+								.show_select(array('data' => get_ssl_for_select(), 'name' => "strEmailSmtpSSL", 'text' => __("SSL", 'lang_email'), 'value' => $obj_email->smtp_ssl))
 							."</div>"
 							."<div class='flex_flow'>"
 								.show_textfield(array('name' => "strEmailSmtpUsername", 'text' => __("User", 'lang_email'), 'value' => $obj_email->smtp_username))

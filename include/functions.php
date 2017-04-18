@@ -1,5 +1,75 @@
 <?php
 
+function get_ssl_for_select()
+{
+	$arr_data = array();
+	$arr_data[''] = __("No", 'lang_email');
+	$arr_data['ssl'] = __("SSL", 'lang_email');
+	$arr_data['tls'] = __("TLS", 'lang_email');
+
+	return $arr_data;
+}
+
+function phpmailer_init_email($phpmailer)
+{
+	global $wpdb;
+
+	$smtp_ssl = $smtp_host = $smtp_port = $smtp_user = $smtp_pass = "";
+	
+	$from_address = $phpmailer->From;
+
+	$result = $wpdb->get_results($wpdb->prepare("SELECT emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpUsername, emailSmtpPassword FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s", $from_address));
+
+	if($wpdb->num_rows > 0)
+	{
+		foreach($result as $r)
+		{
+			$smtp_ssl = $r->emailSmtpSSL;
+			$smtp_host = $r->emailSmtpServer;
+			$smtp_port = $r->emailSmtpPort;
+			$smtp_user = $r->emailSmtpUsername;
+			$smtp_pass_encrypted = $r->emailSmtpPassword;
+
+			$encryption = new mf_encryption("email");
+			$smtp_pass = $encryption->decrypt($smtp_pass_encrypted, md5($from_address));
+		}
+	}
+
+	else
+	{
+		$smtp_ssl = get_option('setting_smtp_ssl');
+		$smtp_host = get_option('setting_smtp_server');
+		$smtp_port = get_option('setting_smtp_port');
+		$smtp_user = get_option('setting_smtp_username');
+		$smtp_pass = get_option('setting_smtp_password');
+	}
+
+	if($smtp_host != '')
+	{
+		$phpmailer->Mailer = 'smtp';
+		$phpmailer->Sender = $phpmailer->From;
+		$phpmailer->SMTPSecure = $smtp_ssl;
+
+		$phpmailer->Host = $smtp_host;
+
+		if($smtp_port > 0)
+		{
+			$phpmailer->Port = $smtp_port;
+		}
+
+		if($smtp_user != '' && $smtp_pass != '')
+		{
+			$phpmailer->SMTPAuth = true;
+			$phpmailer->Username = $smtp_user;
+			$phpmailer->Password = $smtp_pass;
+		}
+		
+		// You can add your own options here, see the phpmailer documentation for more info:
+		// http://phpmailer.sourceforge.net/docs/
+		$phpmailer = apply_filters('wp_mail_smtp_custom_options', $phpmailer);
+	}
+}
+
 function get_user_notifications_email($arr_notifications)
 {
 	global $wpdb;
@@ -376,6 +446,124 @@ function get_folder_ids($name, $type, $intEmailID)
 
 	return $id;
 }
+
+function settings_email()
+{
+	$options_area = __FUNCTION__;
+
+	add_settings_section($options_area, "", $options_area."_callback", BASE_OPTIONS_PAGE);
+
+	$arr_settings = array();
+	$arr_settings['setting_smtp_server'] = __("SMTP Server", 'lang_email');
+	$arr_settings['setting_smtp_port'] = __("SMTP Port", 'lang_email');
+	$arr_settings['setting_smtp_ssl'] = __("SMTP SSL", 'lang_email');
+	$arr_settings['setting_smtp_username'] = __("SMTP Username", 'lang_email');
+	$arr_settings['setting_smtp_password'] = __("SMTP Password", 'lang_email');
+
+	/*if(get_option('setting_smtp_server') != '')
+	{
+		$arr_settings['setting_smtp_test'] = __("Test SMTP", 'lang_email');
+	}*/
+
+	show_settings_fields(array('area' => $options_area, 'settings' => $arr_settings));
+}
+
+function settings_email_callback()
+{
+	$setting_key = get_setting_key(__FUNCTION__);
+
+	echo settings_header($setting_key, __("E-mail", 'lang_email'));
+}
+
+function setting_smtp_server_callback()
+{
+	$setting_key = get_setting_key(__FUNCTION__);
+	$option = get_option($setting_key);
+
+	echo show_textfield(array('name' => $setting_key, 'value' => $option, 'xtra' => "class='widefat'"));
+}
+
+function setting_smtp_port_callback()
+{
+	$setting_key = get_setting_key(__FUNCTION__);
+	$option = get_option($setting_key);
+
+	echo show_textfield(array('type' => 'number', 'name' => $setting_key, 'value' => $option));
+}
+
+function setting_smtp_ssl_callback()
+{
+	$setting_key = get_setting_key(__FUNCTION__);
+	$option = get_option($setting_key);
+
+	echo show_select(array('data' => get_ssl_for_select(), 'name' => $setting_key, 'value' => $option));
+}
+
+function setting_smtp_username_callback()
+{
+	$setting_key = get_setting_key(__FUNCTION__);
+	$option = get_option($setting_key);
+
+	echo show_textfield(array('name' => $setting_key, 'value' => $option, 'xtra' => "class='widefat'"));
+}
+
+function setting_smtp_password_callback()
+{
+	$setting_key = get_setting_key(__FUNCTION__);
+	$option = get_option($setting_key);
+
+	echo show_password_field(array('name' => $setting_key, 'value' => $option, 'xtra' => "class='widefat'"));
+}
+
+/*function setting_smtp_test_callback()
+{
+	if(isset($_POST['btnSmtpTest']) && wp_verify_nonce($_POST['_wpnonce'], 'smtp_test_'.get_current_user_id()))
+	{
+		check_admin_referer('test-email');
+
+		$mail_to = check_var('smtp_to');
+
+		if($mail_to != '')
+		{
+			$mail_subject = sprintf(__("Test mail to %s", 'lang_email'), $mail_to);
+			$mail_content = __("This is a test email generated from WordPress", 'lang_email');
+
+			$phpmailer->SMTPDebug = true;
+
+			ob_start();
+
+			$result = wp_mail($mail_to, $mail_subject, $mail_content);
+
+			$smtp_debug = ob_get_clean();
+
+			echo "<div id='message' class='updated fade'>
+				<p><strong>".__("Test Message Sent", 'lang_email')."</strong></p>
+				<p>".__("The result was", 'lang_email').":</p>
+				<pre>";
+			
+					var_dump($result);
+				
+				echo "</pre>
+				<p>".__("The full debugging output is shown below", 'lang_email').":</p>
+				<pre>";
+				
+					var_dump($phpmailer);
+					
+				echo "</pre>
+				<p>".__("The SMTP debugging output is shown below", 'lang_email').":</p>
+				<pre>".$smtp_debug."</pre>
+			</div>";
+
+			unset($phpmailer);
+		}
+	}
+
+	echo show_textfield(array('name' => 'smtp_to', 'value' => '', 'xtra' => "class='widefat'", 'placeholder' => __("E-mail to send test message to", 'lang_email')))
+	."<div class='form_buttons'>"
+		.show_submit(array('name' => 'btnSmtpTest', 'text' => __("Send", 'lang_email')))
+		.wp_nonce_field('smtp_test_'.get_current_user_id(), '_wpnonce', true, false)
+	."</div>";
+}*/
 
 function count_unread_email()
 {

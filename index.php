@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: 
-Version: 5.2.1
+Version: 5.3.1
 Author: Martin Fors
 Author URI: http://frostkom.se
 Text Domain: lang_email
@@ -25,10 +25,14 @@ if(is_admin())
 	register_activation_hook(__FILE__, 'activate_email');
 	register_uninstall_hook(__FILE__, 'uninstall_email');
 
+	add_action('admin_init', 'settings_email');
 	add_action('admin_menu', 'menu_email');
+
 	add_filter('get_user_notifications', 'get_user_notifications_email', 10, 1);
 	add_action('deleted_user', 'deleted_user_email');
 }
+
+add_action('phpmailer_init','phpmailer_init_email');
 
 load_plugin_textdomain('lang_email', false, dirname(plugin_basename(__FILE__)).'/lang/');
 
@@ -63,7 +67,7 @@ function activate_email()
 		emailName VARCHAR(60),
 		emailCreated DATETIME,
 		emailChecked DATETIME,
-		emailSmtpSSL ENUM('0', '1') NOT NULL DEFAULT '0',
+		emailSmtpSSL ENUM('', 'ssl', 'tls') NOT NULL DEFAULT '',
 		emailSmtpServer VARCHAR(100) DEFAULT NULL,
 		emailSmtpPort SMALLINT DEFAULT NULL,
 		emailSmtpUsername VARCHAR(100) DEFAULT NULL,
@@ -151,11 +155,11 @@ function activate_email()
 		'emailRoles' => "ALTER TABLE [table] ADD [column] VARCHAR(100) AFTER emailPublic",
 		'blogID' => "ALTER TABLE [table] ADD [column] TINYINT UNSIGNED NOT NULL DEFAULT '0' AFTER emailID",
 		'emailChecked' => "ALTER TABLE [table] ADD [column] DATETIME AFTER emailCreated",
-		'emailSmtpSSL' => "ALTER TABLE [table] ADD [column] ENUM('0', '1') NOT NULL DEFAULT '0' AFTER emailChecked",
+		'emailSmtpSSL' => "ALTER TABLE [table] ADD [column] ENUM('', 'ssl', 'tls') NOT NULL DEFAULT '' AFTER emailChecked",
 		'emailSmtpServer' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpSSL",
-		'emailSmtpPort' => "ALTER TABLE [table] ADD [column] SMALLINT DEFAULT NULL AFTER emailSmtpHost",
+		'emailSmtpPort' => "ALTER TABLE [table] ADD [column] SMALLINT DEFAULT NULL AFTER emailSmtpServer",
 		'emailSmtpUsername' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpPort",
-		'emailSmtpPassword' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpUser",
+		'emailSmtpPassword' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpUsername",
 	);
 
 	add_columns($arr_update_tables);
@@ -165,6 +169,7 @@ function activate_email()
 	$arr_update_existing_columns[$wpdb->base_prefix."email_message"] = array(
 		'messageHeader' => "ALTER TABLE [table] DROP [column]",
 		'messageRecieved' => "ALTER TABLE [table] CHANGE [column] messageReceived DATETIME DEFAULT NULL",
+		'emailSmtpSSL' => "ALTER TABLE [table] CHANGE [column] emailSmtpSSL ENUM('', 'ssl', 'tls') NOT NULL DEFAULT ''",
 	);
 
 	update_columns($arr_update_existing_columns);
