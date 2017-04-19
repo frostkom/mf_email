@@ -35,4 +35,42 @@ jQuery(function($)
 		},
 		minLength: 3
 	});
+
+	$(document).on('click', "button[name=btnSmtpTest]", function()
+	{
+		var smtp_to = $('#smtp_to').val();
+
+		if(typeof smtp_to != undefined && smtp_to != '')
+		{
+			$('#smtp_debug').html("<i class='fa fa-spinner fa-spin fa-2x'></i>");
+
+			$.ajax(
+			{
+				type: "post",
+				dataType: "json",
+				url: script_email.ajax_url,
+				data: {
+					action: "send_smtp_test",
+					smtp_to: smtp_to
+				},
+				success: function(data)
+				{
+					$('#smtp_debug').empty();
+
+					if(data.success)
+					{
+						$('button[name=btnSmtpTest]').remove();
+						$('#smtp_debug').html(data.message);
+					}
+
+					else
+					{
+						$('#smtp_debug').html(data.error);
+					}
+				}
+			});
+		}
+
+		return false;
+	});
 });

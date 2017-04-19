@@ -460,10 +460,10 @@ function settings_email()
 	$arr_settings['setting_smtp_username'] = __("SMTP Username", 'lang_email');
 	$arr_settings['setting_smtp_password'] = __("SMTP Password", 'lang_email');
 
-	/*if(get_option('setting_smtp_server') != '')
+	if(get_option('setting_smtp_server') != '')
 	{
 		$arr_settings['setting_smtp_test'] = __("Test SMTP", 'lang_email');
-	}*/
+	}
 
 	show_settings_fields(array('area' => $options_area, 'settings' => $arr_settings));
 }
@@ -515,55 +515,76 @@ function setting_smtp_password_callback()
 	echo show_password_field(array('name' => $setting_key, 'value' => $option, 'xtra' => "class='widefat'"));
 }
 
-/*function setting_smtp_test_callback()
+function send_smtp_test()
 {
-	if(isset($_POST['btnSmtpTest']) && wp_verify_nonce($_POST['_wpnonce'], 'smtp_test_'.get_current_user_id()))
+	global $phpmailer, $done_text, $error_text;
+
+	$mail_to = check_var('smtp_to');
+
+	do_log("send_smtp_test() was run (".$mail_to.")");
+
+	if($mail_to != '')
 	{
-		check_admin_referer('test-email');
+		$mail_subject = sprintf(__("Test mail to %s", 'lang_email'), $mail_to);
+		$mail_content = __("This is a test email generated from WordPress", 'lang_email');
 
-		$mail_to = check_var('smtp_to');
+		$phpmailer->SMTPDebug = true;
 
-		if($mail_to != '')
+		ob_start();
+
+		//$result = wp_mail($mail_to, $mail_subject, $mail_content);
+		$sent = send_email(array('to' => $mail_to, 'subject' => $mail_subject, 'content' => $mail_content));
+
+		$smtp_debug = ob_get_clean();
+
+		if($sent == true)
 		{
-			$mail_subject = sprintf(__("Test mail to %s", 'lang_email'), $mail_to);
-			$mail_content = __("This is a test email generated from WordPress", 'lang_email');
+			$done_text = "<p><strong>".__("The test message was sent successfully", 'lang_email')."</strong></p>";
+		}
 
-			$phpmailer->SMTPDebug = true;
+		else
+		{
+			$error_text = "<p><strong>".__("I am sorry, but I could not send the message for you", 'lang_email')."</strong></p>
+			<p>".__("The result I got back was", 'lang_email').":</p>
+			<pre>".var_export($sent, true)."</pre>
+			<p>".__("PHPmailer debug", 'lang_email').":</p>
+			<pre>".var_export($phpmailer, true)."</pre>";
 
-			ob_start();
+			if($smtp_debug != '')
+			{
+				$error_text .= "<p>".__("SMTP debug", 'lang_email').":</p>
+				<pre>".$smtp_debug."</pre>";
+			}
+		}
 
-			$result = wp_mail($mail_to, $mail_subject, $mail_content);
+		$out = get_notification();
 
-			$smtp_debug = ob_get_clean();
+		unset($phpmailer);
 
-			echo "<div id='message' class='updated fade'>
-				<p><strong>".__("Test Message Sent", 'lang_email')."</strong></p>
-				<p>".__("The result was", 'lang_email').":</p>
-				<pre>";
-			
-					var_dump($result);
-				
-				echo "</pre>
-				<p>".__("The full debugging output is shown below", 'lang_email').":</p>
-				<pre>";
-				
-					var_dump($phpmailer);
-					
-				echo "</pre>
-				<p>".__("The SMTP debugging output is shown below", 'lang_email').":</p>
-				<pre>".$smtp_debug."</pre>
-			</div>";
+		if($out != '')
+		{
+			$result['success'] = true;
+			$result['message'] = $out;
+		}
 
-			unset($phpmailer);
+		else
+		{
+			$result['error'] = __("I could not send the test email. Please make sure that the credentials are correct", 'lang_email');
 		}
 	}
 
-	echo show_textfield(array('name' => 'smtp_to', 'value' => '', 'xtra' => "class='widefat'", 'placeholder' => __("E-mail to send test message to", 'lang_email')))
-	."<div class='form_buttons'>"
-		.show_submit(array('name' => 'btnSmtpTest', 'text' => __("Send", 'lang_email')))
-		.wp_nonce_field('smtp_test_'.get_current_user_id(), '_wpnonce', true, false)
-	."</div>";
-}*/
+	echo json_encode($result);
+	die();
+}
+
+function setting_smtp_test_callback()
+{
+	echo "<div class='flex_flow tight'>"
+		.show_textfield(array('name' => 'smtp_to', 'value' => '', 'xtra' => "id='smtp_to'", 'placeholder' => __("E-mail to send test message to", 'lang_email')))
+		.show_button(array('type' => 'button', 'name' => 'btnSmtpTest', 'text' => __("Send", 'lang_email'), 'class' => 'button-secondary'))
+	."</div>
+	<div id='smtp_debug'></div>";
+}
 
 function count_unread_email()
 {
@@ -594,16 +615,16 @@ function menu_email()
 	$menu_start = $menu_root."list/index.php";
 	$menu_capability = "edit_posts";
 
+	if(current_user_can($menu_capability))
+	{
+		mf_enqueue_script('jquery-ui-autocomplete');
+		mf_enqueue_script('script_email', plugin_dir_url(__FILE__)."script_wp.js", array('plugin_url' => plugin_dir_url(__FILE__), 'ajax_url' => admin_url('admin-ajax.php')), get_plugin_version(__FILE__));
+	}
+
 	$obj_email = new mf_email();
 
 	if($obj_email->has_accounts())
 	{
-		if(current_user_can($menu_capability))
-		{
-			wp_enqueue_script('jquery-ui-autocomplete');
-			mf_enqueue_script('script_email', plugin_dir_url(__FILE__)."script_wp.js", array('plugin_url' => plugin_dir_url(__FILE__)));
-		}
-
 		$count_message = count_unread_email();
 
 		$menu_title = __("E-mail", 'lang_email');
