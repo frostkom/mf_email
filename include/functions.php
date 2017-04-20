@@ -454,6 +454,7 @@ function settings_email()
 	add_settings_section($options_area, "", $options_area."_callback", BASE_OPTIONS_PAGE);
 
 	$arr_settings = array();
+	$arr_settings['setting_email'] = __("E-mail", 'lang_email');
 	$arr_settings['setting_smtp_server'] = __("SMTP Server", 'lang_email');
 	$arr_settings['setting_smtp_port'] = __("SMTP Port", 'lang_email');
 	$arr_settings['setting_smtp_ssl'] = __("SMTP SSL", 'lang_email');
@@ -475,12 +476,17 @@ function settings_email_callback()
 	echo settings_header($setting_key, __("E-mail", 'lang_email'));
 }
 
+function setting_email_callback()
+{
+	echo "<p>".sprintf(__("The e-mail %s is used as sender address so this must be white listed in the SMTP, otherwise it can be caught in the servers spam filter", 'lang_email'), "<a href='".admin_url("options-general.php")."' class='bold'>".get_bloginfo('admin_email')."</a>")."</p>";
+}
+
 function setting_smtp_server_callback()
 {
 	$setting_key = get_setting_key(__FUNCTION__);
 	$option = get_option($setting_key);
 
-	echo show_textfield(array('name' => $setting_key, 'value' => $option, 'xtra' => "class='widefat'"));
+	echo show_textfield(array('name' => $setting_key, 'value' => $option));
 }
 
 function setting_smtp_port_callback()
@@ -504,7 +510,7 @@ function setting_smtp_username_callback()
 	$setting_key = get_setting_key(__FUNCTION__);
 	$option = get_option($setting_key);
 
-	echo show_textfield(array('name' => $setting_key, 'value' => $option, 'xtra' => "class='widefat'"));
+	echo show_textfield(array('name' => $setting_key, 'value' => $option));
 }
 
 function setting_smtp_password_callback()
@@ -512,7 +518,7 @@ function setting_smtp_password_callback()
 	$setting_key = get_setting_key(__FUNCTION__);
 	$option = get_option($setting_key);
 
-	echo show_password_field(array('name' => $setting_key, 'value' => $option, 'xtra' => "class='widefat'"));
+	echo show_password_field(array('name' => $setting_key, 'value' => $option));
 }
 
 function send_smtp_test()
@@ -579,8 +585,8 @@ function send_smtp_test()
 
 function setting_smtp_test_callback()
 {
-	echo "<div class='flex_flow tight'>"
-		.show_textfield(array('name' => 'smtp_to', 'value' => '', 'xtra' => "id='smtp_to'", 'placeholder' => __("E-mail to send test message to", 'lang_email')))
+	echo show_textfield(array('name' => 'smtp_to', 'value' => '', 'xtra' => "id='smtp_to'", 'placeholder' => __("E-mail to send test message to", 'lang_email')))
+	."<div class='form_buttons'>"
 		.show_button(array('type' => 'button', 'name' => 'btnSmtpTest', 'text' => __("Send", 'lang_email'), 'class' => 'button-secondary'))
 	."</div>
 	<div id='smtp_debug'></div>";
