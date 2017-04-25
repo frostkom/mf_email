@@ -97,7 +97,7 @@ echo "<script type='text/template' id='template_folder_item'>
 		<td>
 			<% if(messageDraggable)
 			{ %>
-				<i class='fa fa-arrows'></i>
+				<i class='fa fa-arrows fa-lg'></i>
 			<% } %>
 			<% if(messageAttachment)
 			{ %>
@@ -140,7 +140,7 @@ echo "<script type='text/template' id='template_folder_item'>
 		<td>
 			<% if(messageRead == 0)
 			{ %>
-				<a href='#email/read/<%= messageID %>'><i class='fa fa-circle green'></i></a>
+				<a href='#email/read/<%= messageID %>'><i class='fa fa-lg fa-circle green'></i></a>
 			<% }
 
 			else
