@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: 
-Version: 5.4.3
+Version: 5.5.0
 Author: Martin Fors
 Author URI: http://frostkom.se
 Text Domain: lang_email
@@ -212,6 +212,18 @@ function activate_email()
 			),
 		),
 	));
+
+	//Clean up spam folders where messages has not been deleted
+	####################################
+	$result = $wpdb->get_results("SELECT folderID FROM ".$wpdb->base_prefix."email_folder WHERE folderType = '3'");
+
+	foreach($result as $r)
+	{
+		$intFolderID = $r->folderID;
+
+		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email_message SET messageDeleted = '1', messageDeletedDate = NOW() WHERE folderID = '%d' AND messageDeleted = '0'", $intFolderID));
+	}
+	####################################
 }
 
 function uninstall_email()

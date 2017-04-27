@@ -339,7 +339,6 @@ if($arr_input[0] == "email")
 		$intMessageID = $arr_input[2];
 
 		set_mail_info(array('message_id' => $intMessageID, 'mail_deleted' => 0), $json_output);
-
 		mark_spam(array('message_id' => $intMessageID, 'spam' => false));
 
 		$json_output['success'] = true;
@@ -350,7 +349,6 @@ if($arr_input[0] == "email")
 		$intMessageID = $arr_input[2];
 
 		set_mail_info(array('message_id' => $intMessageID, 'mail_spam' => 1), $json_output);
-
 		mark_spam(array('message_id' => $intMessageID, 'spam' => true));
 
 		$json_output['success'] = true;

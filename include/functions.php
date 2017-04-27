@@ -810,6 +810,9 @@ function cron_email()
 						{
 							if($intSpamID > 0)
 							{
+								$arr_temp = array();
+
+								set_mail_info(array('message_id' => $intMessageID, 'mail_spam' => 1), $arr_temp);
 								mark_spam(array('message_id' => $intMessageID, 'spam' => true));
 							}
 

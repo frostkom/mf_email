@@ -89,7 +89,7 @@ echo "<script type='text/template' id='template_folder_item'>
 </script>
 
 <script type='text/template' id='template_email_more'>
-	<tr class='show_more'><td colspan='5'><a href='#email/emails/<%= folderName %>/<%= limit_start %>'>".__("Show more", 'lang_email')."</a></td></tr>
+	<tr class='show_more'><td colspan='5'><a href='#email/emails/<%= folderName %>/<%= limit_start %>'>".__("Show more", 'lang_email')."&hellip;</a></td></tr>
 </script>
 
 <script type='text/template' id='template_email_item'>
@@ -102,7 +102,7 @@ echo "<script type='text/template' id='template_folder_item'>
 			<% if(messageAttachment)
 			{ %>
 				<div class='row-actions'>
-					<i class='fa fa-paperclip'></i>
+					<i class='fa fa-paperclip fa-lg'></i>
 				</div>
 			<% } %>
 		</td>
