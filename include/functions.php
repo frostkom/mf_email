@@ -527,8 +527,6 @@ function send_smtp_test()
 
 	$mail_to = check_var('smtp_to');
 
-	do_log("send_smtp_test() was run (".$mail_to.")");
-
 	if($mail_to != '')
 	{
 		$mail_subject = sprintf(__("Test mail to %s", 'lang_email'), $mail_to);
@@ -538,7 +536,6 @@ function send_smtp_test()
 
 		ob_start();
 
-		//$result = wp_mail($mail_to, $mail_subject, $mail_content);
 		$sent = send_email(array('to' => $mail_to, 'subject' => $mail_subject, 'content' => $mail_content));
 
 		$smtp_debug = ob_get_clean();
