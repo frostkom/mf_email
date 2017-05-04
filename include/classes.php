@@ -637,7 +637,7 @@ class mf_email_account_table extends mf_list_table
 
 						else
 						{
-							$out .= "<i class='fa fa-question-circle-o fa-lg'></i>"
+							$out .= "<i class='fa fa-question-circle fa-lg'></i>"
 							."<div class='row-actions'>".__("No e-mails so far", 'lang_email')."</div>";
 						}
 					}
