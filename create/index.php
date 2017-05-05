@@ -33,35 +33,30 @@ echo "<div class='wrap'>
 				<div id='post-body-content'>
 					<div class='postbox'>
 						<h3 class='hndle'><span>".__("Information", 'lang_email')."</span></h3>
-						<div class='inside'>";
-
-							echo "<div class='flex_flow'>"
+						<div class='inside'>
+							<div class='flex_flow'>"
 								.show_textfield(array('name' => "strEmailName", 'text' => __("Name", 'lang_email'), 'value' => $obj_email->name, 'placeholder' => $placeholder_name))
 								.show_textfield(array('name' => "strEmailAddress", 'text' => __("E-mail Address", 'lang_email'), 'value' => $obj_email->address, 'placeholder' => $placeholder_address))
-							."</div>";
-						
-						echo "</div>
+							."</div>
+						</div>
 					</div>
 					<div class='postbox'>
 						<h3 class='hndle'><span>".__("Incoming", 'lang_email')." (IMAP)</span></h3>
-						<div class='inside'>";
-
-							echo "<div class='flex_flow'>"
+						<div class='inside'>
+							<div class='flex_flow'>"
 								.show_textfield(array('name' => "strEmailServer", 'text' => __("Server", 'lang_email'), 'value' => $obj_email->server, 'placeholder' => "mail.".$placeholder_server))
 								.show_textfield(array('type' => 'number', 'name' => "intEmailPort", 'text' => __("Port", 'lang_email'), 'value' => $obj_email->port, 'placeholder' => 143))
 							."</div>
 							<div class='flex_flow'>"
 								.show_textfield(array('name' => "strEmailUsername", 'text' => __("Username", 'lang_email'), 'value' => $obj_email->username))
 								.show_password_field(array('name' => "strEmailPassword", 'text' => __("Password", 'lang_email'), 'value' => $obj_email->password))
-							."</div>";
-						
-						echo "</div>
+							."</div>
+						</div>
 					</div>
 					<div class='postbox'>
 						<h3 class='hndle'><span>".__("Outgoing", 'lang_email')." (SMTP)</span></h3>
-						<div class='inside'>";
-
-							echo "<div class='flex_flow'>"
+						<div class='inside'>
+							<div class='flex_flow'>"
 								.show_textfield(array('name' => "strEmailSmtpServer", 'text' => __("Server", 'lang_email'), 'value' => $obj_email->smtp_server))
 								.show_textfield(array('type' => 'number', 'name' => "intEmailSmtpPort", 'text' => __("Port", 'lang_email'), 'value' => $obj_email->smtp_port))
 								.show_select(array('data' => get_ssl_for_select(), 'name' => "strEmailSmtpSSL", 'text' => __("SSL", 'lang_email'), 'value' => $obj_email->smtp_ssl))
@@ -69,34 +64,28 @@ echo "<div class='wrap'>
 							."<div class='flex_flow'>"
 								.show_textfield(array('name' => "strEmailSmtpUsername", 'text' => __("User", 'lang_email'), 'value' => $obj_email->smtp_username))
 								.show_password_field(array('name' => "strEmailSmtpPassword", 'text' => __("Password", 'lang_email'), 'value' => $obj_email->smtp_password))
-							."</div>";
-						
-						echo "</div>
+							."</div>
+						</div>
 					</div>
 				</div>
 				<div id='postbox-container-1'>
 					<div class='postbox'>
 						<h3 class='hndle'><span></span></h3>
-						<div class='inside'>";
-
-							echo show_button(array('name' => 'btnEmailCreate', 'text' => __("Save", 'lang_email')))
+						<div class='inside'>"
+							.show_button(array('name' => 'btnEmailCreate', 'text' => __("Save", 'lang_email')))
 							.input_hidden(array('name' => "intEmailID", 'value' => $obj_email->id))
-							.wp_nonce_field('email_create_'.$obj_email->id, '_wpnonce', true, false);
-						
-						echo "</div>
+							.wp_nonce_field('email_create_'.$obj_email->id, '_wpnonce', true, false)
+						."</div>
 					</div>
-
 					<div class='postbox'>
 						<h3 class='hndle'><span></span></h3>
-						<div class='inside'>";
-
-							echo show_checkbox(array('name' => "intEmailPublic", 'text' => __("Public", 'lang_email'), 'value' => 1, 'compare' => $obj_email->public))
+						<div class='inside'>"
+							.show_checkbox(array('name' => "intEmailPublic", 'text' => __("Public", 'lang_email'), 'value' => 1, 'compare' => $obj_email->public))
 							."<h3>".__("or", 'lang_email')."</h3>"
 							.show_select(array('data' => get_roles_for_select(array('use_capability' => false)), 'name' => 'arrEmailRoles[]', 'text' => __("Permission", 'lang_email'), 'value' => $obj_email->roles))
 							."<h3>".__("or", 'lang_email')."</h3>"
-							.show_select(array('data' => $arr_data_users, 'name' => 'arrEmailUsers[]', 'text' => __("Users", 'lang_email'), 'value' => $obj_email->users));
-
-						echo "</div>
+							.show_select(array('data' => $arr_data_users, 'name' => 'arrEmailUsers[]', 'text' => __("Users", 'lang_email'), 'value' => $obj_email->users))
+						."</div>
 					</div>
 				</div>
 			</div>

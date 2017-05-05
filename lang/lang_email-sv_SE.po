@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-20 08:58+0100\n"
+"POT-Creation-Date: 2017-05-05 08:31+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -18,8 +18,8 @@ msgstr ""
 
 #: ../accounts/index.php:10
 #: ../create/index.php:28
-#: ../include/functions.php:645
-#: ../include/functions.php:662
+#: ../include/functions.php:642
+#: ../include/functions.php:659
 msgid "Accounts"
 msgstr "Konton"
 
@@ -31,73 +31,73 @@ msgstr "Skapa ny"
 msgid "Information"
 msgstr "Information"
 
-#: ../create/index.php:39
+#: ../create/index.php:38
 #: ../folder/index.php:83
 #: ../include/classes.php:470
 msgid "Name"
 msgstr "Namn"
 
-#: ../create/index.php:40
+#: ../create/index.php:39
 msgid "E-mail Address"
 msgstr "E-postadress"
 
-#: ../create/index.php:46
+#: ../create/index.php:44
 #: ../include/classes.php:471
 msgid "Incoming"
 msgstr "Inkommande"
 
-#: ../create/index.php:50
-#: ../create/index.php:65
+#: ../create/index.php:47
+#: ../create/index.php:60
 msgid "Server"
 msgstr "Server"
 
-#: ../create/index.php:51
-#: ../create/index.php:66
+#: ../create/index.php:48
+#: ../create/index.php:61
 msgid "Port"
 msgstr "Port"
 
-#: ../create/index.php:54
+#: ../create/index.php:51
 msgid "Username"
 msgstr "Användarnamn"
 
-#: ../create/index.php:55
-#: ../create/index.php:71
+#: ../create/index.php:52
+#: ../create/index.php:66
 msgid "Password"
 msgstr "Lösenord"
 
-#: ../create/index.php:61
+#: ../create/index.php:57
 #: ../include/classes.php:472
 msgid "Outgoing"
 msgstr "Ugående"
 
-#: ../create/index.php:67
+#: ../create/index.php:62
 #: ../include/functions.php:7
 msgid "SSL"
 msgstr "SSL"
 
-#: ../create/index.php:70
+#: ../create/index.php:65
 msgid "User"
 msgstr "Användare"
 
-#: ../create/index.php:82
+#: ../create/index.php:75
 #: ../folder/index.php:84
 msgid "Save"
 msgstr "Spara"
 
-#: ../create/index.php:93
+#: ../create/index.php:83
 msgid "Public"
 msgstr "Publik"
 
-#: ../create/index.php:94
-#: ../create/index.php:96
+#: ../create/index.php:84
+#: ../create/index.php:86
 msgid "or"
 msgstr "eller"
 
-#: ../create/index.php:95
+#: ../create/index.php:85
 msgid "Permission"
 msgstr "Behörighet"
 
-#: ../create/index.php:97
+#: ../create/index.php:87
 msgid "Users"
 msgstr "Användare"
 
@@ -124,8 +124,8 @@ msgstr "Konto"
 #: ../include/ajax.php:15
 #: ../include/functions.php:332
 #: ../include/functions.php:355
-#: ../include/functions.php:639
-#: ../include/functions.php:804
+#: ../include/functions.php:636
+#: ../include/functions.php:801
 #: ../list/index.php:17
 msgid "Inbox"
 msgstr "Inkorg"
@@ -279,14 +279,14 @@ msgid "You have to edit the function to be public instead of private"
 msgstr "Du måste ändra funktion från private till public"
 
 #: ../include/functions.php:348
-#: ../include/functions.php:799
+#: ../include/functions.php:796
 msgid "Spam"
 msgstr "Spam"
 
 #: ../include/functions.php:457
 #: ../include/functions.php:476
-#: ../include/functions.php:636
-#: ../include/functions.php:659
+#: ../include/functions.php:633
+#: ../include/functions.php:656
 #: ../list/index.php:36
 #: ../send/index.php:330
 msgid "E-mail"
@@ -321,68 +321,68 @@ msgstr "Testa SMTP"
 msgid "The e-mail %s is used as sender address so this must be white listed in the SMTP, otherwise it can be caught in the servers spam filter"
 msgstr "E-postadressen %s används som avsändaradress så den måste vara vitlistad i SMTP-servern, annars kan meddelandet fastna i serverns spamfilter"
 
-#: ../include/functions.php:534
+#: ../include/functions.php:532
 #, php-format
 msgid "Test mail to %s"
 msgstr "Testmeddelande till %s"
 
-#: ../include/functions.php:535
+#: ../include/functions.php:533
 msgid "This is a test email generated from WordPress"
 msgstr "Detta är ett testmeddelande genererat från Wordpress"
 
-#: ../include/functions.php:548
+#: ../include/functions.php:545
 msgid "The test message was sent successfully"
 msgstr "Testmeddelandet skickades som det skulle"
 
-#: ../include/functions.php:553
+#: ../include/functions.php:550
 msgid "I am sorry, but I could not send the message for you"
 msgstr "Förlåt men jag kunde inte skicka meddelandet åt dig"
 
-#: ../include/functions.php:554
+#: ../include/functions.php:551
 msgid "The result I got back was"
 msgstr "Resultatet som jag fick tillbaka var"
 
-#: ../include/functions.php:556
+#: ../include/functions.php:553
 msgid "PHPmailer debug"
 msgstr "PHPmailer debug"
 
-#: ../include/functions.php:561
+#: ../include/functions.php:558
 msgid "SMTP debug"
 msgstr "SMTP debug"
 
-#: ../include/functions.php:578
+#: ../include/functions.php:575
 msgid "I could not send the test email. Please make sure that the credentials are correct"
 msgstr "Jag kunde inte skicka testmeddelandet. Var vänlig kontrollera uppgifterna så att de är korrekt"
 
-#: ../include/functions.php:588
+#: ../include/functions.php:585
 msgid "E-mail to send test message to"
 msgstr "E-post att skicka testmeddelande till"
 
-#: ../include/functions.php:590
+#: ../include/functions.php:587
 #: ../send/index.php:357
 #: ../send/index.php:361
 msgid "Send"
 msgstr "Skicka"
 
-#: ../include/functions.php:608
+#: ../include/functions.php:605
 msgid "Unread"
 msgstr "Olästa"
 
-#: ../include/functions.php:642
+#: ../include/functions.php:639
 msgid "Send New"
 msgstr "Skicka nytt"
 
-#: ../include/functions.php:648
-#: ../include/functions.php:665
+#: ../include/functions.php:645
+#: ../include/functions.php:662
 msgid "Add New Account"
 msgstr "Skapa nytt konto"
 
-#: ../include/functions.php:651
+#: ../include/functions.php:648
 #: ../list/index.php:44
 msgid "Add New Folder"
 msgstr "Skapa ny mapp"
 
-#: ../include/functions.php:673
+#: ../include/functions.php:670
 msgid "Email error"
 msgstr "E-postfel"
 
