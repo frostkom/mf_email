@@ -271,15 +271,23 @@ class rcube_imap_generic
 
     function readReply(&$untagged=null)
     {
-        do {
-            $line = trim($this->readLine(1024));
-            // store untagged response lines
-            if ($line[0] == '*')
-                $untagged[] = $line;
-        } while ($line[0] == '*');
+		do
+		{
+			$line = trim($this->readLine(1024));
+		
+			// store untagged response lines
+			if(isset($line[0]) && $line[0] == '*')
+			{
+				$untagged[] = $line;
+			}
+		}
+		
+		while(isset($line[0]) && $line[0] == '*');
 
-        if ($untagged)
-            $untagged = join("\n", $untagged);
+		if($untagged)
+		{
+			$untagged = join("\n", $untagged);
+		}
 
         return $line;
     }
