@@ -746,31 +746,34 @@ function cron_email()
 					{
 						$error_text = "Found bounce: ".var_export($arr_emails, true)." (".$strMessageSubject.")<br>";
 
-						foreach($arr_emails as $email)
+						if(is_plugin_active("mf_address/index.php"))
 						{
-							$intAddressID = $wpdb->get_var($wpdb->prepare("SELECT addressID FROM ".$wpdb->base_prefix."address WHERE addressEmail = %s", $email));
-
-							if($intAddressID > 0)
+							foreach($arr_emails as $email)
 							{
-								$obj_address = new mf_address($intAddressID);
-								$obj_address->update_errors(array('action' => 'reset'));
+								$intAddressID = $wpdb->get_var($wpdb->prepare("SELECT addressID FROM ".$wpdb->base_prefix."address WHERE addressEmail = %s", $email));
 
-								$intQueueID = $wpdb->get_var($wpdb->prepare("SELECT queueID FROM ".$wpdb->base_prefix."group_queue WHERE addressID = '%d' AND queueSent = '1' AND queueSentTime <= '".$strMessageCreated."' ORDER BY queueSentTime DESC LIMIT 0, 1", $intAddressID));
-
-								if($intQueueID > 0)
+								if($intAddressID > 0)
 								{
-									$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."group_queue SET queueReceived = '-1' WHERE queueID = '%d' AND addressID = '%d'", $intQueueID, $intAddressID));
+									$obj_address = new mf_address($intAddressID);
+									$obj_address->update_errors(array('action' => 'reset'));
+
+									$intQueueID = $wpdb->get_var($wpdb->prepare("SELECT queueID FROM ".$wpdb->base_prefix."group_queue WHERE addressID = '%d' AND queueSent = '1' AND queueSentTime <= '".$strMessageCreated."' ORDER BY queueSentTime DESC LIMIT 0, 1", $intAddressID));
+
+									if($intQueueID > 0)
+									{
+										$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."group_queue SET queueReceived = '-1' WHERE queueID = '%d' AND addressID = '%d'", $intQueueID, $intAddressID));
+									}
+
+									else
+									{
+										$error_text = "No group message sent to that address (".$email.", ".$intAddressID.")<br>";
+									}
 								}
 
 								else
 								{
-									$error_text = "No group message sent to that address (".$email.", ".$intAddressID.")<br>";
+									$error_text = "No address with that e-mail (".$email.")<br>";
 								}
-							}
-
-							else
-							{
-								$error_text = "No address with that e-mail (".$email.")<br>";
 							}
 						}
 					}

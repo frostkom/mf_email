@@ -336,6 +336,115 @@ class mf_email
 		return $this->from_address;
 	}
 
+	function get_from_last()
+	{
+		global $wpdb;
+
+		return $wpdb->get_var($wpdb->prepare("SELECT emailID FROM ".$wpdb->base_prefix."email INNER JOIN ".$wpdb->base_prefix."email_message ON ".$wpdb->base_prefix."email.emailAddress = ".$wpdb->base_prefix."email_message.messageFrom WHERE blogID = '%d' ORDER BY messageCreated DESC LIMIT 0, 1", $wpdb->blogid));
+	}
+
+	function get_from_for_select($data = array())
+	{
+		global $wpdb;
+
+		if(!isset($data['index'])){	$data['index'] = 'id';}
+
+		$arr_data = array();
+		$arr_data[''] = "-- ".__("Choose here", 'lang_email')." --";
+
+		$result = $wpdb->get_results("SELECT ".$wpdb->base_prefix."email.emailID, emailName, emailAddress FROM ".$wpdb->base_prefix."email_users RIGHT JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE (emailPublic = '1' OR emailRoles LIKE '%".get_current_user_role()."%' OR ".$wpdb->base_prefix."email.userID = '".get_current_user_id()."' OR ".$wpdb->base_prefix."email_users.userID = '".get_current_user_id()."') AND (blogID = '".$wpdb->blogid."' OR blogID = '0') AND emailDeleted = '0' ORDER BY emailName ASC, emailAddress ASC");
+
+		foreach($result as $r)
+		{
+			$intEmailID2 = $r->emailID;
+			$strEmailName = $strEmailName_orig = $r->emailName;
+			$strEmailAddress = $r->emailAddress;
+
+			$strEmailName = $strEmailName != '' ? $strEmailName." &lt;".$strEmailAddress."&gt;" : $strEmailAddress;
+
+			switch($data['index'])
+			{
+				case 'id':
+					$arr_data[$intEmailID2] = $strEmailName;
+				break;
+
+				case 'address':
+					$arr_data[$strEmailName_orig."|".$strEmailAddress] = $strEmailName;
+				break;
+			}
+		}
+
+		if(count($arr_data) <= 1)
+		{
+			$current_user = wp_get_current_user();
+
+			$user_name = $current_user->display_name;
+			$user_email = $current_user->user_email;
+			$admin_name = get_bloginfo('name');
+			$admin_email = get_bloginfo('admin_email');
+
+			$this->fetch_request();
+
+			if($user_email != '')
+			{
+				$this->name = $user_name;
+				$this->address = $user_email;
+				$this->users = array(get_current_user_id());
+
+				$this->id = $this->check_if_account_exists();
+
+				if(!($this->id > 0))
+				{
+					$this->create_account();
+				}
+
+				if($this->id > 0)
+				{
+					switch($data['index'])
+					{
+						case 'id':
+							$arr_data[$this->id] = $user_name." &lt;".$user_email."&gt;";
+						break;
+
+						case 'address':
+							$arr_data[$user_name."|".$user_email] = $user_name." &lt;".$user_email."&gt;";
+						break;
+					}
+				}
+			}
+
+			if($admin_email != '' && $admin_email != $user_email)
+			{
+				$this->public = 1;
+				$this->name = $admin_name;
+				$this->address = $admin_email;
+
+				$this->id = $this->check_if_account_exists();
+
+				if(!($this->id > 0))
+				{
+					$this->create_account();
+				}
+
+				if($this->id > 0)
+				{
+					switch($data['index'])
+					{
+						case 'id':
+							$arr_data[$this->id] = $admin_name." &lt;".$admin_email."&gt;";
+						break;
+
+						case 'address':
+							$arr_data[$admin_name."|".$admin_email] = $admin_name." &lt;".$admin_email."&gt;";
+						break;
+					}
+				}
+			}
+		}
+
+		return $arr_data;
+	}
+
 	function check_if_spam($data)
 	{
 		global $wpdb;
