@@ -570,13 +570,13 @@ class mf_email_account_table extends mf_list_table
 
 		$arr_columns = array(
 			//'cb' => '<input type="checkbox">',
+			'emailAddress' => __("Address", 'lang_email'),
+			'emailName' => __("Name", 'lang_email'),
 			'rights' => __("Rights", 'lang_email'),
 			//'emailPublic' => __("Public", 'lang_email'),
 			//'emailRoles' => __("Roles", 'lang_email'),
 			//'emailUsers' => __("Users", 'lang_email'),
 			'emailVerified' => __("Verified", 'lang_email'),
-			'emailAddress' => __("Address", 'lang_email'),
-			'emailName' => __("Name", 'lang_email'),
 			'emailServer' => __("Incoming", 'lang_email'),
 			'emailSmtpServer' => __("Outgoing", 'lang_email'),
 			'emailChecked' => __("Status", 'lang_email'),
@@ -590,6 +590,8 @@ class mf_email_account_table extends mf_list_table
 			'emailServer',
 			'emailSmtpServer',
 		));
+
+		//$this->default_column = 'emailAddress';
 	}
 
 	function column_default($item, $column_name)
