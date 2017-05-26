@@ -193,7 +193,7 @@ echo "<div class='wrap'>
 		{ %>
 			<li><strong>".__("Cc", 'lang_email').":</strong> <%= messageCc %></li>
 		<% } %>
-		<li><a href='?page=mf_email/send/index.php&intMessageID=<%= messageID %>&answer' class='button'>&laquo; ".__("Answer", 'lang_email')."</a> <a href='?page=mf_email/send/index.php&intMessageID=<%= messageID %>&forward' class='button'>".__("Forward", 'lang_email')." &raquo;</a></li>
+		<li><a href='?page=mf_email/send/index.php&intMessageID=<%= messageID %>&answer' class='button'><i class='fa fa-chevron-left'></i>".__("Answer", 'lang_email')."</a> <a href='?page=mf_email/send/index.php&intMessageID=<%= messageID %>&forward' class='button'>".__("Forward", 'lang_email')." <i class='fa fa-chevron-right'></i></a></li>
 		<% if(messageAttachment.length > 0)
 		{ %>
 			<li>&nbsp;</li>

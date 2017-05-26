@@ -59,7 +59,7 @@ jQuery(function($)
 
 					if(data.success)
 					{
-						$('button[name=btnSmtpTest]').remove();
+						$('button[name=btnSmtpTest]').attr('disabled', true);
 						$('#smtp_debug').html(data.message);
 					}
 
