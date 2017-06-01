@@ -175,7 +175,7 @@ class mf_email
 								{
 									$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailVerified = '-1' WHERE emailID = '%d'", $this->id));
 
-									$error_text = __("The e-mail account didn't pass the verification", 'lang_email')." (".var_export($connection, true).")";
+									$error_text = __("The e-mail account didn't pass the verification", 'lang_email'); //." (".var_export($connection, true).")"
 								}
 							}
 
