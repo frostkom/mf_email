@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-01 12:31+0100\n"
+"POT-Creation-Date: 2017-06-02 12:48+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -79,25 +79,29 @@ msgstr "SSL"
 msgid "User"
 msgstr "Användare"
 
-#: ../create/index.php:75
+#: ../create/index.php:74
 #: ../folder/index.php:84
 msgid "Save"
 msgstr "Spara"
 
-#: ../create/index.php:83
+#: ../create/index.php:80
+msgid "Settings"
+msgstr "Inställningar"
+
+#: ../create/index.php:82
 msgid "Public"
 msgstr "Publik"
 
-#: ../create/index.php:84
-#: ../create/index.php:86
+#: ../create/index.php:83
+#: ../create/index.php:85
 msgid "or"
 msgstr "eller"
 
-#: ../create/index.php:85
+#: ../create/index.php:84
 msgid "Permission"
 msgstr "Behörighet"
 
-#: ../create/index.php:87
+#: ../create/index.php:86
 msgid "Users"
 msgstr "Användare"
 

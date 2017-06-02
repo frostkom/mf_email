@@ -259,7 +259,7 @@ echo "<div class='wrap'>
 	<h2>".__("E-mail", 'lang_email')."</h2>"
 	.get_notification()
 	."<div id='poststuff'>
-		<form method='post' action='' class='mf_form'>
+		<form method='post' action='' class='mf_form mf_settings'>
 			<div id='post-body' class='columns-2'>
 				<div id='post-body-content'>
 					<div class='postbox'>
@@ -283,17 +283,19 @@ echo "<div class='wrap'>
 				</div>
 				<div id='postbox-container-1'>
 					<div class='postbox'>
-						<h3 class='hndle'>".__("Send", 'lang_email')."</h3>
+						<div class='inside'>"
+							.show_button(array('name' => 'btnMessageSend', 'text' => __("Send", 'lang_email')))
+							."&nbsp;"
+							.show_button(array('name' => 'btnMessageDraft', 'text' => __("Save draft", 'lang_email'), 'class' => "button"))
+							.input_hidden(array('name' => "intMessageDraftID", 'value' => $intMessageDraftID))
+							.wp_nonce_field('message_send', '_wpnonce', true, false)
+						."</div>
+					</div>
+					<div class='postbox'>
+						<h3 class='hndle'>".__("Settings", 'lang_email')."</h3>
 						<div class='inside'>"
 							.get_media_button(array('name' => "strMessageAttachment", 'value' => $strMessageAttachment))
-							."<div>"
-								.show_button(array('name' => 'btnMessageSend', 'text' => __("Send", 'lang_email')))
-								."&nbsp;"
-								.show_button(array('name' => 'btnMessageDraft', 'text' => __("Save draft", 'lang_email'), 'class' => "button"))
-								.input_hidden(array('name' => "intMessageDraftID", 'value' => $intMessageDraftID))
-								.wp_nonce_field('message_send', '_wpnonce', true, false)
-							."</div>
-						</div>
+						."</div>
 					</div>
 				</div>
 			</div>

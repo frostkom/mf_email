@@ -70,7 +70,6 @@ echo "<div class='wrap'>
 				</div>
 				<div id='postbox-container-1'>
 					<div class='postbox'>
-						<h3 class='hndle'><span></span></h3>
 						<div class='inside'>"
 							.show_button(array('name' => 'btnEmailCreate', 'text' => __("Save", 'lang_email')))
 							.input_hidden(array('name' => "intEmailID", 'value' => $obj_email->id))
@@ -78,7 +77,7 @@ echo "<div class='wrap'>
 						."</div>
 					</div>
 					<div class='postbox'>
-						<h3 class='hndle'><span></span></h3>
+						<h3 class='hndle'><span>".__("Settings", 'lang_email')."</span></h3>
 						<div class='inside'>"
 							.show_checkbox(array('name' => "intEmailPublic", 'text' => __("Public", 'lang_email'), 'value' => 1, 'compare' => $obj_email->public))
 							."<h3>".__("or", 'lang_email')."</h3>"
