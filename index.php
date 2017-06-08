@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: 
-Version: 5.6.9
+Version: 5.7.0
 Author: Martin Fors
 Author URI: http://frostkom.se
 Text Domain: lang_email
@@ -32,7 +32,9 @@ if(is_admin())
 	add_action('deleted_user', 'deleted_user_email');
 }
 
-add_action('phpmailer_init','phpmailer_init_email');
+add_filter('wp_mail_from', 'mail_from_email');
+add_filter('wp_mail_from_name', 'mail_from_name_email');
+add_action('phpmailer_init', 'phpmailer_init_email');
 add_action('wp_ajax_send_smtp_test', 'send_smtp_test');
 
 load_plugin_textdomain('lang_email', false, dirname(plugin_basename(__FILE__)).'/lang/');

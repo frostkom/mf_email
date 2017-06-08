@@ -1,5 +1,15 @@
 <?php
 
+function mail_from_email($old)
+{
+	return get_option('admin_email');
+}
+
+function mail_from_name_email($old)
+{
+	return get_option('blogname');
+}
+
 function get_ssl_for_select()
 {
 	$arr_data = array();
