@@ -40,7 +40,7 @@ class mf_email
 				$this->smtp_username = check_var('strEmailSmtpUsername');
 				$this->smtp_password = check_var('strEmailSmtpPassword');
 
-				$this->password_encrypted = "";
+				$this->password_encrypted = $this->smtp_password_encrypted = "";
 			break;
 		}
 	}
@@ -175,7 +175,7 @@ class mf_email
 								{
 									$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailVerified = '-1' WHERE emailID = '%d'", $this->id));
 
-									$error_text = __("The e-mail account didn't pass the verification", 'lang_email'); //." (".var_export($connection, true).")"
+									$error_text = __("The e-mail account didn't pass the verification", 'lang_email'); //." (".var_export(array('server' => $strEmailServer, 'port' => $intEmailPort, 'username' => $strEmailUsername, 'password' => substr($strEmailPassword, 0, 5), 'close_after' => true), true).")"." (".var_export($connection, true).")"
 								}
 							}
 
@@ -484,15 +484,23 @@ class mf_email
 	{
 		global $wpdb;
 
+		$rows_affected = 0;
+
 		if($this->password_encrypted != '')
 		{
-			$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailPassword = %s WHERE emailID = '%d' AND userID = '%d'", $this->password_encrypted, $this->id, get_current_user_id()));
+			$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailPassword = %s WHERE emailID = '%d'", $this->password_encrypted, $this->id)); // AND userID = '%d', get_current_user_id()
+
+			$rows_affected += $wpdb->rows_affected;
 		}
 
 		if($this->smtp_password_encrypted != '')
 		{
-			$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailSmtpPassword = %s WHERE emailID = '%d' AND userID = '%d'", $this->smtp_password_encrypted, $this->id, get_current_user_id()));
+			$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailSmtpPassword = %s WHERE emailID = '%d'", $this->smtp_password_encrypted, $this->id)); // AND userID = '%d', get_current_user_id()
+			
+			$rows_affected += $wpdb->rows_affected;
 		}
+		
+		return $rows_affected > 0;
 	}
 
 	function create_account()
@@ -507,7 +515,7 @@ class mf_email
 
 		if($this->id > 0)
 		{
-			$this->update_passwords();
+			$updated = $this->update_passwords();
 		}
 	}
 
@@ -521,10 +529,10 @@ class mf_email
 
 		$rows_affected = $wpdb->rows_affected;
 
-		if($rows_affected > 0)
-		{
-			$this->update_passwords();
+		$updated = $this->update_passwords();
 
+		if($rows_affected > 0 || $updated == true)
+		{
 			return true;
 		}
 
