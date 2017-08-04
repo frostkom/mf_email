@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: 
-Version: 5.7.5
+Version: 5.7.7
 Author: Martin Fors
 Author URI: http://frostkom.se
 Text Domain: lang_email
@@ -55,6 +55,8 @@ function activate_email()
 	global $wpdb;
 
 	$default_charset = DB_CHARSET != '' ? DB_CHARSET : "utf8";
+	
+	$arr_add_column = $arr_update_column = array();
 
 	$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email (
 		emailID INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -80,8 +82,28 @@ function activate_email()
 		emailDeletedDate DATETIME DEFAULT NULL,
 		emailDeletedID INT UNSIGNED DEFAULT NULL,
 		PRIMARY KEY (emailID),
-		KEY userID (userID)
+		KEY userID (userID),
+		KEY emailDeleted (emailDeleted),
+		KEY emailAddress (emailAddress)
 	) DEFAULT CHARSET=".$default_charset);
+
+	$arr_add_column[$wpdb->base_prefix."email"] = array(
+		'emailVerified' => "ALTER TABLE [table] ADD [column] ENUM('-1', '0', '1') NOT NULL DEFAULT '0' AFTER emailID",
+		'emailPublic' => "ALTER TABLE [table] ADD [column] ENUM('0', '1') NOT NULL DEFAULT '0' AFTER emailID",
+		'emailRoles' => "ALTER TABLE [table] ADD [column] VARCHAR(100) AFTER emailPublic",
+		'blogID' => "ALTER TABLE [table] ADD [column] TINYINT UNSIGNED NOT NULL DEFAULT '0' AFTER emailID",
+		'emailChecked' => "ALTER TABLE [table] ADD [column] DATETIME AFTER emailCreated",
+		'emailSmtpSSL' => "ALTER TABLE [table] ADD [column] ENUM('', 'ssl', 'tls') NOT NULL DEFAULT '' AFTER emailChecked",
+		'emailSmtpServer' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpSSL",
+		'emailSmtpPort' => "ALTER TABLE [table] ADD [column] SMALLINT DEFAULT NULL AFTER emailSmtpServer",
+		'emailSmtpUsername' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpPort",
+		'emailSmtpPassword' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpUsername",
+	);
+	
+	$arr_update_column[$wpdb->base_prefix."email"] = array(
+		'emailDeleted' => "ALTER TABLE [table] ADD INDEX [column] ([column])",
+		'emailAddress' => "ALTER TABLE [table] ADD INDEX [column] ([column])",
+	);
 
 	$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email_users (
 		emailID INT UNSIGNED,
@@ -104,8 +126,13 @@ function activate_email()
 		PRIMARY KEY (folderID),
 		KEY emailID (emailID),
 		KEY userID (userID),
-		KEY folderType (folderType)
+		KEY folderType (folderType),
+		KEY folderName (folderName)
 	) DEFAULT CHARSET=".$default_charset);
+	
+	$arr_update_column[$wpdb->base_prefix."email_folder"] = array(
+		'folderName' => "ALTER TABLE [table] ADD INDEX [column] ([column])",
+	);
 
 	$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email_message (
 		messageID INT unsigned NOT NULL AUTO_INCREMENT,
@@ -134,6 +161,12 @@ function activate_email()
 		KEY messageCreated (messageCreated)
 	) DEFAULT CHARSET=".$default_charset);
 
+	$arr_update_column[$wpdb->base_prefix."email_message"] = array(
+		'messageHeader' => "ALTER TABLE [table] DROP [column]",
+		'messageRecieved' => "ALTER TABLE [table] CHANGE [column] messageReceived DATETIME DEFAULT NULL",
+		'emailSmtpSSL' => "ALTER TABLE [table] CHANGE [column] emailSmtpSSL ENUM('', 'ssl', 'tls') NOT NULL DEFAULT ''",
+	);
+
 	$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email_message_attachment (
 		messageID INT unsigned NOT NULL,
 		fileID INT unsigned DEFAULT NULL,
@@ -147,35 +180,16 @@ function activate_email()
 		messageFrom VARCHAR(100) DEFAULT NULL,
 		spamCount INT UNSIGNED DEFAULT NULL,
 		KEY spamID (spamID),
-		KEY emailID (emailID)
+		KEY emailID (emailID),
+		KEY messageFrom (messageFrom)
 	) DEFAULT CHARSET=".$default_charset);
 
-	$arr_update_tables = array();
-
-	$arr_update_tables[$wpdb->base_prefix."email"] = array(
-		'emailVerified' => "ALTER TABLE [table] ADD [column] ENUM('-1', '0', '1') NOT NULL DEFAULT '0' AFTER emailID",
-		'emailPublic' => "ALTER TABLE [table] ADD [column] ENUM('0', '1') NOT NULL DEFAULT '0' AFTER emailID",
-		'emailRoles' => "ALTER TABLE [table] ADD [column] VARCHAR(100) AFTER emailPublic",
-		'blogID' => "ALTER TABLE [table] ADD [column] TINYINT UNSIGNED NOT NULL DEFAULT '0' AFTER emailID",
-		'emailChecked' => "ALTER TABLE [table] ADD [column] DATETIME AFTER emailCreated",
-		'emailSmtpSSL' => "ALTER TABLE [table] ADD [column] ENUM('', 'ssl', 'tls') NOT NULL DEFAULT '' AFTER emailChecked",
-		'emailSmtpServer' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpSSL",
-		'emailSmtpPort' => "ALTER TABLE [table] ADD [column] SMALLINT DEFAULT NULL AFTER emailSmtpServer",
-		'emailSmtpUsername' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpPort",
-		'emailSmtpPassword' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpUsername",
+	$arr_update_column[$wpdb->base_prefix."email_spam"] = array(
+		'messageFrom' => "ALTER TABLE [table] ADD INDEX [column] ([column])",
 	);
 
-	add_columns($arr_update_tables);
-
-	$arr_update_existing_columns = array();
-
-	$arr_update_existing_columns[$wpdb->base_prefix."email_message"] = array(
-		'messageHeader' => "ALTER TABLE [table] DROP [column]",
-		'messageRecieved' => "ALTER TABLE [table] CHANGE [column] messageReceived DATETIME DEFAULT NULL",
-		'emailSmtpSSL' => "ALTER TABLE [table] CHANGE [column] emailSmtpSSL ENUM('', 'ssl', 'tls') NOT NULL DEFAULT ''",
-	);
-
-	update_columns($arr_update_existing_columns);
+	add_columns($arr_add_column);
+	update_columns($arr_update_column);
 
 	delete_base(array(
 		'table' => "email_folder",
