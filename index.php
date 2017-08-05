@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: 
-Version: 5.7.7
+Version: 5.7.8
 Author: Martin Fors
 Author URI: http://frostkom.se
 Text Domain: lang_email
@@ -56,7 +56,7 @@ function activate_email()
 
 	$default_charset = DB_CHARSET != '' ? DB_CHARSET : "utf8";
 	
-	$arr_add_column = $arr_update_column = array();
+	$arr_add_column = $arr_update_column = $arr_add_index = array();
 
 	$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email (
 		emailID INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -100,7 +100,7 @@ function activate_email()
 		'emailSmtpPassword' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpUsername",
 	);
 	
-	$arr_update_column[$wpdb->base_prefix."email"] = array(
+	$arr_add_index[$wpdb->base_prefix."email"] = array(
 		'emailDeleted' => "ALTER TABLE [table] ADD INDEX [column] ([column])",
 		'emailAddress' => "ALTER TABLE [table] ADD INDEX [column] ([column])",
 	);
@@ -130,7 +130,7 @@ function activate_email()
 		KEY folderName (folderName)
 	) DEFAULT CHARSET=".$default_charset);
 	
-	$arr_update_column[$wpdb->base_prefix."email_folder"] = array(
+	$arr_add_index[$wpdb->base_prefix."email_folder"] = array(
 		'folderName' => "ALTER TABLE [table] ADD INDEX [column] ([column])",
 	);
 
@@ -184,12 +184,13 @@ function activate_email()
 		KEY messageFrom (messageFrom)
 	) DEFAULT CHARSET=".$default_charset);
 
-	$arr_update_column[$wpdb->base_prefix."email_spam"] = array(
+	$arr_add_index[$wpdb->base_prefix."email_spam"] = array(
 		'messageFrom' => "ALTER TABLE [table] ADD INDEX [column] ([column])",
 	);
 
 	add_columns($arr_add_column);
 	update_columns($arr_update_column);
+	add_index($arr_add_index);
 
 	delete_base(array(
 		'table' => "email_folder",
