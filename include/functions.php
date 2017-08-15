@@ -2,12 +2,12 @@
 
 function mail_from_email($old)
 {
-	return get_option('admin_email');
+	return (substr($old, 0, 10) == "wordpress@" ? get_option('admin_email') : $old);
 }
 
 function mail_from_name_email($old)
 {
-	return get_option('blogname');
+	return ($old == "WordPress" ? get_option('blogname') : $old);
 }
 
 function get_ssl_for_select()

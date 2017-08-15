@@ -2414,8 +2414,7 @@ class rcube_imap_generic
         $len    = strlen($line);
         $result = false;
 
-        if ($a[2] != 'FETCH') {
-        }
+        if(isset($a[2]) && $a[2] != 'FETCH'){}
         // handle empty "* X FETCH ()" response
         else if ($line[$len-1] == ')' && $line[$len-2] != '(') {
             // one line response, get everything between first and last quotes
