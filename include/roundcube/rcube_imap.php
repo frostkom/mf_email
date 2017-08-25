@@ -1974,7 +1974,7 @@ class rcube_imap
 
         // message doesn't exist?
         if (empty($headers))
-            return null; 
+            return null;
 
         // structure might be cached
         if (!empty($headers->structure))
@@ -3117,7 +3117,7 @@ class rcube_imap
         }
 
         $a_mboxes = $this->_list_unsubscribed($root, $name);
-        
+
         if (!is_array($a_mboxes)) {
             $a_mboxes = array();
         }
@@ -3857,11 +3857,11 @@ class rcube_imap
      */
     function delete_metadata($mailbox, $entries)
     {
-        if ($this->get_capability('METADATA') || 
-            (!strlen($mailbox) && $this->get_capability('METADATA-SERVER'))
-        ) {
-            return $this->conn->deleteMetadata($mailbox, $entries);
+        if($this->get_capability('METADATA') || (!strlen($mailbox) && $this->get_capability('METADATA-SERVER')))
+		{
+			return $this->conn->deleteMetadata($mailbox, $entries);
         }
+
         else if ($this->get_capability('ANNOTATEMORE') || $this->get_capability('ANNOTATEMORE2')) {
             foreach ((array)$entries as $idx => $entry) {
                 list($ent, $attr) = $this->md2annotate($entry);
@@ -3888,11 +3888,11 @@ class rcube_imap
      */
     function get_metadata($mailbox, $entries, $options=array())
     {
-        if ($this->get_capability('METADATA') || 
-            (!strlen($mailbox) && $this->get_capability('METADATA-SERVER'))
-        ) {
-            return $this->conn->getMetadata($mailbox, $entries, $options);
+        if($this->get_capability('METADATA') || (!strlen($mailbox) && $this->get_capability('METADATA-SERVER')))
+		{
+			return $this->conn->getMetadata($mailbox, $entries, $options);
         }
+
         else if ($this->get_capability('ANNOTATEMORE') || $this->get_capability('ANNOTATEMORE2')) {
             $queries = array();
             $res     = array();

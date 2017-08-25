@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: 
-Version: 5.7.12
+Version: 5.7.13
 Author: Martin Fors
 Author URI: http://frostkom.se
 Text Domain: lang_email
@@ -55,7 +55,7 @@ function activate_email()
 	global $wpdb;
 
 	$default_charset = DB_CHARSET != '' ? DB_CHARSET : "utf8";
-	
+
 	$arr_add_column = $arr_update_column = $arr_add_index = array();
 
 	$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email (
@@ -99,7 +99,7 @@ function activate_email()
 		'emailSmtpUsername' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpPort",
 		'emailSmtpPassword' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpUsername",
 	);
-	
+
 	$arr_add_index[$wpdb->base_prefix."email"] = array(
 		'emailDeleted' => "ALTER TABLE [table] ADD INDEX [column] ([column])",
 		'emailAddress' => "ALTER TABLE [table] ADD INDEX [column] ([column])",
@@ -129,7 +129,7 @@ function activate_email()
 		KEY folderType (folderType),
 		KEY folderName (folderName)
 	) DEFAULT CHARSET=".$default_charset);
-	
+
 	$arr_add_index[$wpdb->base_prefix."email_folder"] = array(
 		'folderName' => "ALTER TABLE [table] ADD INDEX [column] ([column])",
 	);

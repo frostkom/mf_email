@@ -143,7 +143,7 @@ function rcube_charset_convert($str, $from, $to=NULL)
 
 /**
  * Parse and validate charset name string (see #1485758).
- * Sometimes charset string is malformed, there are also charset aliases 
+ * Sometimes charset string is malformed, there are also charset aliases
  * but we need strict names for charset conversion (specially utf8 class)
  *
  * @param  string Input charset name
@@ -254,19 +254,19 @@ function rcube_parse_charset($input)
 
 /*
  *  Copyright (C) 2000 Edmund Grimley Evans <edmundo@rano.org>
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
  *  (at your option) any later version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  Translated from C to PHP by Thomas Bruederli <roundcube@gmail.com>
- */ 
+ */
 
 
 /**
@@ -302,7 +302,7 @@ function utf7_to_utf8($str)
       $i++;
       $u7len--;
       $u7 = $str[$i];
-      
+
       if ($u7len && $u7 == '-')
       {
         $p .= '&';
@@ -353,11 +353,11 @@ function utf7_to_utf8($str)
       /* Non-zero or too many extra bits */
       if ($ch || $k < 6)
         return $err;
-        
+
       /* BASE64 not properly terminated */
       if (!$u7len || $u7 != '-')
         return $err;
-        
+
       /* Adjacent BASE64 sections */
       if ($u7len > 2 && $str[$i+1] == '&' && $str[$i+2] != '-')
         return $err;
@@ -396,7 +396,7 @@ function utf8_to_utf7($str)
   {
     $u8 = $str[$i];
     $c = ord($u8);
-    
+
     if ($c < 0x80)
     {
       $ch = $c;
@@ -445,10 +445,10 @@ function utf8_to_utf7($str)
         return $err;
       $ch = ($ch << 6) | ($o & 0x3f);
     }
-    
+
     if ($n > 1 && !($ch >> ($n * 5 + 1)))
       return $err;
-    
+
     $i += $n;
     $u8len -= $n;
 
@@ -463,7 +463,7 @@ function utf8_to_utf7($str)
       }
       if ($ch & ~0xffff)
         $ch = 0xfffe;
-      
+
       $p .= $B64Chars[($b | $ch >> $k)];
       $k -= 6;
       for (; $k >= 0; $k -= 6)
@@ -481,7 +481,7 @@ function utf8_to_utf7($str)
         $p .= '-';
         $base64 = 0;
       }
-      
+
       $p .= chr($ch);
       if (chr($ch) == '&')
         $p .= '-';
@@ -559,8 +559,7 @@ class rcube_charset
 
     /**
      * Parse and validate charset name string (see #1485758).
-     * Sometimes charset string is malformed, there are also charset aliases 
-     * but we need strict names for charset conversion (specially utf8 class)
+     * Sometimes charset string is malformed, there are also charset aliases but we need strict names for charset conversion (specially utf8 class)
      *
      * @param string $input Input charset name
      *
@@ -1123,14 +1122,13 @@ class rcube_charset
             return $failover;
         }
 
-        // FIXME: the order is important, because sometimes 
-        // iso string is detected as euc-jp and etc.
+        // FIXME: the order is important, because sometimes iso string is detected as euc-jp and etc.
         $enc = array(
             'UTF-8', 'SJIS', 'BIG5', 'GB2312',
             'ISO-8859-1', 'ISO-8859-2', 'ISO-8859-3', 'ISO-8859-4',
             'ISO-8859-5', 'ISO-8859-6', 'ISO-8859-7', 'ISO-8859-8', 'ISO-8859-9',
             'ISO-8859-10', 'ISO-8859-13', 'ISO-8859-14', 'ISO-8859-15', 'ISO-8859-16',
-            'WINDOWS-1252', 'WINDOWS-1251', 'EUC-JP', 'EUC-TW', 'KOI8-R', 
+            'WINDOWS-1252', 'WINDOWS-1251', 'EUC-JP', 'EUC-TW', 'KOI8-R',
             'ISO-2022-KR', 'ISO-2022-JP'
         );
 

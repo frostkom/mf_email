@@ -274,14 +274,14 @@ class rcube_imap_generic
 		do
 		{
 			$line = trim($this->readLine(1024));
-		
+
 			// store untagged response lines
 			if(isset($line[0]) && $line[0] == '*')
 			{
 				$untagged[] = $line;
 			}
 		}
-		
+
 		while(isset($line[0]) && $line[0] == '*');
 
 		if($untagged)
@@ -341,13 +341,11 @@ class rcube_imap_generic
             return true;
         }
 
-        // If a connection opened by fsockopen() wasn't closed
-        // by the server, feof() will hang.
+        // If a connection opened by fsockopen() wasn't closed by the server, feof() will hang.
         $start = microtime(true);
 
-        if (feof($this->fp) || 
-            ($this->prefs['timeout'] && (microtime(true) - $start > $this->prefs['timeout']))
-        ) {
+        if(feof($this->fp) || ($this->prefs['timeout'] && (microtime(true) - $start > $this->prefs['timeout'])))
+		{
             $this->closeSocket();
             return true;
         }
@@ -2085,7 +2083,7 @@ class rcube_imap_generic
      * @param bool   $return_uid Enable UID in result instead of sequence ID
      * @param array  $items      Return items (MIN, MAX, COUNT, ALL)
      *
-     * @return array Message identifiers or item-value hash 
+     * @return array Message identifiers or item-value hash
      */
     function search($mailbox, $criteria, $return_uid=false, $items=array())
     {

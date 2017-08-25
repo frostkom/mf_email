@@ -496,10 +496,10 @@ class mf_email
 		if($this->smtp_password_encrypted != '')
 		{
 			$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailSmtpPassword = %s WHERE emailID = '%d'", $this->smtp_password_encrypted, $this->id)); // AND userID = '%d', get_current_user_id()
-			
+
 			$rows_affected += $wpdb->rows_affected;
 		}
-		
+
 		return $rows_affected > 0;
 	}
 

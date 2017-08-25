@@ -25,7 +25,7 @@ function phpmailer_init_email($phpmailer)
 	global $wpdb;
 
 	$smtp_ssl = $smtp_host = $smtp_port = $smtp_user = $smtp_pass = "";
-	
+
 	$from_address = $phpmailer->From;
 
 	$result = $wpdb->get_results($wpdb->prepare("SELECT emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpUsername, emailSmtpPassword FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s", $from_address));
@@ -73,9 +73,8 @@ function phpmailer_init_email($phpmailer)
 			$phpmailer->Username = $smtp_user;
 			$phpmailer->Password = $smtp_pass;
 		}
-		
-		// You can add your own options here, see the phpmailer documentation for more info:
-		// http://phpmailer.sourceforge.net/docs/
+
+		// You can add your own options here, see the phpmailer documentation for more info: http://phpmailer.sourceforge.net/docs/
 		$phpmailer = apply_filters('wp_mail_smtp_custom_options', $phpmailer);
 	}
 }
@@ -869,7 +868,7 @@ function cron_email()
 
 									wp_set_object_terms($post_id, array((int)$term_attachment['term_id']), $taxonomy, false);
 
-									$done_text = __("The attachment was saved", 'lang_base').": ".$intFileID." -> ".$intMessageID;
+									$done_text = __("The attachment was saved", 'lang_email').": ".$intFileID." -> ".$intMessageID;
 								}
 							}
 						}
