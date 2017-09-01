@@ -1,19 +1,20 @@
 <?php
 
+$plugin_include_url = plugins_url();
 $plugin_version = get_plugin_version(__FILE__);
 
-mf_enqueue_style('style_email_wp', plugins_url()."/mf_email/include/style_wp.css", $plugin_version);
+mf_enqueue_style('style_email_wp', $plugin_include_url."/mf_email/include/style_wp.css", $plugin_version);
 
 wp_enqueue_script('jquery-ui-draggable');
 wp_enqueue_script('jquery-ui-droppable');
-mf_enqueue_script('script_touch', plugins_url()."/mf_base/include/jquery.ui.touch-punch.min.js", '0.2.2');
+mf_enqueue_script('script_touch', $plugin_include_url."/mf_base/include/jquery.ui.touch-punch.min.js", '0.2.2');
 
 mf_enqueue_script('underscore');
 mf_enqueue_script('backbone');
-mf_enqueue_script('script_email_bb_plugins', plugins_url()."/mf_email/include/backbone/bb.plugins.js", $plugin_version);
-mf_enqueue_script('script_email_bb_router', plugins_url()."/mf_email/include/backbone/bb.router.js", $plugin_version);
-mf_enqueue_script('script_email_bb_models', plugins_url()."/mf_email/include/backbone/bb.models.js", $plugin_version);
-mf_enqueue_script('script_email_bb_views', plugins_url()."/mf_email/include/backbone/bb.views.js", array('emails2show' => EMAILS2SHOW), $plugin_version);
+mf_enqueue_script('script_email_bb_plugins', $plugin_include_url."/mf_email/include/backbone/bb.plugins.js", $plugin_version);
+mf_enqueue_script('script_email_bb_router', $plugin_include_url."/mf_email/include/backbone/bb.router.js", $plugin_version);
+mf_enqueue_script('script_email_bb_models', $plugin_include_url."/mf_email/include/backbone/bb.models.js", $plugin_version);
+mf_enqueue_script('script_email_bb_views', $plugin_include_url."/mf_email/include/backbone/bb.views.js", array('emails2show' => EMAILS2SHOW), $plugin_version);
 
 $intFolderID = check_var('intFolderID');
 $strFolderName = check_var('strFolderName', '', true, __("Inbox", 'lang_email'));
@@ -195,7 +196,7 @@ echo "<div class='wrap'>
 		{ %>
 			<li><strong>".__("Cc", 'lang_email').":</strong> <%= messageCc %></li>
 		<% } %>
-		<li><a href='?page=mf_email/send/index.php&intMessageID=<%= messageID %>&answer' class='button'><i class='fa fa-chevron-left'></i>".__("Answer", 'lang_email')."</a> <a href='?page=mf_email/send/index.php&intMessageID=<%= messageID %>&forward' class='button'>".__("Forward", 'lang_email')." <i class='fa fa-chevron-right'></i></a></li>
+		<li><a href='?page=mf_email/send/index.php&intMessageID=<%= messageID %>&answer' class='button'><i class='fa fa-chevron-left'></i> ".__("Answer", 'lang_email')."</a> <a href='?page=mf_email/send/index.php&intMessageID=<%= messageID %>&forward' class='button'>".__("Forward", 'lang_email')." <i class='fa fa-chevron-right'></i></a></li>
 		<% if(messageAttachment.length > 0)
 		{ %>
 			<li>&nbsp;</li>
