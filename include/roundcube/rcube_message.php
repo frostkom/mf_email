@@ -439,8 +439,8 @@ class rcube_message
                         continue;
 
                     // part belongs to a related message and is linked
-                    if ($mimetype == 'multipart/related'
-                        && ($mail_part->headers['content-id'] || $mail_part->headers['content-location'])) {
+                    if($mimetype == 'multipart/related' && (isset($mail_part->headers['content-id']) && $mail_part->headers['content-id'] || isset($mail_part->headers['content-location']) && $mail_part->headers['content-location']))
+					{
                         if ($mail_part->headers['content-id'])
                             $mail_part->content_id = preg_replace(array('/^</', '/>$/'), '', $mail_part->headers['content-id']);
                         if (isset($mail_part->headers['content-location']) && $mail_part->headers['content-location'])

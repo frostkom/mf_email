@@ -692,6 +692,20 @@ function email_connect($data)
 	return array($is_connected, $connection);
 }
 
+function create_term_if_not_exists($data)
+{
+	$term = term_exists($data['term_slug'], $data['taxonomy']);
+
+	if(!$term)
+	{
+		$term = wp_insert_term($data['term_name'], $data['taxonomy'], array(
+			'slug' => $data['term_slug'],
+		));
+	}
+
+	return $term;
+}
+
 function cron_email()
 {
 	global $wpdb;
