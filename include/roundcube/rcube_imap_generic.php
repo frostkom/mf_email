@@ -2414,7 +2414,8 @@ class rcube_imap_generic
 
         if(isset($a[2]) && $a[2] != 'FETCH'){}
         // handle empty "* X FETCH ()" response
-        else if ($line[$len-1] == ')' && $line[$len-2] != '(') {
+        else if(isset($line[$len-1]) && $line[$len-1] == ')' && isset($line[$len-2]) && $line[$len-2] != '(')
+		{
             // one line response, get everything between first and last quotes
             if (substr($line, -4, 3) == 'NIL') {
                 // NIL response
@@ -2436,7 +2437,10 @@ class rcube_imap_generic
                 $result = convert_uudecode($result);
             }
 
-        } else if ($line[$len-1] == '}') {
+        }
+		
+		else if(isset($line[$len-1]) && $line[$len-1] == '}')
+		{
             // multi-line request, find sizes of content and receive that many bytes
             $from     = strpos($line, '{') + 1;
             $to       = strrpos($line, '}');
