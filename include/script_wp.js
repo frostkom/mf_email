@@ -1,5 +1,6 @@
 jQuery(function($)
 {
+	/* WP admin */
 	$(document).on('click', "a[href^='mailto:']", function(e)
 	{
 		if(e.which != 3)
@@ -13,6 +14,37 @@ jQuery(function($)
 		}
 	});
 
+	/* create account */
+	function clone_value_if_empty(self_obj, to_obj)
+	{
+		var dom_from_val = self_obj.val(),
+			dom_to_val = to_obj.val();
+
+		if(dom_from_val != '' && dom_to_val == '')
+		{
+			to_obj.val(dom_from_val);
+		}
+	}
+
+	if($('.mf_form.mf_settings input[type=hidden][name=intEmailID]').val() == '')
+	{
+		$(document).on('blur', 'input[name=strEmailAddress]', function()
+		{
+			clone_value_if_empty($(this), $('input[name=strEmailUsername]'));
+		});
+		
+		$(document).on('blur', 'input[name=strEmailServer]', function()
+		{
+			clone_value_if_empty($(this), $('input[name=strEmailSmtpServer]'));
+		});
+
+		$(document).on('blur', 'input[name=strEmailUsername]', function()
+		{
+			clone_value_if_empty($(this), $('input[name=strEmailSmtpUsername]'));
+		});
+	}
+
+	/* send email */
 	$("#strMessageTo, #strMessageCc").autocomplete(
 	{
 		source: function(request, response)
@@ -36,6 +68,7 @@ jQuery(function($)
 		minLength: 3
 	});
 
+	/* settings */
 	$(document).on('click', "button[name=btnSmtpTest]", function()
 	{
 		var smtp_to = $('#smtp_to').val();

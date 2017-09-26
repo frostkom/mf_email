@@ -57,8 +57,8 @@ echo "<div class='wrap'>
 						<h3 class='hndle'><span>".__("Outgoing", 'lang_email')." (SMTP)</span></h3>
 						<div class='inside'>
 							<div class='flex_flow'>"
-								.show_textfield(array('name' => "strEmailSmtpServer", 'text' => __("Server", 'lang_email'), 'value' => $obj_email->smtp_server))
-								.show_textfield(array('type' => 'number', 'name' => "intEmailSmtpPort", 'text' => __("Port", 'lang_email'), 'value' => $obj_email->smtp_port))
+								.show_textfield(array('name' => "strEmailSmtpServer", 'text' => __("Server", 'lang_email'), 'value' => $obj_email->smtp_server, 'placeholder' => "mail.".$placeholder_server))
+								.show_textfield(array('type' => 'number', 'name' => "intEmailSmtpPort", 'text' => __("Port", 'lang_email'), 'value' => $obj_email->smtp_port, 'placeholder' => 587))
 								.show_select(array('data' => get_ssl_for_select(), 'name' => "strEmailSmtpSSL", 'text' => __("SSL", 'lang_email'), 'value' => $obj_email->smtp_ssl))
 							."</div>"
 							."<div class='flex_flow'>"
