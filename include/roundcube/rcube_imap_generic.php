@@ -564,7 +564,7 @@ class rcube_imap_generic
                 $this->putLine($this->nextTag() . " AUTHENTICATE PLAIN");
                 $line = trim($this->readReply());
 
-                if ($line[0] != '+') {
+                if (isset($line[0]) && $line[0] != '+') {
                     return $this->parseResult($line);
                 }
 

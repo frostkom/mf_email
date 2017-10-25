@@ -580,11 +580,10 @@ class mf_email_account_table extends mf_list_table
 			//'cb' => '<input type="checkbox">',
 			'emailAddress' => __("Address", 'lang_email'),
 			'emailName' => __("Name", 'lang_email'),
-			'rights' => __("Rights", 'lang_email'),
+			'rights' => shorten_text(array('string' => __("Rights", 'lang_email'), 'limit' => 3)),
 			//'emailPublic' => __("Public", 'lang_email'),
 			//'emailRoles' => __("Roles", 'lang_email'),
 			//'emailUsers' => __("Users", 'lang_email'),
-			'emailVerified' => __("Verified", 'lang_email'),
 			'emailServer' => __("Incoming", 'lang_email'),
 			'emailSmtpServer' => __("Outgoing", 'lang_email'),
 			'emailChecked' => __("Status", 'lang_email'),
@@ -612,62 +611,6 @@ class mf_email_account_table extends mf_list_table
 
 		switch($column_name)
 		{
-			case 'rights':
-				$intEmailPublic = $item['emailPublic'];
-				$strEmailRoles = $item['emailRoles'];
-
-				if($intEmailPublic == 1)
-				{
-					$out .= "<i class='fa fa-lg fa-check green'></i>";
-				}
-
-				else if($strEmailRoles != '')
-				{
-					$out .= "<i class='fa fa-lg fa-users' title='".$strEmailRoles."'></i>";
-				}
-
-				else
-				{
-					$strEmailUsers = "";
-
-					$resultUsers = $wpdb->get_results($wpdb->prepare("SELECT userID FROM ".$wpdb->base_prefix."email_users WHERE emailID = '%d'", $intEmailID));
-
-					foreach($resultUsers as $r)
-					{
-						$strEmailUsers .= ($strEmailUsers != '' ? ", " : "").get_user_info(array('id' => $r->userID));
-					}
-
-					if($strEmailUsers != '')
-					{
-						$out .= "<i class='fa fa-lg fa-users' title='".$strEmailUsers."'></i>";
-					}
-				}
-			break;
-
-			case 'emailVerified':
-				switch($item[$column_name])
-				{
-					default:
-					case 0:
-						$out .= "<i class='fa fa-lg fa-question'></i>
-						<div class='row-actions'>
-							<a href='".wp_nonce_url("?page=mf_email/accounts/index.php&btnEmailVerify&intEmailID=".$intEmailID, 'email_verify_'.$intEmailID)."'>".__("Verify", 'lang_email')."</a>
-						</div>";
-					break;
-
-					case 1:
-						$out .= "<i class='fa fa-lg fa-check green'></i>";
-					break;
-
-					case -1:
-						$out .= "<span class='fa-stack'>
-							<i class='fa fa-search fa-stack-1x'></i>
-							<i class='fa fa-ban fa-stack-2x text-danger red'></i>
-						</span>";
-					break;
-				}
-			break;
-
 			case 'emailAddress':
 				$strEmailAddress = $item[$column_name];
 				$intUserID = $item['userID'];
@@ -700,14 +643,74 @@ class mf_email_account_table extends mf_list_table
 				$out .= $item[$column_name];
 			break;
 
+			case 'rights':
+				$intEmailPublic = $item['emailPublic'];
+				$strEmailRoles = $item['emailRoles'];
+
+				if($intEmailPublic == 1)
+				{
+					$out .= "<i class='fa fa-lg fa-check green'></i>";
+				}
+
+				else if($strEmailRoles != '')
+				{
+					$out .= "<i class='fa fa-lg fa-users' title='".$strEmailRoles."'></i>";
+				}
+
+				else
+				{
+					$strEmailUsers = "";
+
+					$resultUsers = $wpdb->get_results($wpdb->prepare("SELECT userID FROM ".$wpdb->base_prefix."email_users WHERE emailID = '%d'", $intEmailID));
+
+					foreach($resultUsers as $r)
+					{
+						$strEmailUsers .= ($strEmailUsers != '' ? ", " : "").get_user_info(array('id' => $r->userID));
+					}
+
+					if($strEmailUsers != '')
+					{
+						$out .= "<i class='fa fa-lg fa-users' title='".$strEmailUsers."'></i>";
+					}
+				}
+			break;
+
 			case 'emailServer':
 				$strEmailServer = $item[$column_name];
 
 				if($strEmailServer != '')
 				{
-					$out .= $strEmailServer.":".$item['emailPort']
+					$row_actions = "";
+
+					$out .= "<span class='nowrap'>";
+
+						switch($item['emailVerified'])
+						{
+							default:
+							case 0:
+								$out .= "<i class='fa fa-lg fa-question'></i>&nbsp;";
+
+								$row_actions .= ($row_actions != '' ? " | " : "")."<a href='".wp_nonce_url("?page=mf_email/accounts/index.php&btnEmailVerify&intEmailID=".$intEmailID, 'email_verify_'.$intEmailID)."'>".__("Verify", 'lang_email')."</a>";
+							break;
+
+							case 1:
+								$out .= "<i class='fa fa-lg fa-check green'></i>&nbsp;";
+							break;
+
+							case -1:
+								$out .= "<span class='fa-stack'>
+									<i class='fa fa-search fa-stack-1x'></i>
+									<i class='fa fa-ban fa-stack-2x text-danger red'></i>
+								</span>&nbsp;";
+							break;
+						}
+
+						$row_actions .= ($row_actions != '' ? " | " : "").$item['emailUsername'];
+
+						$out .= $strEmailServer.":".$item['emailPort']
+					."</span>"
 					."<div class='row-actions'>"
-						.$item['emailUsername']
+						.$row_actions
 					."</div>";
 				}
 			break;

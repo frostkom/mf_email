@@ -79,28 +79,76 @@ function phpmailer_init_email($phpmailer)
 	}
 }
 
-function get_user_notifications_email($arr_notifications)
+function get_update_email($data = array())
 {
 	global $wpdb;
 
-	$arr_email_accounts_permission = get_email_accounts_permission();
-	$query_permission = " AND emailID IN ('".implode("','", $arr_email_accounts_permission)."')";
+	if(!isset($data['cutoff'])){	$data['cutoff'] = date("Y-m-d H:i:s", strtotime("-2 minute"));} //"DATE_SUB(NOW(), INTERVAL 2 MINUTE)"
 
-	$intUnread = $wpdb->get_var("SELECT COUNT(messageID) FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) WHERE messageRead = '0' AND folderType != '3' AND messageCreated > DATE_SUB(NOW(), INTERVAL 2 MINUTE)".$query_permission);
-
-	if($intUnread > 0)
+	if(IS_ADMIN)
 	{
-		$arr_notifications[] = array(
-			'title' => $intUnread > 1 ? sprintf(__("There are %d new emails in your inbox", 'lang_email'), $intUnread) : __("There is one new email in your inbox", 'lang_email'),
-			'tag' => 'email',
-			//'text' => "",
-			//'icon' => "",
-			'link' => admin_url("admin.php?page=mf_email/list/index.php"),
-		);
+		$query_permission = " AND emailID IN ('".implode("','", get_email_accounts_permission())."')";
+
+		$intUnread = $wpdb->get_var($wpdb->prepare("SELECT COUNT(messageID) FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) WHERE messageRead = '0' AND folderType != '3' AND messageCreated > %s".$query_permission, $data['cutoff']));
+
+		if($intUnread > 0)
+		{
+			return array(
+				'title' => $intUnread > 1 ? sprintf(__("There are %d new emails in your inbox", 'lang_email'), $intUnread) : __("There is one new email in your inbox", 'lang_email'),
+				'tag' => 'email',
+				//'text' => "",
+				//'icon' => "",
+				'link' => admin_url("admin.php?page=mf_email/list/index.php"),
+			);
+		}
+	}
+}
+
+function get_user_notifications_email($array)
+{
+	$update_email = get_update_email();
+
+	if($update_email != '')
+	{
+		$array[] = $update_email;
 	}
 
-	return $arr_notifications;
+	return $array;
 }
+
+/*function get_user_reminders_email($array)
+{
+	global $wpdb;
+
+	$user_id = $array['user_id'];
+	$reminder_cutoff = $array['cutoff'];
+
+	do_log("get_user_reminder_email was run for ".$user_id." (".$reminder_cutoff.")");
+
+	$update_email = get_update_email(array('cutoff' => $reminder_cutoff));
+
+	if($update_email != '')
+	{
+		$array['reminder'][] = $update_email;
+	}
+
+	else
+	{
+		$query_permission = " AND emailID IN ('".implode("','", get_email_accounts_permission())."')";
+
+		$intUnread = $wpdb->get_var("SELECT COUNT(messageID) FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) WHERE messageRead = '0' AND folderType != '3'".$query_permission);
+
+		if($intUnread > 0)
+		{
+			$array['reminder'][] = array(
+				'title' => $intUnread > 1 ? sprintf(__("There are %d unread emails in your inbox", 'lang_email'), $intUnread) : __("There is one unread email in your inbox", 'lang_email'),
+				'link' => admin_url("admin.php?page=mf_email/list/index.php"),
+			);
+		}
+	}
+
+	return $array;
+}*/
 
 function deleted_user_email($user_id)
 {
@@ -545,7 +593,7 @@ function send_smtp_test()
 
 		ob_start();
 
-		$sent = send_email(array('to' => $mail_to, 'subject' => $mail_subject, 'content' => $mail_content));
+			$sent = send_email(array('to' => $mail_to, 'subject' => $mail_subject, 'content' => $mail_content));
 
 		$smtp_debug = ob_get_clean();
 
@@ -604,8 +652,7 @@ function count_unread_email()
 
 	$count_message = "";
 
-	$arr_email_accounts_permission = get_email_accounts_permission();
-	$query_permission = " AND emailID IN ('".implode("','", $arr_email_accounts_permission)."')";
+	$query_permission = " AND emailID IN ('".implode("','", get_email_accounts_permission())."')";
 
 	$intUnread = $wpdb->get_var("SELECT COUNT(messageID) FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) WHERE messageRead = '0' AND folderType != '3'".$query_permission);
 
