@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: 
-Version: 5.8.8
+Version: 5.8.9
 Author: Martin Fors
 Author URI: http://frostkom.se
 Text Domain: lang_email
@@ -189,8 +189,8 @@ function activate_email()
 		'messageFrom' => "ALTER TABLE [table] ADD INDEX [column] ([column])",
 	);
 
-	add_columns($arr_add_column);
 	update_columns($arr_update_column);
+	add_columns($arr_add_column);
 	add_index($arr_add_index);
 
 	delete_base(array(
