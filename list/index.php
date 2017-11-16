@@ -213,13 +213,16 @@ echo "<div class='wrap'>
 	<div id='message_container'>
 		<% if(messageText2)
 		{ %>
-			<h3 class='nav-tab-wrapper'>
-				<a class='nav-tab'>".__("Plain", 'lang_email')."</a>
-				<a class='nav-tab nav-tab-active'>".__("HTML", 'lang_email')."</a>
-			</h3>
-			<div class='hide'>
-				<%= messageText %>
-			</div>
+			<% if(messageText != '')
+			{ %>
+				<h3 class='nav-tab-wrapper'>
+					<a class='nav-tab'>".__("Plain", 'lang_email')."</a>
+					<a class='nav-tab nav-tab-active'>".__("HTML", 'lang_email')."</a>
+				</h3>
+				<div class='hide'>
+					<%= messageText %>
+				</div>
+			<% } %>
 			<div>
 				<%= messageText2 %>
 			</div>

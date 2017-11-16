@@ -32,7 +32,7 @@ jQuery(function($)
 		{
 			clone_value_if_empty($(this), $('input[name=strEmailUsername]'));
 		});
-		
+
 		$(document).on('blur', 'input[name=strEmailServer]', function()
 		{
 			clone_value_if_empty($(this), $('input[name=strEmailSmtpServer]'));

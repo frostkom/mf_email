@@ -2436,9 +2436,8 @@ class rcube_imap_generic
             else if ($mode == 3) {
                 $result = convert_uudecode($result);
             }
-
         }
-		
+
 		else if(isset($line[$len-1]) && $line[$len-1] == '}')
 		{
             // multi-line request, find sizes of content and receive that many bytes

@@ -261,6 +261,11 @@ if($arr_input[0] == "email")
 			$intFolderType = $r->folderType;
 
 			//$strMessageText2 = preg_replace("/\@media.*\}/s", "", $strMessageText2);
+			$strMessageText2 = preg_replace("/<title>.*?<\/title>/is", "", $strMessageText2);
+			$strMessageText2 = preg_replace("/<meta[^>]*>/i", "", $strMessageText2);
+			$strMessageText2 = preg_replace("/<style[^>]*>.*?<\/style>/is", "", $strMessageText2);
+			$strMessageText2 = preg_replace("/<img[^>]*(height|width)=[\"\']1[\"\'][^>]*>/is", "", $strMessageText2);
+			$strMessageText2 = preg_replace("/<!--(.*?)-->/is", "", $strMessageText2); // /<!--[\s\S]*?-->/g
 
 			$email_outgoing = $intUserID2 == '' || $strMailFrom != '' ? false : true;
 

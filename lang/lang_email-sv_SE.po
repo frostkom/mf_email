@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-25 13:39+0100\n"
+"POT-Creation-Date: 2017-11-16 15:06+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -18,8 +18,8 @@ msgstr ""
 
 #: ../accounts/index.php:10
 #: ../create/index.php:28
-#: ../include/functions.php:698
-#: ../include/functions.php:715
+#: ../include/functions.php:704
+#: ../include/functions.php:721
 msgid "Accounts"
 msgstr "Konton"
 
@@ -129,8 +129,8 @@ msgstr "Konto"
 #: ../include/ajax.php:15
 #: ../include/functions.php:389
 #: ../include/functions.php:412
-#: ../include/functions.php:692
-#: ../include/functions.php:874
+#: ../include/functions.php:698
+#: ../include/functions.php:880
 #: ../list/index.php:20
 msgid "Inbox"
 msgstr "Inkorg"
@@ -284,14 +284,14 @@ msgid "You have to edit the function to be public instead of private"
 msgstr "Du måste ändra funktion från private till public"
 
 #: ../include/functions.php:405
-#: ../include/functions.php:869
+#: ../include/functions.php:875
 msgid "Spam"
 msgstr "Spam"
 
 #: ../include/functions.php:514
 #: ../include/functions.php:533
-#: ../include/functions.php:689
-#: ../include/functions.php:712
+#: ../include/functions.php:695
+#: ../include/functions.php:718
 #: ../list/index.php:39
 #: ../send/index.php:259
 msgid "E-mail"
@@ -335,82 +335,82 @@ msgstr "Testmeddelande till %s"
 msgid "This is a test email generated from WordPress"
 msgstr "Detta är ett testmeddelande genererat från Wordpress"
 
-#: ../include/functions.php:602
+#: ../include/functions.php:605
 msgid "The test message was sent successfully"
 msgstr "Testmeddelandet skickades som det skulle"
 
-#: ../include/functions.php:607
+#: ../include/functions.php:610
 msgid "I am sorry, but I could not send the message for you"
 msgstr "Förlåt men jag kunde inte skicka meddelandet åt dig"
 
-#: ../include/functions.php:608
+#: ../include/functions.php:611
 msgid "The result I got back was"
 msgstr "Resultatet som jag fick tillbaka var"
 
-#: ../include/functions.php:610
+#: ../include/functions.php:613
 msgid "PHPmailer debug"
 msgstr "PHPmailer debug"
 
-#: ../include/functions.php:615
+#: ../include/functions.php:618
 msgid "SMTP debug"
 msgstr "SMTP debug"
 
-#: ../include/functions.php:632
+#: ../include/functions.php:635
 msgid "I could not send the test email. Please make sure that the credentials are correct"
 msgstr "Jag kunde inte skicka testmeddelandet. Var vänlig kontrollera uppgifterna så att de är korrekt"
 
-#: ../include/functions.php:642
+#: ../include/functions.php:645
 msgid "E-mail to send test message to"
 msgstr "E-post att skicka testmeddelande till"
 
-#: ../include/functions.php:644
+#: ../include/functions.php:647
 #: ../send/index.php:287
 msgid "Send"
 msgstr "Skicka"
 
-#: ../include/functions.php:661
+#: ../include/functions.php:664
 msgid "Unread"
 msgstr "Olästa"
 
-#: ../include/functions.php:695
+#: ../include/functions.php:701
 msgid "Send New"
 msgstr "Skicka nytt"
 
-#: ../include/functions.php:701
-#: ../include/functions.php:718
+#: ../include/functions.php:707
+#: ../include/functions.php:724
 msgid "Add New Account"
 msgstr "Skapa nytt konto"
 
-#: ../include/functions.php:704
+#: ../include/functions.php:710
 #: ../list/index.php:47
 msgid "Add New Folder"
 msgstr "Skapa ny mapp"
 
-#: ../include/functions.php:726
+#: ../include/functions.php:732
 msgid "Email error"
 msgstr "E-postfel"
 
-#: ../include/functions.php:889
+#: ../include/functions.php:895
 msgid "Inserted"
 msgstr "Inlagd"
 
-#: ../include/functions.php:928
+#: ../include/functions.php:934
 msgid "E-mail attachments"
 msgstr "Bifogade filer"
 
-#: ../include/functions.php:932
+#: ../include/functions.php:938
 msgid "The attachment was saved"
 msgstr "Bifogade filer sparades"
 
-#: ../include/functions.php:939
+#: ../include/functions.php:945
 msgid "The email was not able to be saved"
 msgstr "E-postkontot kunde inte sparas"
 
-#: ../include/functions.php:946
+#: ../include/functions.php:952
 msgid "The e-mail already exists"
 msgstr "Meddelandet finns redan"
 
-#: ../include/functions.php:987
+#: ../include/functions.php:993
 msgid "Connection failed"
 msgstr "Tappade uppkopplingen"
 
@@ -476,11 +476,11 @@ msgstr "Svara"
 msgid "Forward"
 msgstr "Vidarebefordra"
 
-#: ../list/index.php:217
+#: ../list/index.php:219
 msgid "Plain"
 msgstr "Oformaterad"
 
-#: ../list/index.php:218
+#: ../list/index.php:220
 msgid "HTML"
 msgstr "HTML"
 
@@ -537,11 +537,3 @@ msgstr "Meddelande"
 msgid "Save draft"
 msgstr "Spara utkast"
 
-#~ msgid "There are %d unread emails in your inbox"
-#~ msgstr "Det finns %d olästa e-post i din inkorg"
-
-#~ msgid "There is one unread email in your inbox"
-#~ msgstr "Det finns ett oläst meddelande i din inkorg"
-
-#~ msgid "Verified"
-#~ msgstr "Veriferad"
