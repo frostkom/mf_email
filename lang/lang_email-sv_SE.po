@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 15:06+0100\n"
+"POT-Creation-Date: 2017-11-19 11:27+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -33,7 +33,7 @@ msgstr "Information"
 
 #: ../create/index.php:38
 #: ../folder/index.php:83
-#: ../include/classes.php:582
+#: ../include/classes.php:594
 msgid "Name"
 msgstr "Namn"
 
@@ -42,7 +42,7 @@ msgid "E-mail Address"
 msgstr "E-postadress"
 
 #: ../create/index.php:44
-#: ../include/classes.php:587
+#: ../include/classes.php:599
 msgid "Incoming"
 msgstr "Inkommande"
 
@@ -66,7 +66,7 @@ msgid "Password"
 msgstr "Lösenord"
 
 #: ../create/index.php:57
-#: ../include/classes.php:588
+#: ../include/classes.php:600
 msgid "Outgoing"
 msgstr "Ugående"
 
@@ -135,9 +135,9 @@ msgstr "Konto"
 msgid "Inbox"
 msgstr "Inkorg"
 
-#: ../include/ajax.php:138
-#: ../include/ajax.php:196
-#: ../include/ajax.php:255
+#: ../include/ajax.php:140
+#: ../include/ajax.php:198
+#: ../include/ajax.php:257
 msgid "No subject"
 msgstr "Inget ämne"
 
@@ -200,65 +200,65 @@ msgstr "Kontot uppdaterades"
 msgid "Choose here"
 msgstr "Välj här"
 
-#: ../include/classes.php:574
+#: ../include/classes.php:586
 msgid "All"
 msgstr "Alla"
 
-#: ../include/classes.php:575
+#: ../include/classes.php:587
 #: ../include/functions.php:382
 msgid "Trash"
 msgstr "Papperskorg"
 
-#: ../include/classes.php:581
+#: ../include/classes.php:593
 msgid "Address"
 msgstr "Adress"
 
-#: ../include/classes.php:583
+#: ../include/classes.php:595
 msgid "Rights"
 msgstr "Behörighet"
 
-#: ../include/classes.php:589
+#: ../include/classes.php:601
 msgid "Status"
 msgstr "Status"
 
-#: ../include/classes.php:626
+#: ../include/classes.php:638
 #: ../list/index.php:78
 msgid "Edit"
 msgstr "Redigera"
 
-#: ../include/classes.php:630
+#: ../include/classes.php:642
 #: ../list/index.php:83
 #: ../list/index.php:133
 msgid "Delete"
 msgstr "Radera"
 
-#: ../include/classes.php:636
+#: ../include/classes.php:648
 msgid "Recover"
 msgstr "Återställ"
 
-#: ../include/classes.php:693
+#: ../include/classes.php:705
 msgid "Verify"
 msgstr "Verifera"
 
-#: ../include/classes.php:738
+#: ../include/classes.php:750
 #, php-format
 msgid "Not been checked since %s"
 msgstr "Har inte kollats sedan %s"
 
-#: ../include/classes.php:750
+#: ../include/classes.php:762
 #, php-format
 msgid "No e-mails since %s"
 msgstr "Inga e-post sedan %s"
 
-#: ../include/classes.php:756
+#: ../include/classes.php:768
 msgid "Checked"
 msgstr "Kollad"
 
-#: ../include/classes.php:763
+#: ../include/classes.php:775
 msgid "No e-mails so far"
 msgstr "Inga e-post än så länge"
 
-#: ../include/classes.php:771
+#: ../include/classes.php:783
 msgid "The e-mail has not been checked yet"
 msgstr "E-postkontot har inte kollats ännu"
 

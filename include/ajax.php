@@ -15,6 +15,8 @@ else
 $strAjaxInput = check_var('type', 'char', true, 'email/folders/'.__("Inbox", 'lang_email'));
 $arr_input = explode("/", trim($strAjaxInput, "/"));
 
+$obj_email = new mf_email();
+
 $json_output = "";
 
 if($arr_input[0] == "email")
@@ -260,12 +262,7 @@ if($arr_input[0] == "email")
 			$intUserID2 = $r->userID;
 			$intFolderType = $r->folderType;
 
-			//$strMessageText2 = preg_replace("/\@media.*\}/s", "", $strMessageText2);
-			$strMessageText2 = preg_replace("/<title>.*?<\/title>/is", "", $strMessageText2);
-			$strMessageText2 = preg_replace("/<meta[^>]*>/i", "", $strMessageText2);
-			$strMessageText2 = preg_replace("/<style[^>]*>.*?<\/style>/is", "", $strMessageText2);
-			$strMessageText2 = preg_replace("/<img[^>]*(height|width)=[\"\']1[\"\'][^>]*>/is", "", $strMessageText2);
-			$strMessageText2 = preg_replace("/<!--(.*?)-->/is", "", $strMessageText2); // /<!--[\s\S]*?-->/g
+			$strMessageText2 = $obj_email->filter_text($strMessageText2);
 
 			$email_outgoing = $intUserID2 == '' || $strMailFrom != '' ? false : true;
 

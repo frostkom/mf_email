@@ -480,6 +480,18 @@ class mf_email
 		return $intEmailID;
 	}
 
+	function filter_text($string)
+	{
+		//$string = preg_replace("/\@media.*\}/s", "", $string);
+		$string = preg_replace("/<title>.*?<\/title>/is", "", $string);
+		$string = preg_replace("/<meta[^>]*>/i", "", $string);
+		$string = preg_replace("/<style[^>]*>.*?<\/style>/is", "", $string);
+		$string = preg_replace("/<img[^>]*(height|width)=[\"\']1[\"\'][^>]*>/is", "", $string);
+		$string = preg_replace("/<!--(.*?)-->/is", "", $string); // /<!--[\s\S]*?-->/g
+
+		return $string;
+	}
+
 	function update_passwords()
 	{
 		global $wpdb;
