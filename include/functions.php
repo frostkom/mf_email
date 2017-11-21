@@ -535,7 +535,9 @@ function settings_email_callback()
 
 function setting_email_callback()
 {
-	echo "<p>".sprintf(__("The e-mail %s is used as sender address so this must be white listed in the SMTP, otherwise it can be caught in the servers spam filter", 'lang_email'), "<a href='".admin_url("options-general.php")."' class='bold'>".get_bloginfo('admin_email')."</a>")."</p>";
+	global $wpdb;
+
+	echo "<p>".sprintf(__("The e-mail %s is used as sender address so this must be white listed in the SMTP, otherwise it can be caught in the servers spam filter", 'lang_email'), "<a href='".(is_multisite() ? admin_url("network/site-settings.php?id=".$wpdb->blogid."#admin_email") : admin_url("options-general.php"))."' class='bold'>".get_bloginfo('admin_email')."</a>")."</p>";
 }
 
 function setting_smtp_server_callback()
