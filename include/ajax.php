@@ -151,7 +151,7 @@ if($arr_input[0] == "email")
 			if($intMessageRead == 0){	$class .= ($class != '' ? " " : "")."strong";}
 			if($is_draggable){			$class .= ($class != '' ? " " : "")."draggable";}
 
-			$resultAttachment = $wpdb->get_results($wpdb->prepare("SELECT fileID FROM ".$wpdb->base_prefix."email_message_attachment WHERE messageID = '%d'", $intMessageID));
+			$wpdb->get_results($wpdb->prepare("SELECT fileID FROM ".$wpdb->base_prefix."email_message_attachment WHERE messageID = '%d' LIMIT 0, 1", $intMessageID));
 			$has_attachment = $wpdb->num_rows > 0;
 
 			//$strMessageSpam = check_spam_reason($intMessageID);
@@ -210,7 +210,7 @@ if($arr_input[0] == "email")
 			if($intMessageRead == 0){	$class .= ($class != '' ? " " : "")."strong";}
 			if($is_draggable){			$class .= ($class != '' ? " " : "")."draggable";}
 
-			$resultAttachment = $wpdb->get_results($wpdb->prepare("SELECT fileID FROM ".$wpdb->base_prefix."email_message_attachment WHERE messageID = '%d'", $intMessageID));
+			$wpdb->get_results($wpdb->prepare("SELECT fileID FROM ".$wpdb->base_prefix."email_message_attachment WHERE messageID = '%d' LIMIT 0, 1", $intMessageID));
 			$has_attachment = $wpdb->num_rows > 0;
 
 			$json_output['render_row'] = array(

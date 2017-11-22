@@ -449,7 +449,7 @@ class mf_email
 	{
 		global $wpdb;
 
-		$result = $wpdb->get_results($wpdb->prepare("SELECT spamID FROM ".$wpdb->base_prefix."email_spam WHERE emailID = '%d' AND messageFrom = %s", $this->id, $data['from']));
+		$wpdb->get_results($wpdb->prepare("SELECT spamID FROM ".$wpdb->base_prefix."email_spam WHERE emailID = '%d' AND messageFrom = %s LIMIT 0, 1", $this->id, $data['from']));
 
 		return $wpdb->num_rows > 0 ? true : false;
 	}
