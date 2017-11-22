@@ -28,7 +28,7 @@ function phpmailer_init_email($phpmailer)
 
 	$from_address = $phpmailer->From;
 
-	$result = $wpdb->get_results($wpdb->prepare("SELECT emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpUsername, emailSmtpPassword FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s", $from_address));
+	$result = $wpdb->get_results($wpdb->prepare("SELECT emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpUsername, emailSmtpPassword FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s AND emailSmtpServer != ''", $from_address));
 
 	if($wpdb->num_rows > 0)
 	{
