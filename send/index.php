@@ -87,7 +87,7 @@ if(isset($_POST['btnMessageSend']) && wp_verify_nonce($_POST['_wpnonce'], 'messa
 
 					if(!isset($error_text) || $error_text == '')
 					{
-						mf_redirect("?page=mf_email/list/index.php&sent");
+						mf_redirect(admin_url("admin.php?page=mf_email/list/index.php&sent"));
 					}
 				}
 			}

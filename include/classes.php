@@ -110,7 +110,7 @@ class mf_email
 
 					if(!isset($error_text) || $error_text == '')
 					{
-						mf_redirect("?page=mf_email/accounts/index.php&".$type);
+						mf_redirect(admin_url("admin.php?page=mf_email/accounts/index.php&".$type));
 					}
 				}
 			break;

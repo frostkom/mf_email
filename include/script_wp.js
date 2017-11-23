@@ -6,7 +6,7 @@ jQuery(function($)
 		if(e.which != 3)
 		{
 			var this_href = $(this).attr('href').replace('mailto:', ''),
-				url = '/wp-admin/admin.php?page=mf_email/send/index.php&strMessageTo=' + this_href;
+				url = script_email.admin_url + '&strMessageTo=' + this_href;
 
 			location.href = url;
 

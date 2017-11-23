@@ -685,7 +685,7 @@ function menu_email()
 		$plugin_version = get_plugin_version(__FILE__);
 
 		mf_enqueue_script('jquery-ui-autocomplete');
-		mf_enqueue_script('script_email', $plugin_include_url."script_wp.js", array('plugin_url' => $plugin_include_url, 'ajax_url' => admin_url('admin-ajax.php')), $plugin_version);
+		mf_enqueue_script('script_email', $plugin_include_url."script_wp.js", array('admin_url' => admin_url("admin.php?page=mf_email/send/index.php"), 'plugin_url' => $plugin_include_url, 'ajax_url' => admin_url('admin-ajax.php')), $plugin_version);
 	}
 
 	$obj_email = new mf_email();

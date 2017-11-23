@@ -12,7 +12,7 @@ if(isset($_POST['btnFolderCreate']) && wp_verify_nonce($_POST['_wpnonce'], 'fold
 
 		if($wpdb->rows_affected > 0)
 		{
-			mf_redirect("?page=mf_email/list/index.php&updated");
+			mf_redirect(admin_url("admin.php?page=mf_email/list/index.php&updated"));
 		}
 
 		else
@@ -29,7 +29,7 @@ if(isset($_POST['btnFolderCreate']) && wp_verify_nonce($_POST['_wpnonce'], 'fold
 
 		if($wpdb->rows_affected > 0)
 		{
-			mf_redirect("?page=mf_email/list/index.php&created");
+			mf_redirect(admin_url("admin.php?page=mf_email/list/index.php&created"));
 		}
 
 		else
