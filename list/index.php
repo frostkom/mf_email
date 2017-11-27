@@ -1,5 +1,6 @@
 <?php
 
+$plugin_base_include_url = plugins_url();
 $plugin_include_url = plugins_url();
 $plugin_version = get_plugin_version(__FILE__);
 
@@ -15,6 +16,7 @@ mf_enqueue_script('script_email_bb_plugins', $plugin_include_url."/mf_email/incl
 mf_enqueue_script('script_email_bb_router', $plugin_include_url."/mf_email/include/backbone/bb.router.js", $plugin_version);
 mf_enqueue_script('script_email_bb_models', $plugin_include_url."/mf_email/include/backbone/bb.models.js", $plugin_version);
 mf_enqueue_script('script_email_bb_views', $plugin_include_url."/mf_email/include/backbone/bb.views.js", array('emails2show' => EMAILS2SHOW), $plugin_version);
+mf_enqueue_script('script_base_bb_init', $plugin_base_include_url."/mf_base/include/backbone/bb.init.js", $plugin_version);
 
 $intFolderID = check_var('intFolderID');
 $strFolderName = check_var('strFolderName', '', true, __("Inbox", 'lang_email'));

@@ -195,5 +195,3 @@ var EmailView = Backbone.View.extend(
 });
 
 var myEmailView = new EmailView({model: new EmailModel()});
-
-Backbone.history.start();
