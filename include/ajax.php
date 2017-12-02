@@ -1,15 +1,10 @@
 <?php
 
-$wp_root = '../../../..';
-
-if(file_exists($wp_root.'/wp-load.php'))
+if(!defined('ABSPATH'))
 {
-	require_once($wp_root.'/wp-load.php');
-}
+	$folder = str_replace("/wp-content/plugins/mf_email/include", "/", dirname(__FILE__));
 
-else
-{
-	require_once($wp_root.'/wp-config.php');
+	require_once($folder."wp-load.php");
 }
 
 $strAjaxInput = check_var('type', 'char', true, 'email/folders/'.__("Inbox", 'lang_email'));
