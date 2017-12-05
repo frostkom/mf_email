@@ -519,21 +519,35 @@ function get_folder_ids($name, $type, $intEmailID)
 
 function settings_email()
 {
+	global $wpdb;
+
 	$options_area = __FUNCTION__;
 
 	add_settings_section($options_area, "", $options_area."_callback", BASE_OPTIONS_PAGE);
 
 	$arr_settings = array();
 	$arr_settings['setting_email'] = __("E-mail", 'lang_email');
-	$arr_settings['setting_smtp_server'] = __("SMTP Server", 'lang_email');
-	$arr_settings['setting_smtp_port'] = __("SMTP Port", 'lang_email');
-	$arr_settings['setting_smtp_ssl'] = __("SMTP SSL", 'lang_email');
-	$arr_settings['setting_smtp_username'] = __("SMTP Username", 'lang_email');
-	$arr_settings['setting_smtp_password'] = __("SMTP Password", 'lang_email');
 
-	if(get_option('setting_smtp_server') != '')
+	$admin_email = get_bloginfo('admin_email');
+	$wpdb->get_results($wpdb->prepare("SELECT emailID FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s AND emailSmtpServer != ''", $admin_email));
+
+	if($wpdb->num_rows > 0)
 	{
 		$arr_settings['setting_smtp_test'] = __("Test SMTP", 'lang_email');
+	}
+
+	else
+	{
+		$arr_settings['setting_smtp_server'] = __("SMTP Server", 'lang_email');
+		$arr_settings['setting_smtp_port'] = __("SMTP Port", 'lang_email');
+		$arr_settings['setting_smtp_ssl'] = __("SMTP SSL", 'lang_email');
+		$arr_settings['setting_smtp_username'] = __("SMTP Username", 'lang_email');
+		$arr_settings['setting_smtp_password'] = __("SMTP Password", 'lang_email');
+
+		if(get_option('setting_smtp_server') != '')
+		{
+			$arr_settings['setting_smtp_test'] = __("Test SMTP", 'lang_email');
+		}
 	}
 
 	show_settings_fields(array('area' => $options_area, 'settings' => $arr_settings));
@@ -549,8 +563,17 @@ function settings_email_callback()
 function setting_email_callback()
 {
 	global $wpdb;
+	
+	$admin_email = get_bloginfo('admin_email');
 
-	echo "<p>".sprintf(__("The e-mail %s is used as sender address so this must be white listed in the SMTP, otherwise it can be caught in the servers spam filter", 'lang_email'), "<a href='".(is_multisite() ? admin_url("network/site-settings.php?id=".$wpdb->blogid."#admin_email") : admin_url("options-general.php"))."' class='bold'>".get_bloginfo('admin_email')."</a>")."</p>";
+	echo "<p>".sprintf(__("The e-mail %s is used as sender address so this must be white listed in the SMTP, otherwise it can be caught in the servers spam filter", 'lang_email'), "<a href='".(is_multisite() ? admin_url("network/site-settings.php?id=".$wpdb->blogid."#admin_email") : admin_url("options-general.php"))."' class='bold'>".$admin_email."</a>")."</p>";
+
+	$intEmailID = $wpdb->get_var($wpdb->prepare("SELECT emailID FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s AND emailSmtpServer != ''", $admin_email));
+
+	if($intEmailID > 0)
+	{
+		echo "<p>".sprintf(__("The e-mail %s already has an account where you have set an SMTP", 'lang_email'), "<a href='".admin_url("admin.php?page=mf_email/create/index.php&intEmailID=".$intEmailID)."' class='bold'>".$admin_email."</a>")."</p>";
+	}
 }
 
 function setting_smtp_server_callback()
