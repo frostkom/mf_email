@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: 
-Version: 5.8.20
+Version: 5.9.0
 Author: Martin Fors
 Author URI: http://frostkom.se
 Text Domain: lang_email

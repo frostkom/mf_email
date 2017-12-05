@@ -275,16 +275,29 @@ function get_email_accounts_permission()
 
 function convert_email_subject($data)
 {
-	$elements = imap_mime_header_decode($data['subject']);
-
-	$out = "";
-
-	$count_temp = count($elements);
-
-	for($i = 0; $i < $count_temp; $i++)
+	if(function_exists('imap_mime_header_decode'))
 	{
-		$out .= $elements[$i]->text;
+		$out = "";
+
+		$elements = imap_mime_header_decode($data['subject']);
+		
+		$count_temp = count($elements);
+
+		for($i = 0; $i < $count_temp; $i++)
+		{
+			$out .= $elements[$i]->text;
+		}
 	}
+
+	else
+	{
+		$out = iconv_mime_decode($data['subject']); //, 0, "ISO-8859-1"
+	}
+
+	/*else
+	{
+		$out = $data['subject'];
+	}*/
 
 	return $out;
 }
