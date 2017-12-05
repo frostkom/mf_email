@@ -620,7 +620,7 @@ function send_smtp_test()
 {
 	global $phpmailer, $done_text, $error_text;
 
-	$mail_to = check_var('smtp_to');
+	$mail_to = check_var('smtp_to', 'email');
 
 	if($mail_to != '')
 	{
@@ -645,22 +645,23 @@ function send_smtp_test()
 
 		else
 		{
-			$error_text = "<p><strong>".__("I am sorry, but I could not send the message for you", 'lang_email')."</strong></p>
-			<p>".__("The result I got back was", 'lang_email').":</p>
-			<pre>".var_export($sent, true)."</pre>
-			<p>".__("PHPmailer debug", 'lang_email').":</p>
+			$error_text = "<p><strong>".__("I am sorry, but I could not send the message for you", 'lang_email')."</strong></p>"
+			."<p>".__("More information regarding this is saved in the log", 'lang_email')."</p>";
+			
+			/*$error_text .= "<p>".__("The result I got back was", 'lang_email').":</p>
+			<pre>".var_export($sent, true)."</pre>";
+
+			$error_text .= "<p>".__("PHPmailer debug", 'lang_email').":</p>
 			<pre>".var_export($phpmailer, true)."</pre>";
 
 			if($smtp_debug != '')
 			{
 				$error_text .= "<p>".__("SMTP debug", 'lang_email').":</p>
 				<pre>".$smtp_debug."</pre>";
-			}
+			}*/
 		}
 
 		$out = get_notification();
-
-		unset($phpmailer);
 
 		if($out != '')
 		{
@@ -672,6 +673,11 @@ function send_smtp_test()
 		{
 			$result['error'] = __("I could not send the test email. Please make sure that the credentials are correct", 'lang_email');
 		}
+	}
+	
+	else
+	{
+		$result['error'] = __("You did not enter a valid email address. Please do and try again", 'lang_email');
 	}
 
 	echo json_encode($result);

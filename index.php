@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: 
-Version: 5.9.2
+Version: 5.9.3
 Author: Martin Fors
 Author URI: http://frostkom.se
 Text Domain: lang_email
@@ -37,6 +37,7 @@ add_filter('wp_mail_from', 'mail_from_email');
 add_filter('wp_mail_from_name', 'mail_from_name_email');
 add_action('phpmailer_init', 'phpmailer_init_email');
 add_action('wp_ajax_send_smtp_test', 'send_smtp_test');
+add_action('wp_ajax_nopriv_send_smtp_test', 'send_smtp_test');
 
 load_plugin_textdomain('lang_email', false, dirname(plugin_basename(__FILE__)).'/lang/');
 
@@ -249,7 +250,7 @@ function activate_email()
 function uninstall_email()
 {
 	mf_uninstall_plugin(array(
-		//'options' => array(),
+		'options' => array('setting_email', 'setting_smtp_test', 'setting_smtp_server', 'setting_smtp_port', 'setting_smtp_ssl', 'setting_smtp_username', 'setting_smtp_password'),
 		'tables' => array('email', 'email_users', 'email_folders', 'email_message', 'email_message_attachment', 'email_spam'),
 	));
 }
