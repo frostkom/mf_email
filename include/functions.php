@@ -24,11 +24,11 @@ function phpmailer_init_email($phpmailer)
 {
 	global $wpdb;
 
-	$smtp_ssl = $smtp_host = $smtp_port = $smtp_user = $smtp_pass = "";
+	$smtp_ssl = $smtp_host = $smtp_port = $smtp_hostname = $smtp_user = $smtp_pass = "";
 
 	$from_address = $phpmailer->From;
 
-	$result = $wpdb->get_results($wpdb->prepare("SELECT emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpUsername, emailSmtpPassword FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s AND emailSmtpServer != ''", $from_address));
+	$result = $wpdb->get_results($wpdb->prepare("SELECT emailName, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailSmtpPassword FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s AND emailSmtpServer != ''", $from_address));
 
 	if($wpdb->num_rows > 0)
 	{
@@ -37,11 +37,14 @@ function phpmailer_init_email($phpmailer)
 			$smtp_ssl = $r->emailSmtpSSL;
 			$smtp_host = $r->emailSmtpServer;
 			$smtp_port = $r->emailSmtpPort;
+			$smtp_hostname = $r->emailSmtpHostname;
 			$smtp_user = $r->emailSmtpUsername;
 			$smtp_pass_encrypted = $r->emailSmtpPassword;
 
 			$encryption = new mf_encryption("email");
 			$smtp_pass = $encryption->decrypt($smtp_pass_encrypted, md5($from_address));
+
+			$phpmailer->FromName = $r->emailName;
 		}
 	}
 
@@ -56,6 +59,8 @@ function phpmailer_init_email($phpmailer)
 
 	if($smtp_host != '')
 	{
+		$phpmailer->SMTPDebug = defined('SMTPDebug') ? SMTPDebug : false;
+
 		$phpmailer->Mailer = 'smtp';
 		$phpmailer->Sender = $phpmailer->From;
 		$phpmailer->SMTPSecure = $smtp_ssl;
@@ -65,6 +70,11 @@ function phpmailer_init_email($phpmailer)
 		if($smtp_port > 0)
 		{
 			$phpmailer->Port = $smtp_port;
+		}
+		
+		if($smtp_hostname != '')
+		{
+			$phpmailer->Hostname = $smtp_hostname;
 		}
 
 		if($smtp_user != '' && $smtp_pass != '')
@@ -280,7 +290,7 @@ function convert_email_subject($data)
 		$out = "";
 
 		$elements = imap_mime_header_decode($data['subject']);
-		
+
 		$count_temp = count($elements);
 
 		for($i = 0; $i < $count_temp; $i++)
@@ -563,7 +573,7 @@ function settings_email_callback()
 function setting_email_callback()
 {
 	global $wpdb;
-	
+
 	$admin_email = get_bloginfo('admin_email');
 
 	echo "<p>".sprintf(__("The e-mail %s is used as sender address so this must be white listed in the SMTP, otherwise it can be caught in the servers spam filter", 'lang_email'), "<a href='".(is_multisite() ? admin_url("network/site-settings.php?id=".$wpdb->blogid."#admin_email") : admin_url("options-general.php"))."' class='bold'>".$admin_email."</a>")."</p>";
@@ -627,10 +637,7 @@ function send_smtp_test()
 		$mail_subject = sprintf(__("Test mail to %s", 'lang_email'), $mail_to);
 		$mail_content = __("This is a test email generated from WordPress", 'lang_email');
 
-		if(isset($phpmailer))
-		{
-			$phpmailer->SMTPDebug = true;
-		}
+		DEFINE('SMTPDebug', 3);
 
 		ob_start();
 
@@ -647,18 +654,18 @@ function send_smtp_test()
 		{
 			$error_text = "<p><strong>".__("I am sorry, but I could not send the message for you", 'lang_email')."</strong></p>"
 			."<p>".__("More information regarding this is saved in the log", 'lang_email')."</p>";
-			
-			/*$error_text .= "<p>".__("The result I got back was", 'lang_email').":</p>
-			<pre>".var_export($sent, true)."</pre>";
 
-			$error_text .= "<p>".__("PHPmailer debug", 'lang_email').":</p>
-			<pre>".var_export($phpmailer, true)."</pre>";
+			/*$error_text .= "<p>".__("The result I got back was", 'lang_email').":</p>
+			<pre>".var_export($sent, true)."</pre>";*/
+
+			/*$error_text .= "<p>".__("PHPmailer debug", 'lang_email').":</p>
+			<pre>".var_export($phpmailer, true)."</pre>";*/
 
 			if($smtp_debug != '')
 			{
 				$error_text .= "<p>".__("SMTP debug", 'lang_email').":</p>
 				<pre>".$smtp_debug."</pre>";
-			}*/
+			}
 		}
 
 		$out = get_notification();
@@ -674,7 +681,7 @@ function send_smtp_test()
 			$result['error'] = __("I could not send the test email. Please make sure that the credentials are correct", 'lang_email');
 		}
 	}
-	
+
 	else
 	{
 		$result['error'] = __("You did not enter a valid email address. Please do and try again", 'lang_email');

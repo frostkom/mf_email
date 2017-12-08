@@ -37,6 +37,7 @@ class mf_email
 				$this->smtp_server = check_var('strEmailSmtpServer');
 				$this->smtp_port = check_var('intEmailSmtpPort');
 				$this->smtp_ssl = check_var('strEmailSmtpSSL');
+				$this->smtp_hostname = check_var('strEmailSmtpHostname');
 				$this->smtp_username = check_var('strEmailSmtpUsername');
 				$this->smtp_password = check_var('strEmailSmtpPassword');
 
@@ -175,7 +176,7 @@ class mf_email
 								{
 									$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailVerified = '-1' WHERE emailID = '%d'", $this->id));
 
-									$error_text = __("The e-mail account didn't pass the verification", 'lang_email'); //." (".var_export(array('server' => $strEmailServer, 'port' => $intEmailPort, 'username' => $strEmailUsername, 'password' => substr($strEmailPassword, 0, 5), 'close_after' => true), true).")"." (".var_export($connection, true).")"
+									$error_text = __("The e-mail account didn't pass the verification", 'lang_email');
 								}
 							}
 
@@ -227,7 +228,7 @@ class mf_email
 			case 'account_create':
 				if($this->id > 0)
 				{
-					$result = $wpdb->get_results($wpdb->prepare("SELECT emailPublic, emailRoles, emailServer, emailPort, emailUsername, emailAddress, emailName, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpUsername, emailSmtpPassword, emailDeleted FROM ".$wpdb->base_prefix."email WHERE emailID = '%d'", $this->id));
+					$result = $wpdb->get_results($wpdb->prepare("SELECT emailPublic, emailRoles, emailServer, emailPort, emailUsername, emailAddress, emailName, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailDeleted FROM ".$wpdb->base_prefix."email WHERE emailID = '%d'", $this->id));
 
 					foreach($result as $r)
 					{
@@ -236,14 +237,13 @@ class mf_email
 						$this->server = $r->emailServer;
 						$this->port = $r->emailPort;
 						$this->username = $r->emailUsername;
-						//$this->password = $r->emailPassword;
 						$this->address = $r->emailAddress;
 						$this->name = $r->emailName;
 						$this->smtp_ssl = $r->emailSmtpSSL;
 						$this->smtp_server = $r->emailSmtpServer;
 						$this->smtp_port = $r->emailSmtpPort;
+						$this->smtp_hostname = $r->emailSmtpHostname;
 						$this->smtp_username = $r->emailSmtpUsername;
-						$this->smtp_password = $r->emailSmtpPassword;
 						$this->deleted = $r->emailDeleted;
 
 						$this->users = array();
@@ -521,7 +521,7 @@ class mf_email
 
 		$this->encrypt_password();
 
-		$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpUsername = %s, emailCreated = NOW(), userID = '%d'", $wpdb->blogid, $this->public, @implode(",", $this->roles), $this->server, $this->port, $this->username, $this->address, $this->name, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_username, get_current_user_id()));
+		$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailCreated = NOW(), userID = '%d'", $wpdb->blogid, $this->public, @implode(",", $this->roles), $this->server, $this->port, $this->username, $this->address, $this->name, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, get_current_user_id()));
 
 		$this->id = $wpdb->insert_id;
 
@@ -537,7 +537,7 @@ class mf_email
 
 		$this->encrypt_password();
 
-		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailVerified = '0', emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpUsername = %s, emailDeleted = '0' WHERE emailID = '%d'", $wpdb->blogid, $this->public, @implode(",", $this->roles), $this->server, $this->port, $this->username, $this->address, $this->name, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_username, $this->id));
+		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailVerified = '0', emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailDeleted = '0' WHERE emailID = '%d'", $wpdb->blogid, $this->public, @implode(",", $this->roles), $this->server, $this->port, $this->username, $this->address, $this->name, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, $this->id));
 
 		$rows_affected = $wpdb->rows_affected;
 

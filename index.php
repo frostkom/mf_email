@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: 
-Version: 5.9.3
+Version: 5.9.5
 Author: Martin Fors
 Author URI: http://frostkom.se
 Text Domain: lang_email
@@ -77,6 +77,7 @@ function activate_email()
 		emailSmtpSSL ENUM('', 'ssl', 'tls') NOT NULL DEFAULT '',
 		emailSmtpServer VARCHAR(100) DEFAULT NULL,
 		emailSmtpPort SMALLINT DEFAULT NULL,
+		emailSmtpHostname VARCHAR(100) DEFAULT NULL,
 		emailSmtpUsername VARCHAR(100) DEFAULT NULL,
 		emailSmtpPassword VARCHAR(100) DEFAULT NULL,
 		userID INT UNSIGNED,
@@ -99,6 +100,7 @@ function activate_email()
 		'emailSmtpPort' => "ALTER TABLE [table] ADD [column] SMALLINT DEFAULT NULL AFTER emailSmtpServer",
 		'emailSmtpUsername' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpPort",
 		'emailSmtpPassword' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpUsername",
+		'emailSmtpHostname' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpPort",
 	);
 
 	$arr_update_column[$wpdb->base_prefix."email"] = array(

@@ -1,6 +1,6 @@
 jQuery(function($)
 {
-	/* WP admin */
+	/* WP Admin */
 	$(document).on('click', "a[href^='mailto:']", function(e)
 	{
 		if(e.which != 3)
@@ -23,7 +23,7 @@ jQuery(function($)
 		}
 	});
 
-	/* create account */
+	/* Create Account */
 	function clone_value_if_empty(self_obj, to_obj)
 	{
 		var dom_from_val = self_obj.val(),
@@ -35,49 +35,65 @@ jQuery(function($)
 		}
 	}
 
-	if($('.mf_form.mf_settings input[type=hidden][name=intEmailID]').val() == '')
+	$(document).on('blur', 'input[name=strEmailAddress]', function()
 	{
-		$(document).on('blur', 'input[name=strEmailAddress]', function()
-		{
-			clone_value_if_empty($(this), $('input[name=strEmailUsername]'));
-		});
+		clone_value_if_empty($(this), $('input[name=strEmailUsername]'));
+	});
 
-		$(document).on('blur', 'input[name=strEmailServer]', function()
-		{
-			clone_value_if_empty($(this), $('input[name=strEmailSmtpServer]'));
-		});
+	$(document).on('blur', 'input[name=strEmailServer]', function()
+	{
+		clone_value_if_empty($(this), $('input[name=strEmailSmtpServer]'));
+	});
 
-		$(document).on('blur', 'input[name=strEmailUsername]', function()
+	$(document).on('blur', 'input[name=strEmailUsername]', function()
+	{
+		clone_value_if_empty($(this), $('input[name=strEmailSmtpUsername]'));
+	});
+
+	$(document).on('blur', 'input[name=strEmailAddress]', function()
+	{
+		var self_obj = $(this),
+			to_obj = $('input[name=strEmailSmtpHostname]');
+
+		var dom_from_val = self_obj.val(),
+			dom_to_val = to_obj.val();
+
+		if(dom_from_val != '' && dom_to_val == '')
 		{
-			clone_value_if_empty($(this), $('input[name=strEmailSmtpUsername]'));
+			var arr_from_val = dom_from_val.split("@");
+
+			to_obj.val(arr_from_val[1]);
+		}
+	});
+
+	/* Send Email */
+	if($("#strMessageTo, #strMessageCc").length > 0)
+	{
+		$("#strMessageTo, #strMessageCc").autocomplete(
+		{
+			source: function(request, response)
+			{
+				$.ajax(
+				{
+					url: script_email.plugin_url + 'ajax.php?type=email/search',
+					dataType: "json",
+					data: {
+						s: request.term
+					},
+					success: function(data)
+					{
+						if(data.amount > 0)
+						{
+							response(data);
+						}
+					}
+				});
+			},
+			minLength: 3
 		});
 	}
 
-	/* send email */
-	$("#strMessageTo, #strMessageCc").autocomplete(
-	{
-		source: function(request, response)
-		{
-			$.ajax(
-			{
-				url: script_email.plugin_url + 'ajax.php?type=email/search',
-				dataType: "json",
-				data: {
-					s: request.term
-				},
-				success: function(data)
-				{
-					if(data.amount > 0)
-					{
-						response(data);
-					}
-				}
-			});
-		},
-		minLength: 3
-	});
-
-	/* settings */
+	/* Settings */
 	$(document).on('click', "button[name=btnSmtpTest]", function()
 	{
 		var smtp_to = $('#smtp_to').val();
