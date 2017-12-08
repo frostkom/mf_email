@@ -635,7 +635,7 @@ function send_smtp_test()
 	if($mail_to != '')
 	{
 		$mail_subject = sprintf(__("Test mail to %s", 'lang_email'), $mail_to);
-		$mail_content = __("This is a test email generated from WordPress", 'lang_email');
+		$mail_content = sprintf(__("This is a test email generated from %s on %s", 'lang_email'), "Wordpress", remove_protocol(array('url' => get_site_url(), 'clean' => true)));
 
 		DEFINE('SMTPDebug', 3);
 

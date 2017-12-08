@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-08 11:08+0100\n"
+"POT-Creation-Date: 2017-12-08 18:09+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -342,8 +342,9 @@ msgid "Test mail to %s"
 msgstr "Testmeddelande till %s"
 
 #: ../include/functions.php:638
-msgid "This is a test email generated from WordPress"
-msgstr "Detta är ett testmeddelande genererat från Wordpress"
+#, php-format
+msgid "This is a test email generated from %s on %s"
+msgstr "Detta är ett testmeddelande genererat från %s på %s"
 
 #: ../include/functions.php:650
 msgid "The test message was sent successfully"
