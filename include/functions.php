@@ -687,6 +687,7 @@ function send_smtp_test()
 		$result['error'] = __("You did not enter a valid email address. Please do and try again", 'lang_email');
 	}
 
+	header('Content-Type: application/json');
 	echo json_encode($result);
 	die();
 }
@@ -780,7 +781,7 @@ function menu_email()
 //Extension for RCube
 function raise_error($error)
 {
-	do_log(__("Email error", 'lang_email').": ".var_export($error, true));
+	error_log(__("Email error", 'lang_email').": ".var_export($error, true));
 }
 
 function email_connect($data)
