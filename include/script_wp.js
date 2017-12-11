@@ -75,7 +75,7 @@ jQuery(function($)
 			{
 				$.ajax(
 				{
-					url: script_email.plugin_url + 'ajax.php?type=email/search',
+					url: script_email.plugin_url + 'api/?type=email/search',
 					dataType: "json",
 					data: {
 						s: request.term

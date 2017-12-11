@@ -4,17 +4,15 @@ if(!defined('ABSPATH'))
 {
 	header('Content-Type: application/json');
 
-	$folder = str_replace("/wp-content/plugins/mf_email/include", "/", dirname(__FILE__));
+	$folder = str_replace("/wp-content/plugins/mf_email/include/api", "/", dirname(__FILE__));
 
 	require_once($folder."wp-load.php");
 }
 
+$json_output = array();
+
 $strAjaxInput = check_var('type', 'char', true, 'email/folders/'.__("Inbox", 'lang_email'));
 $arr_input = explode("/", trim($strAjaxInput, "/"));
-
-$obj_email = new mf_email();
-
-$json_output = "";
 
 if($arr_input[0] == "email")
 {
@@ -235,6 +233,8 @@ if($arr_input[0] == "email")
 
 	else if($arr_input[1] == "show")
 	{
+		$obj_email = new mf_email();
+
 		$intMessageID = $arr_input[2];
 
 		$query = $wpdb->prepare("SELECT messageTextID, messageRead, messageFrom, messageFromName, messageTo, messageCc, emailAddress, messageName, messageText, messageText2, messageCreated, messageReceived, ".$wpdb->base_prefix."email_message.userID, folderType FROM ".$wpdb->base_prefix."email INNER JOIN ".$wpdb->base_prefix."email_folder USING (emailID) INNER JOIN ".$wpdb->base_prefix."email_message USING (folderID) WHERE ".$wpdb->base_prefix."email_message.messageID = '%d'".$query_where." LIMIT 0, 1", $intMessageID);

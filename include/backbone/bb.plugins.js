@@ -2,7 +2,7 @@ jQuery.fn.callAPI = function(o)
 {
 	var op = jQuery.extend(
 	{
-		base_url: '/wp-content/plugins/mf_email/include/ajax.php',
+		base_url: '/wp-content/plugins/mf_email/include/api/',
 		url: '',
 		data: '',
 		send_type: 'post',
