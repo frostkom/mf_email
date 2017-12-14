@@ -7,7 +7,6 @@ var EmailApp = Backbone.Router.extend(
 	{
 		if(jQuery('#txtFolders tbody tr').length == 0)
 		{
-			//action_type = '';
 			myEmailView.loadPage('', action_type);
 		}
 

@@ -541,23 +541,24 @@ function settings_email()
 	$admin_email = get_bloginfo('admin_email');
 	$wpdb->get_results($wpdb->prepare("SELECT emailID FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s AND emailSmtpServer != ''", $admin_email));
 
-	if($wpdb->num_rows > 0)
-	{
-		$arr_settings['setting_smtp_test'] = __("Test SMTP", 'lang_email');
-	}
-
-	else
+	if($wpdb->num_rows == 0)
 	{
 		$arr_settings['setting_smtp_server'] = __("SMTP Server", 'lang_email');
 		$arr_settings['setting_smtp_port'] = __("SMTP Port", 'lang_email');
 		$arr_settings['setting_smtp_ssl'] = __("SMTP SSL", 'lang_email');
 		$arr_settings['setting_smtp_username'] = __("SMTP Username", 'lang_email');
 		$arr_settings['setting_smtp_password'] = __("SMTP Password", 'lang_email');
+	}
+	
+	else if(get_option('setting_smtp_server') != '')
+	{
+		$arr_settings['setting_smtp_test'] = __("Test SMTP", 'lang_email');
 
-		if(get_option('setting_smtp_server') != '')
-		{
-			$arr_settings['setting_smtp_test'] = __("Test SMTP", 'lang_email');
-		}
+		delete_option('setting_smtp_server');
+		delete_option('setting_smtp_port');
+		delete_option('setting_smtp_ssl');
+		delete_option('setting_smtp_username');
+		delete_option('setting_smtp_password');
 	}
 
 	show_settings_fields(array('area' => $options_area, 'settings' => $arr_settings));
