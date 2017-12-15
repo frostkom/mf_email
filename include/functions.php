@@ -550,7 +550,7 @@ function settings_email()
 		$arr_settings['setting_smtp_password'] = __("SMTP Password", 'lang_email');
 	}
 	
-	else if(get_option('setting_smtp_server') != '')
+	else if($wpdb->num_rows > 0 || get_option('setting_smtp_server') != '')
 	{
 		$arr_settings['setting_smtp_test'] = __("Test SMTP", 'lang_email');
 

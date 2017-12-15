@@ -500,6 +500,11 @@ class mf_email
 
 		if($this->password_encrypted != '')
 		{
+			if(strlen($this->password_encrypted) > 150)
+			{
+				do_log(__("The encrypted password was longer than the max length in DB", 'lang_email')." (".strlen($this->password_encrypted).")");
+			}
+
 			$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailPassword = %s WHERE emailID = '%d'", $this->password_encrypted, $this->id)); // AND userID = '%d', get_current_user_id()
 
 			$rows_affected += $wpdb->rows_affected;
@@ -507,6 +512,11 @@ class mf_email
 
 		if($this->smtp_password_encrypted != '')
 		{
+			if(strlen($this->smtp_password_encrypted) > 150)
+			{
+				do_log(__("The encrypted password was longer than the max length in DB", 'lang_email')." (".strlen($this->smtp_password_encrypted).")");
+			}
+
 			$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailSmtpPassword = %s WHERE emailID = '%d'", $this->smtp_password_encrypted, $this->id)); // AND userID = '%d', get_current_user_id()
 
 			$rows_affected += $wpdb->rows_affected;

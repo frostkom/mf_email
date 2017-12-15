@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: 
-Version: 5.9.9
+Version: 5.9.10
 Author: Martin Fors
 Author URI: http://frostkom.se
 Text Domain: lang_email
@@ -69,7 +69,7 @@ function activate_email()
 		emailServer VARCHAR(30),
 		emailPort SMALLINT,
 		emailUsername VARCHAR(30),
-		emailPassword VARCHAR(100),
+		emailPassword VARCHAR(150),
 		emailAddress VARCHAR(50),
 		emailName VARCHAR(60),
 		emailCreated DATETIME,
@@ -79,7 +79,7 @@ function activate_email()
 		emailSmtpPort SMALLINT DEFAULT NULL,
 		emailSmtpHostname VARCHAR(100) DEFAULT NULL,
 		emailSmtpUsername VARCHAR(100) DEFAULT NULL,
-		emailSmtpPassword VARCHAR(100) DEFAULT NULL,
+		emailSmtpPassword VARCHAR(150) DEFAULT NULL,
 		userID INT UNSIGNED,
 		emailDeleted ENUM('0','1') NOT NULL DEFAULT '0',
 		emailDeletedDate DATETIME DEFAULT NULL,
@@ -99,12 +99,14 @@ function activate_email()
 		'emailSmtpServer' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpSSL",
 		'emailSmtpPort' => "ALTER TABLE [table] ADD [column] SMALLINT DEFAULT NULL AFTER emailSmtpServer",
 		'emailSmtpUsername' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpPort",
-		'emailSmtpPassword' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpUsername",
+		'emailSmtpPassword' => "ALTER TABLE [table] ADD [column] VARCHAR(150) DEFAULT NULL AFTER emailSmtpUsername",
 		'emailSmtpHostname' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpPort",
 	);
 
 	$arr_update_column[$wpdb->base_prefix."email"] = array(
-		'emailSmtpSSL' => "ALTER TABLE [table] CHANGE [column] emailSmtpSSL ENUM('', 'ssl', 'tls') NOT NULL DEFAULT ''",
+		'emailSmtpSSL' => "ALTER TABLE [table] CHANGE [column] [column] ENUM('', 'ssl', 'tls') NOT NULL DEFAULT ''",
+		'emailPassword' => "ALTER TABLE [table] CHANGE [column] [column] VARCHAR(150)",
+		'emailSmtpPassword' => "ALTER TABLE [table] CHANGE [column] [column] VARCHAR(150)",
 	);
 
 	$arr_add_index[$wpdb->base_prefix."email"] = array(
