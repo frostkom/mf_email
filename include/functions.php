@@ -787,8 +787,6 @@ function raise_error($error)
 
 function email_connect($data)
 {
-	if(!isset($data['close_after'])){	$data['close_after'] = false;}
-
 	$is_connected = false;
 
 	$connection = new rcube_imap();

@@ -69,7 +69,6 @@ class mf_email
 						else
 						{
 							$error_text = __("The email account was not updated", 'lang_email');
-							//$error_text .= " (".$wpdb->last_query.")";
 						}
 					}
 
@@ -163,7 +162,7 @@ class mf_email
 									$strEmailPassword = $encryption->decrypt($strEmailPassword, md5($strEmailAddress));
 								}
 
-								list($is_connected, $connection) = email_connect(array('server' => $strEmailServer, 'port' => $intEmailPort, 'username' => $strEmailUsername, 'password' => $strEmailPassword, 'close_after' => true));
+								list($is_connected, $connection) = email_connect(array('server' => $strEmailServer, 'port' => $intEmailPort, 'username' => $strEmailUsername, 'password' => $strEmailPassword));
 
 								if($is_connected == true)
 								{
@@ -607,8 +606,8 @@ class mf_email_account_table extends mf_list_table
 			//'emailRoles' => __("Roles", 'lang_email'),
 			//'emailUsers' => __("Users", 'lang_email'),
 			'emailServer' => __("Incoming", 'lang_email'),
-			'emailSmtpServer' => __("Outgoing", 'lang_email'),
 			'emailChecked' => __("Status", 'lang_email'),
+			'emailSmtpServer' => __("Outgoing", 'lang_email'),
 		);
 
 		$this->set_columns($arr_columns);
@@ -737,22 +736,10 @@ class mf_email_account_table extends mf_list_table
 				}
 			break;
 
-			case 'emailSmtpServer':
-				$strEmailSmtpServer = $item[$column_name];
-
-				if($strEmailSmtpServer != '')
-				{
-					$out .= $strEmailSmtpServer.":".$item['emailSmtpPort']
-					."<div class='row-actions'>"
-						.$item['emailSmtpUsername']
-					."</div>";
-				}
-			break;
-
 			case 'emailChecked':
 				$dteEmailChecked = $item[$column_name];
 
-				if($dteEmailChecked > DEFAULT_DATE)
+				if($dteEmailChecked > DEFAULT_DATE && $item['emailServer'] != '')
 				{
 					if($dteEmailChecked < date("Y-m-d H:i:s", strtotime("-1 day")))
 					{
@@ -791,6 +778,18 @@ class mf_email_account_table extends mf_list_table
 				{
 					$out .= "<i class='fa fa-spinner fa-spin fa-lg'></i>
 					<div class='row-actions'>".__("The e-mail has not been checked yet", 'lang_email')."</div>";
+				}
+			break;
+
+			case 'emailSmtpServer':
+				$strEmailSmtpServer = $item[$column_name];
+
+				if($strEmailSmtpServer != '')
+				{
+					$out .= $strEmailSmtpServer.":".$item['emailSmtpPort']
+					."<div class='row-actions'>"
+						.$item['emailSmtpUsername']
+					."</div>";
 				}
 			break;
 

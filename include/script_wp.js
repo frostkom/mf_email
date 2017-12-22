@@ -5,7 +5,7 @@ jQuery(function($)
 	{
 		if(e.which != 3)
 		{
-			var this_href = $(this).attr('href').replace('mailto:', ''),
+			var this_href = $(this).attr('href').replace("mailto:", "").replace("?", "&").replace("&subject", "&strMessageSubject").replace("&body", "&strMessageText"),
 				url = script_email.admin_url + '&strMessageTo=' + this_href;
 
 			location.href = url;
