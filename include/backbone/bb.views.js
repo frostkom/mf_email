@@ -129,9 +129,9 @@ var EmailView = Backbone.View.extend(
 				jQuery('#txtEmails tbody').append(html);
 			}
 
-			if(limit_amount >= script_email_bb_views.emails2show)
+			if(limit_amount >= script_email_views.emails2show)
 			{
-				html = _.template(jQuery('#template_email_more').html())({'folderName': this.model.get("folderName"), 'limit_start': parseInt(limit_start) + parseInt(script_email_bb_views.emails2show)});
+				html = _.template(jQuery('#template_email_more').html())({'folderName': this.model.get("folderName"), 'limit_start': parseInt(limit_start) + parseInt(script_email_views.emails2show)});
 
 				jQuery('#txtEmails tbody').append(html);
 			}

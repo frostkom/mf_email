@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-20 14:48+0100\n"
+"POT-Creation-Date: 2017-12-22 14:45+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -216,13 +216,13 @@ msgid "Status"
 msgstr "Status"
 
 #: ../include/classes.php:647
-#: ../list/index.php:79
+#: ../list/index.php:82
 msgid "Edit"
 msgstr "Redigera"
 
 #: ../include/classes.php:651
-#: ../list/index.php:84
-#: ../list/index.php:134
+#: ../list/index.php:87
+#: ../list/index.php:137
 msgid "Delete"
 msgstr "Radera"
 
@@ -282,7 +282,7 @@ msgstr "Du måste ändra funktion från private till public"
 #: ../include/functions.php:751
 #: ../include/functions.php:931
 #: ../include/api/index.php:14
-#: ../list/index.php:21
+#: ../list/index.php:24
 msgid "Inbox"
 msgstr "Inkorg"
 
@@ -295,7 +295,7 @@ msgstr "Spam"
 #: ../include/functions.php:571
 #: ../include/functions.php:748
 #: ../include/functions.php:771
-#: ../list/index.php:40
+#: ../list/index.php:43
 #: ../send/index.php:259
 msgid "E-mail"
 msgstr "E-post"
@@ -391,7 +391,7 @@ msgid "Add New Account"
 msgstr "Skapa nytt konto"
 
 #: ../include/functions.php:763
-#: ../list/index.php:48
+#: ../list/index.php:51
 msgid "Add New Folder"
 msgstr "Skapa ny mapp"
 
@@ -429,73 +429,69 @@ msgstr "Tappade uppkopplingen"
 msgid "No subject"
 msgstr "Inget ämne"
 
-#: ../list/index.php:25
+#: ../list/index.php:28
 msgid "The e-mail was successfully sent"
 msgstr "Meddelandet skickades!"
 
-#: ../list/index.php:30
+#: ../list/index.php:33
 msgid "The folder was created"
 msgstr "Mappen skapades"
 
-#: ../list/index.php:35
+#: ../list/index.php:38
 msgid "The folder was updated"
 msgstr "Mappen uppdaterades"
 
-#: ../list/index.php:41
+#: ../list/index.php:44
 msgid "Send new"
 msgstr "Skicka nytt"
 
-#: ../list/index.php:59
-msgid "Lost Connection"
-msgstr "Tappade uppkopplingen"
-
-#: ../list/index.php:92
-#: ../list/index.php:189
+#: ../list/index.php:95
+#: ../list/index.php:192
 msgid "There is nothing to show"
 msgstr "Det finns inget att visa"
 
-#: ../list/index.php:96
+#: ../list/index.php:99
 msgid "Show more"
 msgstr "Visa fler"
 
-#: ../list/index.php:135
+#: ../list/index.php:138
 msgid "Mark as Spam"
 msgstr "Markera som spam"
 
-#: ../list/index.php:140
+#: ../list/index.php:143
 msgid "Restore"
 msgstr "Återställ"
 
-#: ../list/index.php:194
+#: ../list/index.php:197
 #: ../send/index.php:236
 #: ../send/index.php:279
 msgid "Subject"
 msgstr "Ämne"
 
-#: ../list/index.php:195
+#: ../list/index.php:198
 #: ../send/index.php:234
 #: ../send/index.php:268
 msgid "From"
 msgstr "Från"
 
-#: ../list/index.php:198
+#: ../list/index.php:201
 #: ../send/index.php:275
 msgid "Cc"
 msgstr "Kopia"
 
-#: ../list/index.php:200
+#: ../list/index.php:203
 msgid "Answer"
 msgstr "Svara"
 
-#: ../list/index.php:200
+#: ../list/index.php:203
 msgid "Forward"
 msgstr "Vidarebefordra"
 
-#: ../list/index.php:220
+#: ../list/index.php:223
 msgid "Plain"
 msgstr "Oformaterad"
 
-#: ../list/index.php:221
+#: ../list/index.php:224
 msgid "HTML"
 msgstr "HTML"
 
@@ -552,8 +548,3 @@ msgstr "Meddelande"
 msgid "Save draft"
 msgstr "Spara utkast"
 
-#~ msgid "The result I got back was"
-#~ msgstr "Resultatet som jag fick tillbaka var"
-
-#~ msgid "PHPmailer debug"
-#~ msgstr "PHPmailer debug"

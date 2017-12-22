@@ -81,27 +81,4 @@
 						margin: 0 0 1em;
 						padding: 0;
 					}
-
-	#overlay_lost_connection, #overlay_loading
-	{
-		background: rgba(0, 0, 0, .5);
-		bottom: 0;
-		color: #ccc;
-		display: none;
-		font-size: 4em;
-		left: 0;
-		position: fixed;
-		right: 0;
-		text-align: center;
-		top: 0;
-		z-index: 1002;
-	}
-
-		#overlay_lost_connection span, #overlay_loading span
-		{
-			display: inline-block;
-			margin-top: 50vh;
-			-webkit-transform: translateY(-50%);
-			transform: translateY(-50%);
-		}
 }

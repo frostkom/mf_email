@@ -7,6 +7,7 @@ var EmailModel = Backbone.Model.extend(
 
 		jQuery().callAPI(
 		{
+			base_url: script_email_models.plugin_url + 'api/',
 			url: dom_href ? "?type=" + dom_href : '',
 			data: form_data,
 			onSuccess: function(data)
