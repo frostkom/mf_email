@@ -721,7 +721,7 @@ class mf_email_account_table extends mf_list_table
 							case -1:
 								$out .= "<span class='fa-stack'>
 									<i class='fa fa-search fa-stack-1x'></i>
-									<i class='fa fa-ban fa-stack-2x text-danger red'></i>
+									<i class='fa fa-ban fa-stack-2x red'></i>
 								</span>&nbsp;";
 							break;
 						}

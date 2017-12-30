@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-22 14:45+0100\n"
+"POT-Creation-Date: 2017-12-30 10:33+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -89,7 +89,6 @@ msgid "Save"
 msgstr "Spara"
 
 #: ../create/index.php:81
-#: ../send/index.php:295
 msgid "Settings"
 msgstr "Inställningar"
 
@@ -296,7 +295,7 @@ msgstr "Spam"
 #: ../include/functions.php:748
 #: ../include/functions.php:771
 #: ../list/index.php:43
-#: ../send/index.php:259
+#: ../send/index.php:269
 msgid "E-mail"
 msgstr "E-post"
 
@@ -373,7 +372,8 @@ msgid "E-mail to send test message to"
 msgstr "E-post att skicka testmeddelande till"
 
 #: ../include/functions.php:700
-#: ../send/index.php:287
+#: ../send/index.php:296
+#: ../send/index.php:298
 msgid "Send"
 msgstr "Skicka"
 
@@ -463,19 +463,19 @@ msgid "Restore"
 msgstr "Återställ"
 
 #: ../list/index.php:197
-#: ../send/index.php:236
-#: ../send/index.php:279
+#: ../send/index.php:237
+#: ../send/index.php:289
 msgid "Subject"
 msgstr "Ämne"
 
 #: ../list/index.php:198
-#: ../send/index.php:234
-#: ../send/index.php:268
+#: ../send/index.php:235
+#: ../send/index.php:278
 msgid "From"
 msgstr "Från"
 
 #: ../list/index.php:201
-#: ../send/index.php:275
+#: ../send/index.php:285
 msgid "Cc"
 msgstr "Kopia"
 
@@ -495,56 +495,64 @@ msgstr "Oformaterad"
 msgid "HTML"
 msgstr "HTML"
 
-#: ../send/index.php:43
+#: ../send/index.php:44
 msgid "Sent"
 msgstr "Skickat"
 
-#: ../send/index.php:72
+#: ../send/index.php:73
 msgid "The file does not seem to exist"
 msgstr "Filen verkar inte finnas"
 
-#: ../send/index.php:83
+#: ../send/index.php:84
 msgid "Could not save the attached file to DB, but it was successfully sent"
 msgstr "Det gick inte att spara den bifogade filen i databasen, men det skickades till mottagaren"
 
-#: ../send/index.php:97
+#: ../send/index.php:98
 msgid "Unfortunately, I could not send the email for you. Please try again. If the problem persists, please contact my admin"
 msgstr "Tyvärr kunde jag inte skicka meddelandet åt dig. Var vänlig försök igen. Om problemet kvarstår, kontakta min admin"
 
-#: ../send/index.php:104
+#: ../send/index.php:105
 msgid "You have to enter all required fields"
 msgstr "Var vänlig fyll i alla obligatoriska fält"
 
-#: ../send/index.php:110
+#: ../send/index.php:111
 msgid "Draft"
 msgstr "Utkast"
 
-#: ../send/index.php:116
+#: ../send/index.php:117
 msgid "The draft has been saved"
 msgstr "Utkastet har sparats"
 
-#: ../send/index.php:233
+#: ../send/index.php:234
 msgid "Original message"
 msgstr "Ursprungligt meddelande"
 
-#: ../send/index.php:235
-#: ../send/index.php:271
+#: ../send/index.php:236
+#: ../send/index.php:281
 msgid "To"
 msgstr "Till"
 
-#: ../send/index.php:237
+#: ../send/index.php:238
 msgid "Date"
 msgstr "Datum"
 
-#: ../send/index.php:240
+#: ../send/index.php:241
 msgid "End original message"
 msgstr "Slut på ursprungligt meddelande"
 
-#: ../send/index.php:266
+#: ../send/index.php:276
 msgid "Message"
 msgstr "Meddelande"
 
-#: ../send/index.php:289
+#: ../send/index.php:300
 msgid "Save draft"
 msgstr "Spara utkast"
+
+#: ../send/index.php:306
+msgid "Advanced"
+msgstr "Avancerat"
+
+#: ../send/index.php:312
+msgid "Text Source"
+msgstr "Textkälla"
 

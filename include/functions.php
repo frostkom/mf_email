@@ -71,7 +71,7 @@ function phpmailer_init_email($phpmailer)
 		{
 			$phpmailer->Port = $smtp_port;
 		}
-		
+
 		if($smtp_hostname != '')
 		{
 			$phpmailer->Hostname = $smtp_hostname;
@@ -549,7 +549,7 @@ function settings_email()
 		$arr_settings['setting_smtp_username'] = __("SMTP Username", 'lang_email');
 		$arr_settings['setting_smtp_password'] = __("SMTP Password", 'lang_email');
 	}
-	
+
 	else if($wpdb->num_rows > 0 || get_option('setting_smtp_server') != '')
 	{
 		$arr_settings['setting_smtp_test'] = __("Test SMTP", 'lang_email');

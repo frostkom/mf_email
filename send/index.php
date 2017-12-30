@@ -13,6 +13,7 @@ $strMessageCc = check_var('strMessageCc');
 $strMessageSubject = check_var('strMessageSubject');
 $strMessageText = check_var('strMessageText', 'raw');
 $strMessageAttachment = check_var('strMessageAttachment');
+$intEmailTextSource = check_var('intEmailTextSource');
 
 $intGroupMessageID = check_var('intGroupMessageID');
 
@@ -126,6 +127,15 @@ else if($intGroupMessageID > 0)
 		$strMessageSubject = $r->messageName;
 		$strMessageText = stripslashes($r->messageText);
 	}
+}
+
+else if($intEmailTextSource > 0)
+{
+	$strMessageText = $wpdb->get_var($wpdb->prepare("SELECT post_content FROM ".$wpdb->posts." WHERE post_type = 'page' AND post_status = 'publish' AND ID = '%d'", $intEmailTextSource));
+
+	$user_data = get_userdata(get_current_user_id());
+
+	$strMessageText = str_replace("[name]", $user_data->display_name, $strMessageText);
 }
 
 else if($strMessageCc == '' && $strMessageSubject == '' && $strMessageText == '')
@@ -283,6 +293,7 @@ echo "<div class='wrap'>
 				</div>
 				<div id='postbox-container-1'>
 					<div class='postbox'>
+						<h3 class='hndle'>".__("Send", 'lang_email')."</h3>
 						<div class='inside'>"
 							.show_button(array('name' => 'btnMessageSend', 'text' => __("Send", 'lang_email')))
 							."&nbsp;"
@@ -292,8 +303,13 @@ echo "<div class='wrap'>
 						."</div>
 					</div>
 					<div class='postbox'>
-						<h3 class='hndle'>".__("Settings", 'lang_email')."</h3>
-						<div class='inside'>"
+						<h3 class='hndle'>".__("Advanced", 'lang_email')."</h3>
+						<div class='inside'>";
+
+							$arr_data_source = array();
+							get_post_children(array('add_choose_here' => true), $arr_data_source);
+
+							echo show_select(array('data' => $arr_data_source, 'name' => 'intEmailTextSource', 'text' => __("Text Source", 'lang_group'), 'xtra' => "rel='submit_change' disabled"))
 							.get_media_button(array('name' => "strMessageAttachment", 'value' => $strMessageAttachment))
 						."</div>
 					</div>
