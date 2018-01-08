@@ -13,7 +13,7 @@ mf_enqueue_script('script_touch', $plugin_base_include_url."jquery.ui.touch-punc
 
 mf_enqueue_script('underscore');
 mf_enqueue_script('backbone');
-mf_enqueue_script('script_base_plugins', $plugin_include_url."backbone/bb.plugins.js", $plugin_version);
+mf_enqueue_script('script_base_plugins', $plugin_base_include_url."backbone/bb.plugins.js", $plugin_version);
 //mf_enqueue_script('script_email_plugins', $plugin_include_url."backbone/bb.plugins.js", $plugin_version);
 mf_enqueue_script('script_email_router', $plugin_include_url."backbone/bb.router.js", $plugin_version);
 mf_enqueue_script('script_email_models', $plugin_include_url."backbone/bb.models.js", array('plugin_url' => $plugin_include_url), $plugin_version);
