@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-30 10:33+0100\n"
+"POT-Creation-Date: 2018-01-26 10:07+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -18,8 +18,8 @@ msgstr ""
 
 #: ../accounts/index.php:10
 #: ../create/index.php:28
-#: ../include/functions.php:757
-#: ../include/functions.php:774
+#: ../include/functions.php:764
+#: ../include/functions.php:781
 msgid "Accounts"
 msgstr "Konton"
 
@@ -33,7 +33,7 @@ msgstr "Information"
 
 #: ../create/index.php:38
 #: ../folder/index.php:83
-#: ../include/classes.php:603
+#: ../include/classes.php:620
 msgid "Name"
 msgstr "Namn"
 
@@ -42,7 +42,7 @@ msgid "E-mail Address"
 msgstr "E-postadress"
 
 #: ../create/index.php:44
-#: ../include/classes.php:608
+#: ../include/classes.php:625
 msgid "Incoming"
 msgstr "Inkommande"
 
@@ -66,7 +66,7 @@ msgid "Password"
 msgstr "Lösenord"
 
 #: ../create/index.php:57
-#: ../include/classes.php:610
+#: ../include/classes.php:627
 msgid "Outgoing"
 msgstr "Ugående"
 
@@ -184,74 +184,74 @@ msgstr "Kontot skapades"
 msgid "The account was updated"
 msgstr "Kontot uppdaterades"
 
-#: ../include/classes.php:352
+#: ../include/classes.php:353
 msgid "Choose here"
 msgstr "Välj här"
 
-#: ../include/classes.php:504
-#: ../include/classes.php:516
+#: ../include/classes.php:521
+#: ../include/classes.php:533
 msgid "The encrypted password was longer than the max length in DB"
 msgstr "Det krypterade lösenordet var längre än maxlängden i DB"
 
-#: ../include/classes.php:595
+#: ../include/classes.php:612
 msgid "All"
 msgstr "Alla"
 
-#: ../include/classes.php:596
-#: ../include/functions.php:405
+#: ../include/classes.php:613
+#: ../include/functions.php:412
 msgid "Trash"
 msgstr "Papperskorg"
 
-#: ../include/classes.php:602
+#: ../include/classes.php:619
 msgid "Address"
 msgstr "Adress"
 
-#: ../include/classes.php:604
+#: ../include/classes.php:621
 msgid "Rights"
 msgstr "Behörighet"
 
-#: ../include/classes.php:609
+#: ../include/classes.php:626
 msgid "Status"
 msgstr "Status"
 
-#: ../include/classes.php:647
+#: ../include/classes.php:664
 #: ../list/index.php:82
 msgid "Edit"
 msgstr "Redigera"
 
-#: ../include/classes.php:651
+#: ../include/classes.php:668
 #: ../list/index.php:87
 #: ../list/index.php:137
 msgid "Delete"
 msgstr "Radera"
 
-#: ../include/classes.php:657
+#: ../include/classes.php:674
 msgid "Recover"
 msgstr "Återställ"
 
-#: ../include/classes.php:714
+#: ../include/classes.php:731
 msgid "Verify"
 msgstr "Verifera"
 
-#: ../include/classes.php:747
+#: ../include/classes.php:764
 #, php-format
 msgid "Not been checked since %s"
 msgstr "Har inte kollats sedan %s"
 
-#: ../include/classes.php:759
+#: ../include/classes.php:776
 #, php-format
 msgid "No e-mails since %s"
 msgstr "Inga e-post sedan %s"
 
-#: ../include/classes.php:765
+#: ../include/classes.php:782
 msgid "Checked"
 msgstr "Kollad"
 
-#: ../include/classes.php:772
+#: ../include/classes.php:789
 msgid "No e-mails so far"
 msgstr "Inga e-post än så länge"
 
-#: ../include/classes.php:780
+#: ../include/classes.php:797
 msgid "The e-mail has not been checked yet"
 msgstr "E-postkontot har inte kollats ännu"
 
@@ -276,150 +276,150 @@ msgstr "Det finns ett nytt meddelande i din inkorg"
 msgid "You have to edit the function to be public instead of private"
 msgstr "Du måste ändra funktion från private till public"
 
-#: ../include/functions.php:412
-#: ../include/functions.php:435
-#: ../include/functions.php:751
-#: ../include/functions.php:931
+#: ../include/functions.php:419
+#: ../include/functions.php:442
+#: ../include/functions.php:758
+#: ../include/functions.php:938
 #: ../include/api/index.php:14
 #: ../list/index.php:24
 msgid "Inbox"
 msgstr "Inkorg"
 
-#: ../include/functions.php:428
-#: ../include/functions.php:926
+#: ../include/functions.php:435
+#: ../include/functions.php:933
 msgid "Spam"
 msgstr "Spam"
 
-#: ../include/functions.php:539
-#: ../include/functions.php:571
-#: ../include/functions.php:748
-#: ../include/functions.php:771
+#: ../include/functions.php:546
+#: ../include/functions.php:578
+#: ../include/functions.php:755
+#: ../include/functions.php:778
 #: ../list/index.php:43
 #: ../send/index.php:269
 msgid "E-mail"
 msgstr "E-post"
 
-#: ../include/functions.php:546
+#: ../include/functions.php:553
 msgid "SMTP Server"
 msgstr "SMTP-server"
 
-#: ../include/functions.php:547
+#: ../include/functions.php:554
 msgid "SMTP Port"
 msgstr "SMTP-port"
 
-#: ../include/functions.php:548
+#: ../include/functions.php:555
 msgid "SMTP SSL"
 msgstr "SMTP SSL"
 
-#: ../include/functions.php:549
+#: ../include/functions.php:556
 msgid "SMTP Username"
 msgstr "SMTP-användarnamn"
 
-#: ../include/functions.php:550
+#: ../include/functions.php:557
 msgid "SMTP Password"
 msgstr "SMTP-lösenord"
 
-#: ../include/functions.php:555
+#: ../include/functions.php:562
 msgid "Test SMTP"
 msgstr "Testa SMTP"
 
-#: ../include/functions.php:580
+#: ../include/functions.php:587
 #, php-format
 msgid "The e-mail %s is used as sender address so this must be white listed in the SMTP, otherwise it can be caught in the servers spam filter"
 msgstr "E-postadressen %s används som avsändaradress så den måste vara vitlistad i SMTP-servern, annars kan meddelandet fastna i serverns spamfilter"
 
-#: ../include/functions.php:586
+#: ../include/functions.php:593
 #, php-format
 msgid "The e-mail %s already has an account where you have set an SMTP"
 msgstr "E-posten %s har redan ett konto där du har angett SMTP"
 
-#: ../include/functions.php:638
+#: ../include/functions.php:645
 #, php-format
 msgid "Test mail to %s"
 msgstr "Testmeddelande till %s"
 
-#: ../include/functions.php:639
+#: ../include/functions.php:646
 #, php-format
 msgid "This is a test email generated from %s on %s"
 msgstr "Detta är ett testmeddelande genererat från %s på %s"
 
-#: ../include/functions.php:651
+#: ../include/functions.php:658
 msgid "The test message was sent successfully"
 msgstr "Testmeddelandet skickades som det skulle"
 
-#: ../include/functions.php:656
+#: ../include/functions.php:663
 msgid "I am sorry, but I could not send the message for you"
 msgstr "Förlåt men jag kunde inte skicka meddelandet åt dig"
 
-#: ../include/functions.php:657
+#: ../include/functions.php:664
 msgid "More information regarding this is saved in the log"
 msgstr "Mer information om detta är sparat i loggen"
 
-#: ../include/functions.php:667
+#: ../include/functions.php:674
 msgid "SMTP debug"
 msgstr "SMTP debug"
 
-#: ../include/functions.php:682
+#: ../include/functions.php:689
 msgid "I could not send the test email. Please make sure that the credentials are correct"
 msgstr "Jag kunde inte skicka testmeddelandet. Var vänlig kontrollera uppgifterna så att de är korrekt"
 
-#: ../include/functions.php:688
+#: ../include/functions.php:695
 msgid "You did not enter a valid email address. Please do and try again"
 msgstr "Du angav inte en korrekt e-postadress. Var vänlig försök igen"
 
-#: ../include/functions.php:698
+#: ../include/functions.php:705
 msgid "E-mail to send test message to"
 msgstr "E-post att skicka testmeddelande till"
 
-#: ../include/functions.php:700
+#: ../include/functions.php:707
 #: ../send/index.php:296
 #: ../send/index.php:298
 msgid "Send"
 msgstr "Skicka"
 
-#: ../include/functions.php:717
+#: ../include/functions.php:724
 msgid "Unread"
 msgstr "Olästa"
 
-#: ../include/functions.php:754
+#: ../include/functions.php:761
 msgid "Send New"
 msgstr "Skicka nytt"
 
-#: ../include/functions.php:760
-#: ../include/functions.php:777
+#: ../include/functions.php:767
+#: ../include/functions.php:784
 msgid "Add New Account"
 msgstr "Skapa nytt konto"
 
-#: ../include/functions.php:763
+#: ../include/functions.php:770
 #: ../list/index.php:51
 msgid "Add New Folder"
 msgstr "Skapa ny mapp"
 
-#: ../include/functions.php:785
+#: ../include/functions.php:792
 msgid "Email error"
 msgstr "E-postfel"
 
-#: ../include/functions.php:946
+#: ../include/functions.php:953
 msgid "Inserted"
 msgstr "Inlagd"
 
-#: ../include/functions.php:985
+#: ../include/functions.php:992
 msgid "E-mail attachments"
 msgstr "Bifogade filer"
 
-#: ../include/functions.php:989
+#: ../include/functions.php:996
 msgid "The attachment was saved"
 msgstr "Bifogade filer sparades"
 
-#: ../include/functions.php:996
+#: ../include/functions.php:1003
 msgid "The email was not able to be saved"
 msgstr "E-postkontot kunde inte sparas"
 
-#: ../include/functions.php:1003
+#: ../include/functions.php:1010
 msgid "The e-mail already exists"
 msgstr "Meddelandet finns redan"
 
-#: ../include/functions.php:1044
+#: ../include/functions.php:1051
 msgid "Connection failed"
 msgstr "Tappade uppkopplingen"
 
@@ -463,13 +463,13 @@ msgid "Restore"
 msgstr "Återställ"
 
 #: ../list/index.php:197
-#: ../send/index.php:237
+#: ../send/index.php:246
 #: ../send/index.php:289
 msgid "Subject"
 msgstr "Ämne"
 
 #: ../list/index.php:198
-#: ../send/index.php:235
+#: ../send/index.php:244
 #: ../send/index.php:278
 msgid "From"
 msgstr "Från"
@@ -523,20 +523,20 @@ msgstr "Utkast"
 msgid "The draft has been saved"
 msgstr "Utkastet har sparats"
 
-#: ../send/index.php:234
+#: ../send/index.php:243
 msgid "Original message"
 msgstr "Ursprungligt meddelande"
 
-#: ../send/index.php:236
+#: ../send/index.php:245
 #: ../send/index.php:281
 msgid "To"
 msgstr "Till"
 
-#: ../send/index.php:238
+#: ../send/index.php:247
 msgid "Date"
 msgstr "Datum"
 
-#: ../send/index.php:241
+#: ../send/index.php:250
 msgid "End original message"
 msgstr "Slut på ursprungligt meddelande"
 

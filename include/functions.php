@@ -350,6 +350,13 @@ function save_email($data)
 	return array($data['id'], $wpdb->rows_affected);
 }
 
+function get_email_address_from_id($id)
+{
+	global $wpdb;
+
+	return $wpdb->get_var($wpdb->prepare("SELECT emailAddress FROM ".$wpdb->base_prefix."email WHERE emailID = '%d'", $id));
+}
+
 function get_email_address_from_text($in)
 {
 	preg_match_all('/[a-z\d][-a-z\d._]+@[a-z\d][-a-z\d._]+\.[a-z]{2,6}/is', strtolower($in), $out);

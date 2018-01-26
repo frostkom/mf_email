@@ -347,11 +347,28 @@ class mf_email
 		global $wpdb;
 
 		if(!isset($data['index'])){	$data['index'] = 'id';}
+		if(!isset($data['type'])){	$data['type'] = 'all';} //incoming, outgoing
 
-		$arr_data = array();
-		$arr_data[''] = "-- ".__("Choose here", 'lang_email')." --";
+		$arr_data = array(
+			'' => "-- ".__("Choose here", 'lang_email')." --"
+		);
 
-		$result = $wpdb->get_results("SELECT ".$wpdb->base_prefix."email.emailID, emailName, emailAddress FROM ".$wpdb->base_prefix."email_users RIGHT JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE (emailPublic = '1' OR emailRoles LIKE '%".get_current_user_role()."%' OR ".$wpdb->base_prefix."email.userID = '".get_current_user_id()."' OR ".$wpdb->base_prefix."email_users.userID = '".get_current_user_id()."') AND (blogID = '".$wpdb->blogid."' OR blogID = '0') AND emailDeleted = '0' ORDER BY emailName ASC, emailAddress ASC");
+		switch($data['type'])
+		{
+			case 'incoming':
+				$query_where = " AND emailServer != ''";
+			break;
+
+			case 'outgoing':
+				$query_where = " AND emailSmtpServer != ''";
+			break;
+
+			default:
+				$query_where = "";
+			break;
+		}
+
+		$result = $wpdb->get_results("SELECT ".$wpdb->base_prefix."email.emailID, emailName, emailAddress FROM ".$wpdb->base_prefix."email_users RIGHT JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE (emailPublic = '1' OR emailRoles LIKE '%".get_current_user_role()."%' OR ".$wpdb->base_prefix."email.userID = '".get_current_user_id()."' OR ".$wpdb->base_prefix."email_users.userID = '".get_current_user_id()."') AND (blogID = '".$wpdb->blogid."' OR blogID = '0') AND emailDeleted = '0'".$query_where." ORDER BY emailName ASC, emailAddress ASC");
 
 		foreach($result as $r)
 		{
