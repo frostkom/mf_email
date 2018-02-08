@@ -17,4 +17,4 @@ var EmailApp = Backbone.Router.extend(
 	}
 });
 
-var app = new EmailApp();
+new EmailApp();

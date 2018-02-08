@@ -14,7 +14,7 @@ list($rest, $placeholder_server) = explode("@", $placeholder_address);
 $users = get_users(array(
 	'orderby' => 'display_name',
 	'order' => 'ASC',
-	'fields' => array('ID', 'display_name'), //'all'
+	'fields' => array('ID', 'display_name'),
 ));
 
 $arr_data_users = array();

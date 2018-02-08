@@ -3,13 +3,14 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: 
-Version: 5.9.20
+Version: 5.9.23
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: http://frostkom.se
 Text Domain: lang_email
 Domain Path: /lang
 
+Depends: MF Base
 GitHub Plugin URI: frostkom/mf_email
 */
 

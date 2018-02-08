@@ -118,7 +118,7 @@ class mf_email
 			case 'account_list':
 				if(isset($_REQUEST['btnEmailDelete']) && $this->id > 0 && wp_verify_nonce($_REQUEST['_wpnonce'], 'email_delete_'.$this->id))
 				{
-					$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailDeleted = '1', emailDeletedID = '%d', emailDeletedDate = NOW() WHERE blogID = '%d' AND emailID = '%d' AND userID = '%d'", $wpdb->blogid, get_current_user_id(), $this->id, get_current_user_id()));
+					$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailDeleted = '1', emailDeletedID = '%d', emailDeletedDate = NOW() WHERE blogID = '%d' AND emailID = '%d'", get_current_user_id(), $wpdb->blogid, $this->id));
 
 					if($wpdb->rows_affected > 0)
 					{
