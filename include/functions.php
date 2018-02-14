@@ -26,9 +26,7 @@ function phpmailer_init_email($phpmailer)
 
 	$smtp_ssl = $smtp_host = $smtp_port = $smtp_hostname = $smtp_user = $smtp_pass = "";
 
-	$from_address = $phpmailer->From;
-
-	$result = $wpdb->get_results($wpdb->prepare("SELECT emailName, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailSmtpPassword FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s AND emailSmtpServer != ''", $from_address));
+	$result = $wpdb->get_results($wpdb->prepare("SELECT emailName, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailSmtpPassword FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s AND emailSmtpServer != ''", $phpmailer->From));
 
 	if($wpdb->num_rows > 0)
 	{
@@ -42,7 +40,7 @@ function phpmailer_init_email($phpmailer)
 			$smtp_pass_encrypted = $r->emailSmtpPassword;
 
 			$encryption = new mf_encryption("email");
-			$smtp_pass = $encryption->decrypt($smtp_pass_encrypted, md5($from_address));
+			$smtp_pass = $encryption->decrypt($smtp_pass_encrypted, md5($phpmailer->From));
 
 			$phpmailer->FromName = $r->emailName;
 		}
@@ -56,15 +54,15 @@ function phpmailer_init_email($phpmailer)
 		$smtp_user = get_option('setting_smtp_username');
 		$smtp_pass = get_option('setting_smtp_password');
 	}
+	
+	$phpmailer->Sender = $phpmailer->From;
 
 	if($smtp_host != '')
 	{
 		$phpmailer->SMTPDebug = defined('SMTPDebug') ? SMTPDebug : false;
 
 		$phpmailer->Mailer = 'smtp';
-		$phpmailer->Sender = $phpmailer->From;
 		$phpmailer->SMTPSecure = $smtp_ssl;
-
 		$phpmailer->Host = $smtp_host;
 
 		if($smtp_port > 0)
