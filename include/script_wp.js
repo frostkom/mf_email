@@ -3,7 +3,8 @@ jQuery(function($)
 	/* WP Admin */
 	$(document).on('click', "a[href^='mailto:']", function(e)
 	{
-		if(e.which != 3)
+		/* If left-click and the admin menu item has not been removed by for example MF Admin Menu */
+		if(e.which != 3 && $("#toplevel_page_mf_email-list-index").length > 0)
 		{
 			var this_href = $(this).attr('href').replace("mailto:", "").replace("?", "&").replace("&subject", "&strMessageSubject").replace("&body", "&strMessageText"),
 				url = script_email.admin_url + '&strMessageTo=' + this_href;

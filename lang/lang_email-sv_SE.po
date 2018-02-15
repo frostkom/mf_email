@@ -68,7 +68,7 @@ msgstr "Lösenord"
 #: ../create/index.php:57
 #: ../include/classes.php:627
 msgid "Outgoing"
-msgstr "Ugående"
+msgstr "Utgående"
 
 #: ../create/index.php:62
 #: ../include/functions.php:17
