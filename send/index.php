@@ -120,7 +120,7 @@ else if(isset($_POST['btnMessageDraft']) && wp_verify_nonce($_POST['_wpnonce'], 
 
 else if($intGroupMessageID > 0)
 {
-	$result = $wpdb->get_results($wpdb->prepare("SELECT messageFrom, messageName, messageText FROM ".$wpdb->base_prefix."group_message WHERE messageID = '%d'", $intGroupMessageID));
+	$result = $wpdb->get_results($wpdb->prepare("SELECT messageFrom, messageName, messageText FROM ".$wpdb->prefix."group_message WHERE messageID = '%d'", $intGroupMessageID));
 
 	foreach($result as $r)
 	{

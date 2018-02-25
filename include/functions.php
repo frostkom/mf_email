@@ -787,7 +787,7 @@ function menu_email()
 //Extension for RCube
 function raise_error($error)
 {
-	error_log(__("Email error", 'lang_email').": ".var_export($error, true));
+	error_log(__("Email error", 'lang_email').": ".str_replace(array("\r", "\n"), "", var_export($error, true)));
 }
 
 function email_connect($data)
@@ -882,18 +882,18 @@ function cron_email()
 						{
 							foreach($arr_emails as $email)
 							{
-								$intAddressID = $wpdb->get_var($wpdb->prepare("SELECT addressID FROM ".$wpdb->base_prefix."address WHERE addressEmail = %s", $email));
+								$intAddressID = $wpdb->get_var($wpdb->prepare("SELECT addressID FROM ".$wpdb->prefix."address WHERE addressEmail = %s", $email));
 
 								if($intAddressID > 0)
 								{
 									$obj_address = new mf_address($intAddressID);
 									$obj_address->update_errors(array('action' => 'reset'));
 
-									$intQueueID = $wpdb->get_var($wpdb->prepare("SELECT queueID FROM ".$wpdb->base_prefix."group_queue WHERE addressID = '%d' AND queueSent = '1' AND queueSentTime <= '".$strMessageCreated."' ORDER BY queueSentTime DESC LIMIT 0, 1", $intAddressID));
+									$intQueueID = $wpdb->get_var($wpdb->prepare("SELECT queueID FROM ".$wpdb->prefix."group_queue WHERE addressID = '%d' AND queueSent = '1' AND queueSentTime <= '".$strMessageCreated."' ORDER BY queueSentTime DESC LIMIT 0, 1", $intAddressID));
 
 									if($intQueueID > 0)
 									{
-										$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."group_queue SET queueReceived = '-1' WHERE queueID = '%d' AND addressID = '%d'", $intQueueID, $intAddressID));
+										$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->prefix."group_queue SET queueReceived = '-1' WHERE queueID = '%d' AND addressID = '%d'", $intQueueID, $intAddressID));
 									}
 
 									else
