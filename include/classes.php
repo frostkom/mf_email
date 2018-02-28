@@ -357,14 +357,22 @@ class mf_email
 		{
 			case 'incoming':
 				$query_where = " AND emailServer != ''";
+				$allow_fallback = true;
 			break;
 
 			case 'outgoing':
 				$query_where = " AND emailSmtpServer != ''";
+				$allow_fallback = false;
+			break;
+
+			case 'abuse':
+				$query_where = " AND (emailAddress LIKE 'abuse@%' OR emailAddress LIKE 'postmaster@%')";
+				$allow_fallback = false;
 			break;
 
 			default:
 				$query_where = "";
+				$allow_fallback = true;
 			break;
 		}
 
@@ -390,7 +398,7 @@ class mf_email
 			}
 		}
 
-		if(count($arr_data) <= 1)
+		if(count($arr_data) <= 1 && $allow_fallback == true)
 		{
 			$current_user = wp_get_current_user();
 
