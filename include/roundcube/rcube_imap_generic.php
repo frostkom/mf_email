@@ -621,7 +621,7 @@ class rcube_imap_generic
      */
     function getHierarchyDelimiter()
     {
-        if ($this->prefs['delimiter']) {
+        if (isset($this->prefs['delimiter']) && $this->prefs['delimiter']) {
             return $this->prefs['delimiter'];
         }
 
@@ -662,7 +662,7 @@ class rcube_imap_generic
             @$data = $this->tokenizeResponse(substr($response, 11));
         }
 
-        if (!is_array($data)) {
+        if (!isset($data) || !is_array($data)) {
             return $code;
         }
 
