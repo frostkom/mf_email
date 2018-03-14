@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: 
-Version: 5.10.6
+Version: 5.10.8
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: http://frostkom.se
@@ -203,6 +203,7 @@ function activate_email()
 	add_index($arr_add_index);
 
 	delete_base(array(
+		'table_prefix' => $wpdb->base_prefix,
 		'table' => "email_folder",
 		'field_prefix' => "folder",
 		'child_tables' => array(
@@ -214,6 +215,7 @@ function activate_email()
 	));
 
 	delete_base(array(
+		'table_prefix' => $wpdb->base_prefix,
 		'table' => "email_message",
 		'field_prefix' => "message",
 		'child_tables' => array(
@@ -224,6 +226,7 @@ function activate_email()
 	));
 
 	delete_base(array(
+		'table_prefix' => $wpdb->base_prefix,
 		'table' => "email",
 		'field_prefix' => "email",
 		'child_tables' => array(

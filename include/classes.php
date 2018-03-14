@@ -298,6 +298,23 @@ class mf_email
 		return $wpdb->get_results("SELECT emailID FROM ".$wpdb->base_prefix."email_users RIGHT JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE (emailPublic = '1' OR emailRoles LIKE '%".get_current_user_role()."%' OR ".$wpdb->base_prefix."email.userID = '".get_current_user_id()."' OR ".$wpdb->base_prefix."email_users.userID = '".get_current_user_id()."') AND (blogID = '".$wpdb->blogid."' OR blogID = '0') AND emailDeleted = '0'".$query_xtra." GROUP BY emailID");
 	}
 
+	function get_message_amount($id)
+	{
+		global $wpdb;
+
+		$array = array();
+
+		$intFolderID = get_folder_ids(__("Sent", 'lang_email'), 4, $id);
+
+		$array['sent'] = $wpdb->get_var($wpdb->prepare("SELECT COUNT(messageID) FROM ".$wpdb->base_prefix."email_message WHERE folderID = '%d'", $intFolderID));
+		
+		$array['received'] = $wpdb->get_var($wpdb->prepare("SELECT COUNT(messageID) FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) WHERE emailID = '%d'", $id));
+		
+		$array['received'] -= $array['sent'];
+
+		return $array;
+	}
+
 	function get_message_info()
 	{
 		global $wpdb;
@@ -687,6 +704,11 @@ class mf_email_account_table extends mf_list_table
 
 			case 'emailName':
 				$out .= $item[$column_name];
+
+				$obj_email = new mf_email();
+				$arr_message_amount = $obj_email->get_message_amount($intEmailID);
+
+				$out .= "<div class='row-actions'>".__("Received", 'lang_email').": ".$arr_message_amount['received'].", ".__("Sent", 'lang_email').": ".$arr_message_amount['sent']."</div>";
 			break;
 
 			case 'rights':

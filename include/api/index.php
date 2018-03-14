@@ -121,7 +121,7 @@ if($arr_input[0] == "email")
 		$json_output['limit_start'] = $intFolderLimitStart = isset($arr_input[3]) && $arr_input[3] > 0 ? $arr_input[3] : 0;
 		$json_output['limit_amount'] = $intFolderLimitAmount = EMAILS2SHOW;
 
-		$result = $wpdb->get_results($wpdb->prepare("SELECT messageID, messageRead, messageFrom, messageFromName, messageTo, messageName, messageSize, messageCreated, messageReceived, messageDeleted, folderType, emailAddress FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) INNER JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE folderName = %s".$query_where." ORDER BY messageCreated DESC LIMIT ".$intFolderLimitStart." , ".$intFolderLimitAmount, $strFolderName));
+		$result = $wpdb->get_results($wpdb->prepare("SELECT messageID, messageRead, messageFrom, messageFromName, messageTo, messageName, messageSize, messageCreated, messageReceived, messageDeleted, folderType, emailAddress FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) INNER JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE folderName = %s".$query_where." ORDER BY messageCreated DESC LIMIT ".$intFolderLimitStart.", ".$intFolderLimitAmount, $strFolderName));
 
 		$json_output['limit_amount'] = $wpdb->num_rows;
 
