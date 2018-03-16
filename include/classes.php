@@ -306,9 +306,9 @@ class mf_email
 
 		$intFolderID = get_folder_ids(__("Sent", 'lang_email'), 4, $id);
 
-		$array['sent'] = $wpdb->get_var($wpdb->prepare("SELECT COUNT(messageID) FROM ".$wpdb->base_prefix."email_message WHERE folderID = '%d'", $intFolderID));
+		$array['sent'] = $wpdb->get_var($wpdb->prepare("SELECT COUNT(messageID) FROM ".$wpdb->base_prefix."email_message WHERE folderID = '%d' AND messageDeleted = '0'", $intFolderID));
 		
-		$array['received'] = $wpdb->get_var($wpdb->prepare("SELECT COUNT(messageID) FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) WHERE emailID = '%d'", $id));
+		$array['received'] = $wpdb->get_var($wpdb->prepare("SELECT COUNT(messageID) FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) WHERE emailID = '%d' AND messageDeleted = '0'", $id));
 		
 		$array['received'] -= $array['sent'];
 
@@ -705,10 +705,22 @@ class mf_email_account_table extends mf_list_table
 			case 'emailName':
 				$out .= $item[$column_name];
 
+				$actions = array();
+
 				$obj_email = new mf_email();
 				$arr_message_amount = $obj_email->get_message_amount($intEmailID);
 
-				$out .= "<div class='row-actions'>".__("Received", 'lang_email').": ".$arr_message_amount['received'].", ".__("Sent", 'lang_email').": ".$arr_message_amount['sent']."</div>";
+				if($arr_message_amount['received'] > 0)
+				{
+					$actions['received'] = __("Received", 'lang_email').": ".$arr_message_amount['received'];
+				}
+
+				if($arr_message_amount['sent'] > 0)
+				{
+					$actions['sent'] = __("Sent", 'lang_email').": ".$arr_message_amount['sent'];
+				}
+				
+				$out .= $this->row_actions($actions);
 			break;
 
 			case 'rights':

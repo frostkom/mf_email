@@ -193,9 +193,9 @@ class rcube_imap
         }
         // write error log
         else if ($this->conn->error) {
-            if ($pass && $user) {
-                $message = sprintf("Login failed for %s from %s. %s",
-                    $user, "", $this->conn->error); //rcmail_remote_ip()
+            if ($pass && $user)
+			{
+                $message = sprintf("Login failed for %s from %s. %s", $user, (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : "(".__("Unknown IP", 'lang_email').")"), $this->conn->error); //rcmail_remote_ip()
 
                 raise_error(array('code' => 403, 'type' => 'imap',
                     'file' => __FILE__, 'line' => __LINE__,
