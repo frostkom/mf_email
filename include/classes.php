@@ -155,11 +155,10 @@ class mf_email
 						{
 							if($strEmailServer != '' && $strEmailUsername != '')
 							{
-								$encryption = new mf_encryption("email");
-
 								if($strEmailPassword != '')
 								{
-									$strEmailPassword = $encryption->decrypt($strEmailPassword, md5($strEmailAddress));
+									$obj_encryption = new mf_email_encryption("email");
+									$strEmailPassword = $obj_encryption->decrypt($strEmailPassword, md5($strEmailAddress));
 								}
 
 								list($is_connected, $connection) = email_connect(array('server' => $strEmailServer, 'port' => $intEmailPort, 'username' => $strEmailUsername, 'password' => $strEmailPassword));
@@ -307,9 +306,9 @@ class mf_email
 		$intFolderID = get_folder_ids(__("Sent", 'lang_email'), 4, $id);
 
 		$array['sent'] = $wpdb->get_var($wpdb->prepare("SELECT COUNT(messageID) FROM ".$wpdb->base_prefix."email_message WHERE folderID = '%d' AND messageDeleted = '0'", $intFolderID));
-		
+
 		$array['received'] = $wpdb->get_var($wpdb->prepare("SELECT COUNT(messageID) FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) WHERE emailID = '%d' AND messageDeleted = '0'", $id));
-		
+
 		$array['received'] -= $array['sent'];
 
 		return $array;
@@ -497,18 +496,16 @@ class mf_email
 
 	function encrypt_password()
 	{
+		$obj_encryption = new mf_email_encryption("email");
+
 		if($this->password != '' && $this->address != '')
 		{
-			$encryption = new mf_encryption("email");
-
-			$this->password_encrypted = $encryption->encrypt($this->password, md5($this->address));
+			$this->password_encrypted = $obj_encryption->encrypt($this->password, md5($this->address));
 		}
 
 		if($this->smtp_password != '' && $this->address != '')
 		{
-			$encryption = new mf_encryption("email");
-
-			$this->smtp_password_encrypted = $encryption->encrypt($this->smtp_password, md5($this->address));
+			$this->smtp_password_encrypted = $obj_encryption->encrypt($this->smtp_password, md5($this->address));
 		}
 	}
 
@@ -606,6 +603,40 @@ class mf_email
 	}
 }
 
+class mf_email_encryption
+{
+	function __construct($type)
+	{
+		$this->set_key($type);
+		$this->iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND);
+	}
+
+	function set_key($type)
+	{
+		$this->key = substr("mf_crypt".$type, 0, 32);
+	}
+
+	function encrypt($text, $key = "")
+	{
+		if($key != '')
+		{
+			$this->set_key($key);
+		}
+
+		return base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $this->key, $text, MCRYPT_MODE_ECB, $this->iv));
+	}
+
+	function decrypt($text, $key = "")
+	{
+		if($key != '')
+		{
+			$this->set_key($key);
+		}
+
+		return trim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $this->key, base64_decode($text), MCRYPT_MODE_ECB, $this->iv));
+	}
+}
+
 class mf_email_account_table extends mf_list_table
 {
 	function set_default()
@@ -660,8 +691,6 @@ class mf_email_account_table extends mf_list_table
 			'emailServer',
 			'emailSmtpServer',
 		));
-
-		//$this->default_column = 'emailAddress';
 	}
 
 	function column_default($item, $column_name)
@@ -719,7 +748,7 @@ class mf_email_account_table extends mf_list_table
 				{
 					$actions['sent'] = __("Sent", 'lang_email').": ".$arr_message_amount['sent'];
 				}
-				
+
 				$out .= $this->row_actions($actions);
 			break;
 

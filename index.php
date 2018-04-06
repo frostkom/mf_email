@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: 
-Version: 5.10.10
+Version: 5.10.11
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: http://frostkom.se
@@ -124,16 +124,16 @@ function activate_email()
 	) DEFAULT CHARSET=".$default_charset);
 
 	$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email_folder (
-		folderID INT unsigned NOT NULL AUTO_INCREMENT,
-		folderID2 INT unsigned DEFAULT NULL,
-		emailID INT unsigned NOT NULL DEFAULT '0',
-		folderType INT unsigned NOT NULL DEFAULT '0',
+		folderID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+		folderID2 INT UNSIGNED DEFAULT NULL,
+		emailID INT UNSIGNED NOT NULL DEFAULT '0',
+		folderType INT UNSIGNED NOT NULL DEFAULT '0',
 		folderName VARCHAR(100) DEFAULT NULL,
 		folderCreated DATETIME DEFAULT NULL,
-		userID INT unsigned DEFAULT NULL,
+		userID INT UNSIGNED DEFAULT NULL,
 		folderDeleted ENUM('0','1') NOT NULL DEFAULT '0',
 		folderDeletedDate DATETIME DEFAULT NULL,
-		folderDeletedID INT unsigned DEFAULT NULL,
+		folderDeletedID INT UNSIGNED DEFAULT NULL,
 		PRIMARY KEY (folderID),
 		KEY emailID (emailID),
 		KEY userID (userID),
@@ -146,8 +146,8 @@ function activate_email()
 	);
 
 	$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email_message (
-		messageID INT unsigned NOT NULL AUTO_INCREMENT,
-		folderID INT unsigned DEFAULT NULL,
+		messageID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+		folderID INT UNSIGNED DEFAULT NULL,
 		messageTextID VARCHAR(100) DEFAULT NULL,
 		messageMd5 VARCHAR(32) DEFAULT NULL,
 		messageRead ENUM('0','1') NOT NULL DEFAULT '0',
@@ -159,13 +159,13 @@ function activate_email()
 		messageName VARCHAR(200) DEFAULT NULL,
 		messageText TEXT,
 		messageText2 TEXT,
-		messageSize INT unsigned NOT NULL DEFAULT '0',
+		messageSize INT UNSIGNED NOT NULL DEFAULT '0',
 		messageCreated DATETIME DEFAULT NULL,
 		messageReceived DATETIME DEFAULT NULL,
-		userID INT unsigned DEFAULT NULL,
+		userID INT UNSIGNED DEFAULT NULL,
 		messageDeleted ENUM('0','1') NOT NULL DEFAULT '0',
 		messageDeletedDate DATETIME DEFAULT NULL,
-		messageDeletedID INT unsigned DEFAULT NULL,
+		messageDeletedID INT UNSIGNED DEFAULT NULL,
 		PRIMARY KEY (messageID),
 		KEY folderID (folderID),
 		KEY messageDeleted (messageDeleted),
@@ -178,14 +178,14 @@ function activate_email()
 	);
 
 	$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email_message_attachment (
-		messageID INT unsigned NOT NULL,
-		fileID INT unsigned DEFAULT NULL,
+		messageID INT UNSIGNED NOT NULL,
+		fileID INT UNSIGNED DEFAULT NULL,
 		KEY messageID (messageID),
 		KEY fileID (fileID)
 	) DEFAULT CHARSET=".$default_charset);
 
 	$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email_spam (
-		spamID INT unsigned NOT NULL AUTO_INCREMENT,
+		spamID INT UNSIGNED NOT NULL AUTO_INCREMENT,
 		emailID INT UNSIGNED,
 		messageFrom VARCHAR(100) DEFAULT NULL,
 		spamCount INT UNSIGNED DEFAULT NULL,

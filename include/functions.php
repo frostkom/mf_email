@@ -39,8 +39,8 @@ function phpmailer_init_email($phpmailer)
 			$smtp_user = $r->emailSmtpUsername;
 			$smtp_pass_encrypted = $r->emailSmtpPassword;
 
-			$encryption = new mf_encryption("email");
-			$smtp_pass = $encryption->decrypt($smtp_pass_encrypted, md5($phpmailer->From));
+			$obj_encryption = new mf_email_encryption("email");
+			$smtp_pass = $obj_encryption->decrypt($smtp_pass_encrypted, md5($phpmailer->From));
 
 			$phpmailer->FromName = $r->emailName;
 		}
@@ -54,7 +54,7 @@ function phpmailer_init_email($phpmailer)
 		$smtp_user = get_option('setting_smtp_username');
 		$smtp_pass = get_option('setting_smtp_password');
 	}
-	
+
 	$phpmailer->Sender = $phpmailer->From;
 
 	if($smtp_host != '')
@@ -845,10 +845,9 @@ function cron_email()
 			$strEmailAddress = $r->emailAddress;
 
 			$obj_email = new mf_email($intEmailID);
+			$obj_encryption = new mf_email_encryption("email");
 
-			$encryption = new mf_encryption("email");
-
-			$strEmailPassword = $encryption->decrypt($strEmailPassword, md5($strEmailAddress));
+			$strEmailPassword = $obj_encryption->decrypt($strEmailPassword, md5($strEmailAddress));
 
 			list($is_connected, $connection) = email_connect(array('server' => $strEmailServer, 'port' => $intEmailPort, 'username' => $strEmailUsername, 'password' => $strEmailPassword));
 
@@ -892,7 +891,7 @@ function cron_email()
 									$obj_address->get_address_id(array('email' => $email));
 
 									if($obj_address->id > 0)
-									{									
+									{
 										$obj_address->update_errors(array('action' => 'reset'));
 
 										$intQueueID = $wpdb->get_var($wpdb->prepare("SELECT queueID FROM ".$wpdb->prefix."group_queue WHERE addressID = '%d' AND queueSent = '1' AND queueSentTime <= '".$strMessageCreated."' ORDER BY queueSentTime DESC LIMIT 0, 1", $obj_address->id));
