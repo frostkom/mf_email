@@ -751,7 +751,7 @@ function menu_email()
 		$count_message = count_unread_email();
 
 		$menu_title = __("E-mail", 'lang_email');
-		add_menu_page("", $menu_title.$count_message, $menu_capability, $menu_start, '', 'dashicons-email-alt');
+		add_menu_page("", $menu_title.$count_message, $menu_capability, $menu_start, '', 'dashicons-email-alt', 99);
 
 		$menu_title = __("Inbox", 'lang_email');
 		add_submenu_page($menu_start, $menu_title, $menu_title, $menu_capability, $menu_start);
@@ -774,7 +774,7 @@ function menu_email()
 		$menu_start = $menu_root."accounts/index.php";
 
 		$menu_title = __("E-mail", 'lang_email');
-		add_menu_page("", $menu_title, $menu_capability, $menu_start, '', 'dashicons-email-alt');
+		add_menu_page("", $menu_title, $menu_capability, $menu_start, '', 'dashicons-email-alt', 99);
 
 		$menu_title = __("Accounts", 'lang_email');
 		add_submenu_page($menu_start, $menu_title, $menu_title, $menu_capability, $menu_start);
@@ -886,8 +886,7 @@ function cron_email()
 							{
 								foreach($arr_emails as $email)
 								{
-									$obj_address = new mf_address(); //$intAddressID
-									//$intAddressID = $wpdb->get_var($wpdb->prepare("SELECT addressID FROM ".get_address_table_prefix()."address WHERE addressEmail = %s", $email));
+									$obj_address = new mf_address();
 									$obj_address->get_address_id(array('email' => $email));
 
 									if($obj_address->id > 0)
