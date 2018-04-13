@@ -729,20 +729,9 @@ function count_unread_email()
 
 function menu_email()
 {
-	global $wpdb;
-
 	$menu_root = 'mf_email/';
 	$menu_start = $menu_root."list/index.php";
 	$menu_capability = "edit_posts";
-
-	if(current_user_can($menu_capability))
-	{
-		$plugin_include_url = plugin_dir_url(__FILE__);
-		$plugin_version = get_plugin_version(__FILE__);
-
-		mf_enqueue_script('jquery-ui-autocomplete');
-		mf_enqueue_script('script_email', $plugin_include_url."script_wp.js", array('admin_url' => admin_url("admin.php?page=mf_email/send/index.php"), 'plugin_url' => $plugin_include_url, 'ajax_url' => admin_url('admin-ajax.php')), $plugin_version);
-	}
 
 	$obj_email = new mf_email();
 

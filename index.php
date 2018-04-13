@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: 
-Version: 5.10.12
+Version: 5.10.13
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: http://frostkom.se
@@ -17,6 +17,8 @@ GitHub Plugin URI: frostkom/mf_email
 include_once("include/classes.php");
 include_once("include/functions.php");
 
+$obj_email = new mf_email();
+
 add_action('cron_base', 'activate_email', mt_rand(1, 10));
 add_action('cron_base', 'cron_email', mt_rand(1, 10));
 
@@ -28,6 +30,7 @@ if(is_admin())
 	register_uninstall_hook(__FILE__, 'uninstall_email');
 
 	add_action('admin_init', 'settings_email');
+	add_action('admin_init', array($obj_email, 'admin_init'));
 	add_action('admin_menu', 'menu_email');
 
 	add_filter('get_user_notifications', 'get_user_notifications_email', 10, 1);

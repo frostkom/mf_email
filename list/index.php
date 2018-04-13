@@ -1,25 +1,5 @@
 <?php
 
-$plugin_base_include_url = plugins_url()."/mf_base/include/";
-$plugin_include_url = plugins_url()."/mf_email/include/";
-$plugin_version = get_plugin_version(__FILE__);
-
-mf_enqueue_style('style_email_wp', $plugin_include_url."style_wp.css", $plugin_version);
-mf_enqueue_style('style_bb', $plugin_base_include_url."backbone/style.css", $plugin_version);
-
-wp_enqueue_script('jquery-ui-draggable');
-wp_enqueue_script('jquery-ui-droppable');
-mf_enqueue_script('script_touch', $plugin_base_include_url."jquery.ui.touch-punch.min.js", '0.2.2');
-
-mf_enqueue_script('underscore');
-mf_enqueue_script('backbone');
-mf_enqueue_script('script_base_plugins', $plugin_base_include_url."backbone/bb.plugins.js", $plugin_version);
-//mf_enqueue_script('script_email_plugins', $plugin_include_url."backbone/bb.plugins.js", $plugin_version);
-mf_enqueue_script('script_email_router', $plugin_include_url."backbone/bb.router.js", $plugin_version);
-mf_enqueue_script('script_email_models', $plugin_include_url."backbone/bb.models.js", array('plugin_url' => $plugin_include_url), $plugin_version);
-mf_enqueue_script('script_email_views', $plugin_include_url."backbone/bb.views.js", array('emails2show' => EMAILS2SHOW), $plugin_version);
-mf_enqueue_script('script_base_init', $plugin_base_include_url."backbone/bb.init.js", $plugin_version);
-
 $intFolderID = check_var('intFolderID');
 $strFolderName = check_var('strFolderName', '', true, __("Inbox", 'lang_email'));
 
