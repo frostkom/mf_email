@@ -776,7 +776,7 @@ function menu_email()
 //Extension for RCube
 function raise_error($error)
 {
-	error_log(__("Email error", 'lang_email').": ".str_replace(array("\r", "\n"), "", var_export($error, true)));
+	do_log(__("Email error", 'lang_email').": ".str_replace(array("\r", "\n"), "", var_export($error, true)));
 }
 
 function email_connect($data)

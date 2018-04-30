@@ -218,7 +218,7 @@ class mf_email
 
 								$site_name = get_bloginfo('name');
 								$site_url = get_site_url();
-								$confirm_url = wp_nonce_url($site_url.$_SERVER['PHP_SELF']."?page=mf_email/accounts/index.php&btnEmailConfirm&intEmailID=".$this->id, 'email_confirm_'.$this->id);
+								$confirm_url = wp_nonce_url(admin_url("admin.php?page=mf_email/accounts/index.php&btnEmailConfirm&intEmailID=".$this->id), 'email_confirm_'.$this->id);
 
 								$mail_to = $strEmailAddress;
 								$mail_headers = "From: ".$user_data->display_name." <".$user_data->user_email.">\r\n";
@@ -753,7 +753,7 @@ class mf_email_account_table extends mf_list_table
 
 						if($intUserID == get_current_user_id())
 						{
-							$out .= " | <a href='".wp_nonce_url("?page=mf_email/accounts/index.php&btnEmailDelete&intEmailID=".$intEmailID, 'email_delete_'.$intEmailID)."' rel='confirm'>".__("Delete", 'lang_email')."</a>";
+							$out .= " | <a href='".wp_nonce_url(admin_url("admin.php?page=mf_email/accounts/index.php&btnEmailDelete&intEmailID=".$intEmailID), 'email_delete_'.$intEmailID)."' rel='confirm'>".__("Delete", 'lang_email')."</a>";
 						}
 					}
 
@@ -833,7 +833,7 @@ class mf_email_account_table extends mf_list_table
 							case 0:
 								$out .= "<i class='fa fa-lg fa-question'></i>&nbsp;";
 
-								$row_actions .= ($row_actions != '' ? " | " : "")."<a href='".wp_nonce_url("?page=mf_email/accounts/index.php&btnEmailVerify&intEmailID=".$intEmailID, 'email_verify_'.$intEmailID)."'>".__("Verify", 'lang_email')."</a>";
+								$row_actions .= ($row_actions != '' ? " | " : "")."<a href='".wp_nonce_url(admin_url("admin.php?page=mf_email/accounts/index.php&btnEmailVerify&intEmailID=".$intEmailID), 'email_verify_'.$intEmailID)."'>".__("Verify", 'lang_email')."</a>";
 							break;
 
 							case 1:
