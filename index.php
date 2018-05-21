@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: 
-Version: 5.10.15
+Version: 5.10.16
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: http://frostkom.se
@@ -257,6 +257,10 @@ function activate_email()
 		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email_message SET messageDeleted = '1', messageDeletedDate = NOW() WHERE folderID = '%d' AND messageDeleted = '0'", $intFolderID));
 	}
 	####################################
+	
+	mf_uninstall_plugin(array(
+		'options' => array('setting_smtp_test'),
+	));
 }
 
 function uninstall_email()
