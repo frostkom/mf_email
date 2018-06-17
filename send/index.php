@@ -17,7 +17,7 @@ $intEmailTextSource = check_var('intEmailTextSource');
 
 $intGroupMessageID = check_var('intGroupMessageID');
 
-if(isset($_POST['btnMessageSend']) && wp_verify_nonce($_POST['_wpnonce'], 'message_send'))
+if(isset($_POST['btnMessageSend']) && wp_verify_nonce($_POST['_wpnonce_message_send'], 'message_send'))
 {
 	if($intEmailID > 0 && $strMessageTo != '')
 	{
@@ -106,7 +106,7 @@ if(isset($_POST['btnMessageSend']) && wp_verify_nonce($_POST['_wpnonce'], 'messa
 	}
 }
 
-else if(isset($_POST['btnMessageDraft']) && wp_verify_nonce($_POST['_wpnonce'], 'message_send'))
+else if(isset($_POST['btnMessageDraft']) && wp_verify_nonce($_POST['_wpnonce_message_send'], 'message_send'))
 {
 	$intFolderID = get_folder_ids(__("Draft", 'lang_email'), 5, $intEmailID);
 
@@ -299,7 +299,7 @@ echo "<div class='wrap'>
 							."&nbsp;"
 							.show_button(array('name' => 'btnMessageDraft', 'text' => __("Save draft", 'lang_email'), 'class' => "button"))
 							.input_hidden(array('name' => "intMessageDraftID", 'value' => $intMessageDraftID))
-							.wp_nonce_field('message_send', '_wpnonce', true, false)
+							.wp_nonce_field('message_send', '_wpnonce_message_send', true, false)
 						."</div>
 					</div>
 					<div class='postbox'>

@@ -89,7 +89,7 @@ class mf_email
 		switch($this->type)
 		{
 			case 'account_create':
-				if(isset($_POST['btnEmailCreate']) && wp_verify_nonce($_POST['_wpnonce'], 'email_create_'.$this->id))
+				if(isset($_POST['btnEmailCreate']) && wp_verify_nonce($_POST['_wpnonce_email_create'], 'email_create_'.$this->id))
 				{
 					if($this->id > 0)
 					{
@@ -150,7 +150,7 @@ class mf_email
 			break;
 
 			case 'account_list':
-				if(isset($_REQUEST['btnEmailDelete']) && $this->id > 0 && wp_verify_nonce($_REQUEST['_wpnonce'], 'email_delete_'.$this->id))
+				if(isset($_REQUEST['btnEmailDelete']) && $this->id > 0 && wp_verify_nonce($_REQUEST['_wpnonce_email_delete'], 'email_delete_'.$this->id))
 				{
 					$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailDeleted = '1', emailDeletedID = '%d', emailDeletedDate = NOW() WHERE blogID = '%d' AND emailID = '%d'", get_current_user_id(), $wpdb->blogid, $this->id));
 
@@ -165,14 +165,14 @@ class mf_email
 					}
 				}
 
-				else if(isset($_REQUEST['btnEmailConfirm']) && $this->id > 0 && wp_verify_nonce($_REQUEST['_wpnonce'], 'email_confirm_'.$this->id))
+				else if(isset($_REQUEST['btnEmailConfirm']) && $this->id > 0 && wp_verify_nonce($_REQUEST['_wpnonce_email_confirm'], 'email_confirm_'.$this->id))
 				{
 					$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET blogID = '%d', emailVerified = '1' WHERE emailID = '%d'", $wpdb->blogid, $this->id));
 
 					$done_text = __("The e-mail account was confirmed", 'lang_email');
 				}
 
-				else if(isset($_REQUEST['btnEmailVerify']) && $this->id > 0 && wp_verify_nonce($_REQUEST['_wpnonce'], 'email_verify_'.$this->id))
+				else if(isset($_REQUEST['btnEmailVerify']) && $this->id > 0 && wp_verify_nonce($_REQUEST['_wpnonce_email_verify'], 'email_verify_'.$this->id))
 				{
 					$result = $wpdb->get_results($wpdb->prepare("SELECT emailVerified, emailServer, emailPort, emailUsername, emailPassword, emailAddress FROM ".$wpdb->base_prefix."email WHERE blogID = '%d' AND emailID = '%d'", $wpdb->blogid, $this->id));
 
@@ -218,7 +218,7 @@ class mf_email
 
 								$site_name = get_bloginfo('name');
 								$site_url = get_site_url();
-								$confirm_url = wp_nonce_url(admin_url("admin.php?page=mf_email/accounts/index.php&btnEmailConfirm&intEmailID=".$this->id), 'email_confirm_'.$this->id);
+								$confirm_url = wp_nonce_url(admin_url("admin.php?page=mf_email/accounts/index.php&btnEmailConfirm&intEmailID=".$this->id), 'email_confirm_'.$this->id, '_wpnonce_email_confirm');
 
 								$mail_to = $strEmailAddress;
 								$mail_headers = "From: ".$user_data->display_name." <".$user_data->user_email.">\r\n";
@@ -400,7 +400,7 @@ class mf_email
 		if(!isset($data['type'])){	$data['type'] = 'all';} //incoming, outgoing
 
 		$arr_data = array(
-			'' => "-- ".__("Choose here", 'lang_email')." --"
+			'' => "-- ".__("Choose Here", 'lang_email')." --"
 		);
 
 		switch($data['type'])
@@ -753,7 +753,7 @@ class mf_email_account_table extends mf_list_table
 
 						if($intUserID == get_current_user_id())
 						{
-							$out .= " | <a href='".wp_nonce_url(admin_url("admin.php?page=mf_email/accounts/index.php&btnEmailDelete&intEmailID=".$intEmailID), 'email_delete_'.$intEmailID)."' rel='confirm'>".__("Delete", 'lang_email')."</a>";
+							$out .= " | <a href='".wp_nonce_url(admin_url("admin.php?page=mf_email/accounts/index.php&btnEmailDelete&intEmailID=".$intEmailID), 'email_delete_'.$intEmailID, '_wpnonce_email_delete')."' rel='confirm'>".__("Delete", 'lang_email')."</a>";
 						}
 					}
 
@@ -833,7 +833,7 @@ class mf_email_account_table extends mf_list_table
 							case 0:
 								$out .= "<i class='fa fa-lg fa-question'></i>&nbsp;";
 
-								$row_actions .= ($row_actions != '' ? " | " : "")."<a href='".wp_nonce_url(admin_url("admin.php?page=mf_email/accounts/index.php&btnEmailVerify&intEmailID=".$intEmailID), 'email_verify_'.$intEmailID)."'>".__("Verify", 'lang_email')."</a>";
+								$row_actions .= ($row_actions != '' ? " | " : "")."<a href='".wp_nonce_url(admin_url("admin.php?page=mf_email/accounts/index.php&btnEmailVerify&intEmailID=".$intEmailID), 'email_verify_'.$intEmailID, '_wpnonce_email_verify')."'>".__("Verify", 'lang_email')."</a>";
 							break;
 
 							case 1:

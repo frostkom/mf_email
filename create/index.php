@@ -74,7 +74,7 @@ echo "<div class='wrap'>
 						<div class='inside'>"
 							.show_button(array('name' => 'btnEmailCreate', 'text' => __("Save", 'lang_email')))
 							.input_hidden(array('name' => "intEmailID", 'value' => $obj_email->id))
-							.wp_nonce_field('email_create_'.$obj_email->id, '_wpnonce', true, false)
+							.wp_nonce_field('email_create_'.$obj_email->id, '_wpnonce_email_create', true, false)
 						."</div>
 					</div>
 					<div class='postbox'>
