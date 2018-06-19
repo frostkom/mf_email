@@ -731,7 +731,7 @@ function menu_email()
 {
 	$menu_root = 'mf_email/';
 	$menu_start = $menu_root."list/index.php";
-	$menu_capability = "edit_posts";
+	$menu_capability = override_capability(array('page' => $menu_start, 'default' => 'edit_posts'));
 
 	$obj_email = new mf_email();
 
