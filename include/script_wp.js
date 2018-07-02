@@ -15,15 +15,6 @@ jQuery(function($)
 		}
 	});
 
-	$(document).on('click', "a[rel='external']", function(e)
-	{
-		if(e.which != 3)
-		{
-			window.open($(this).attr('href'));
-			return false;
-		}
-	});
-
 	/* Create Account */
 	function clone_value_if_empty(self_obj, to_obj)
 	{
