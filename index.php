@@ -6,7 +6,7 @@ Description:
 Version: 5.10.19
 Licence: GPLv2 or later
 Author: Martin Fors
-Author URI: http://frostkom.se
+Author URI: https://frostkom.se
 Text Domain: lang_email
 Domain Path: /lang
 
@@ -85,7 +85,7 @@ function activate_email()
 		emailSmtpHostname VARCHAR(100) DEFAULT NULL,
 		emailSmtpUsername VARCHAR(100) DEFAULT NULL,
 		emailSmtpPassword VARCHAR(150) DEFAULT NULL,
-		userID INT UNSIGNED,
+		userID INT UNSIGNED DEFAULT NULL,
 		emailDeleted ENUM('0','1') NOT NULL DEFAULT '0',
 		emailDeletedDate DATETIME DEFAULT NULL,
 		emailDeletedID INT UNSIGNED DEFAULT NULL,
@@ -121,7 +121,7 @@ function activate_email()
 
 	$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email_users (
 		emailID INT UNSIGNED,
-		userID INT UNSIGNED,
+		userID INT UNSIGNED DEFAULT NULL,
 		KEY emailID (emailID),
 		KEY userID (userID)
 	) DEFAULT CHARSET=".$default_charset);
