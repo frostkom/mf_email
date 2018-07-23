@@ -84,9 +84,11 @@ var EmailView = Backbone.View.extend(
 
 		if(count_temp > 0)
 		{
+			var dom_template = jQuery('#template_folder_item').html();
+
 			for(var i = 0; i < count_temp; i++)
 			{
-				html += _.template(jQuery('#template_folder_item').html())(response[i]);
+				html += _.template(dom_template)(response[i]);
 			}
 
 			jQuery('#txtFolders tbody').html(html);
@@ -112,9 +114,11 @@ var EmailView = Backbone.View.extend(
 
 		if(count_temp > 0)
 		{
+			var dom_template = jQuery('#template_email_item').html();
+
 			for(var i = 0; i < count_temp; i++)
 			{
-				html += _.template(jQuery('#template_email_item').html())(response[i]);
+				html += _.template(dom_template)(response[i]);
 			}
 
 			if(limit_start == 0)
