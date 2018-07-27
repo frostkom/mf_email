@@ -141,13 +141,28 @@ class rcube_imap
      */
     function connect($host, $user, $pass, $port=143, $use_ssl=null)
     {
+		$log_message = __("OpenSSL Not Available", 'lang_email');
+
         // check for OpenSSL support in PHP build
         if ($use_ssl && extension_loaded('openssl'))
+		{
             $this->options['ssl_mode'] = $use_ssl == 'imaps' ? 'ssl' : $use_ssl;
-        else if ($use_ssl) {
-            raise_error(array('code' => 403, 'type' => 'imap',
-                'file' => __FILE__, 'line' => __LINE__,
-                'message' => "OpenSSL not available"), true, false);
+
+			do_log($log_message, 'trash');
+		}
+
+        else if ($use_ssl)
+		{
+            /*raise_error(array(
+				'code' => 403,
+				'type' => 'imap',
+				'file' => __FILE__,
+				'line' => __LINE__,
+                'message' => $log_message,
+			), true, false);*/
+
+			do_log($log_message);
+
             $port = 143;
         }
 
@@ -166,7 +181,9 @@ class rcube_imap
         }
 
         $attempt = 0;
-        do {
+        
+		do
+		{
             $data = array_merge($this->options, array('host' => $host, 'user' => $user, 'attempt' => ++$attempt));
 
             if (!empty($data['pass']))
@@ -178,7 +195,9 @@ class rcube_imap
 			if(!isset($data['force_caps'])){	$data['force_caps'] = false;}
 
             $this->conn->connect($data['host'], $data['user'], $pass, $data);
-        } while(!$this->conn->connected() && isset($data['retry']) && $data['retry']);
+        }
+		
+		while(!$this->conn->connected() && isset($data['retry']) && $data['retry']);
 
         $this->host = $data['host'];
         $this->user = $data['user'];
@@ -186,20 +205,31 @@ class rcube_imap
         $this->port = $port;
         $this->ssl  = $use_ssl;
 
-        if ($this->conn->connected()) {
+		$log_message = sprintf(__("Login failed for %s from %s.", 'lang_email'), $user, (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : "(".__("Unknown IP", 'lang_email').")")); //rcmail_remote_ip()
+
+        if($this->conn->connected())
+		{
             // get namespace and delimiter
             $this->set_env();
+
+			do_log($log_message, 'trash');
+
             return true;
         }
-        // write error log
-        else if ($this->conn->error) {
-            if ($pass && $user)
-			{
-                $message = sprintf("Login failed for %s from %s. %s", $user, (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : "(".__("Unknown IP", 'lang_email').")"), $this->conn->error); //rcmail_remote_ip()
 
-                raise_error(array('code' => 403, 'type' => 'imap',
-                    'file' => __FILE__, 'line' => __LINE__,
-                    'message' => $message), true, false);
+        else if($this->conn->error)
+		{
+            if($pass && $user)
+			{
+                /*raise_error(array(
+					'code' => 403,
+					'type' => 'imap',
+                    'file' => __FILE__,
+					'line' => __LINE__,
+                    'message' => $log_message,
+				), true, false);*/
+
+				do_log($log_message." ".$this->conn->error);
             }
         }
 
