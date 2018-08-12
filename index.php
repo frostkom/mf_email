@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: 
-Version: 5.10.21
+Version: 5.11.2
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://frostkom.se
@@ -20,7 +20,7 @@ include_once("include/functions.php");
 $obj_email = new mf_email();
 
 add_action('cron_base', 'activate_email', mt_rand(1, 10));
-add_action('cron_base', 'cron_email', mt_rand(1, 10));
+add_action('cron_base', array($obj_email, 'run_cron'), mt_rand(1, 10));
 
 if(is_admin())
 {
@@ -29,20 +29,21 @@ if(is_admin())
 	register_activation_hook(__FILE__, 'activate_email');
 	register_uninstall_hook(__FILE__, 'uninstall_email');
 
-	add_action('admin_init', 'settings_email');
+	add_action('admin_init', array($obj_email, 'settings_email'));
 	add_action('admin_init', array($obj_email, 'admin_init'), 0);
-	add_action('admin_menu', 'menu_email');
+	add_action('admin_menu', array($obj_email, 'admin_menu'));
 
-	add_filter('get_user_notifications', 'get_user_notifications_email', 10, 1);
-	//add_filter('get_user_reminders', 'get_user_reminders_email', 10, 1);
-	add_action('deleted_user', 'deleted_user_email');
+	add_filter('get_user_notifications', array($obj_email, 'get_user_notifications'), 10, 1);
+	//add_filter('get_user_reminders', array($obj_email, 'get_user_reminders'), 10, 1);
+	add_action('deleted_user', array($obj_email, 'deleted_user'));
 }
 
-add_filter('wp_mail_from', 'mail_from_email');
-add_filter('wp_mail_from_name', 'mail_from_name_email');
-add_action('phpmailer_init', 'phpmailer_init_email');
-add_action('wp_ajax_send_smtp_test', 'send_smtp_test');
-add_action('wp_ajax_nopriv_send_smtp_test', 'send_smtp_test');
+add_filter('wp_mail_from', array($obj_email, 'wp_mail_from'));
+add_filter('wp_mail_from_name', array($obj_email, 'wp_mail_from_name'));
+add_action('phpmailer_init', array($obj_email, 'phpmailer_init'));
+
+add_action('wp_ajax_send_smtp_test', array($obj_email, 'send_smtp_test'));
+add_action('wp_ajax_nopriv_send_smtp_test', array($obj_email, 'send_smtp_test'));
 
 load_plugin_textdomain('lang_email', false, dirname(plugin_basename(__FILE__)).'/lang/');
 
@@ -79,6 +80,7 @@ function activate_email()
 		emailName VARCHAR(60),
 		emailCreated DATETIME,
 		emailChecked DATETIME,
+		emailOutgoingType ENUM('smtp', 'ungapped') NOT NULL DEFAULT 'smtp',
 		emailSmtpSSL ENUM('', 'ssl', 'tls') NOT NULL DEFAULT '',
 		emailSmtpServer VARCHAR(100) DEFAULT NULL,
 		emailSmtpPort SMALLINT DEFAULT NULL,
@@ -106,6 +108,7 @@ function activate_email()
 		'emailSmtpUsername' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpPort",
 		'emailSmtpPassword' => "ALTER TABLE [table] ADD [column] VARCHAR(150) DEFAULT NULL AFTER emailSmtpUsername",
 		'emailSmtpHostname' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpPort",
+		'emailOutgoingType' => "ALTER TABLE [table] ADD [column] ENUM('smtp', 'ungapped') NOT NULL DEFAULT 'smtp' AFTER emailChecked",
 	);
 
 	$arr_update_column[$wpdb->base_prefix."email"] = array(

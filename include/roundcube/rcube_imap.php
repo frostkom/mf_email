@@ -144,7 +144,7 @@ class rcube_imap
 		$log_message = __("OpenSSL Not Available", 'lang_email');
 
         // check for OpenSSL support in PHP build
-        if ($use_ssl && extension_loaded('openssl'))
+        if($use_ssl && extension_loaded('openssl'))
 		{
             $this->options['ssl_mode'] = $use_ssl == 'imaps' ? 'ssl' : $use_ssl;
 
@@ -153,14 +153,6 @@ class rcube_imap
 
         else if ($use_ssl)
 		{
-            /*raise_error(array(
-				'code' => 403,
-				'type' => 'imap',
-				'file' => __FILE__,
-				'line' => __LINE__,
-                'message' => $log_message,
-			), true, false);*/
-
 			do_log($log_message);
 
             $port = 143;
@@ -168,7 +160,8 @@ class rcube_imap
 
         $this->options['port'] = $port;
 
-        if ($this->options['debug']) {
+        if($this->options['debug'])
+		{
             $this->conn->setDebug(true, array($this, 'debug_handler'));
 
             $this->options['ident'] = array(
@@ -181,7 +174,7 @@ class rcube_imap
         }
 
         $attempt = 0;
-        
+
 		do
 		{
             $data = array_merge($this->options, array('host' => $host, 'user' => $user, 'attempt' => ++$attempt));
@@ -196,7 +189,7 @@ class rcube_imap
 
             $this->conn->connect($data['host'], $data['user'], $pass, $data);
         }
-		
+
 		while(!$this->conn->connected() && isset($data['retry']) && $data['retry']);
 
         $this->host = $data['host'];
@@ -221,14 +214,6 @@ class rcube_imap
 		{
             if($pass && $user)
 			{
-                /*raise_error(array(
-					'code' => 403,
-					'type' => 'imap',
-                    'file' => __FILE__,
-					'line' => __LINE__,
-                    'message' => $log_message,
-				), true, false);*/
-
 				do_log($log_message." ".$this->conn->error);
             }
         }
