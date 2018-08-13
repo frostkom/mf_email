@@ -631,16 +631,17 @@ class mf_email
 
 	function get_ungapped_token($smtp_user, $smtp_pass)
 	{
-		$arr_post_data = array(
+		/*$arr_post_data = array(
 			'grant_type' => 'password',
 			'username' => $smtp_user,
 			'password' => $smtp_pass,
-		);
+		);*/
 
 		list($content, $headers) = get_url_content(array(
 			'url' => $this->ungapped_base_url."/token",
 			'catch_head' => true,
-			'post_data' => json_encode($arr_post_data),
+			//'post_data' => json_encode($arr_post_data),
+			'post' => "grant_type=password&username=".urlencode($smtp_user)."&password=".urlencode($smtp_pass),
 		));
 
 		switch($headers['http_code'])
