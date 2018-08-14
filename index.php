@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: 
-Version: 5.11.3
+Version: 5.11.5
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://frostkom.se
@@ -80,7 +80,7 @@ function activate_email()
 		emailName VARCHAR(60),
 		emailCreated DATETIME,
 		emailChecked DATETIME,
-		emailOutgoingType ENUM('smtp', 'ungapped') NOT NULL DEFAULT 'smtp',
+		emailOutgoingType VARCHAR(20) NOT NULL DEFAULT 'smtp',
 		emailSmtpSSL ENUM('', 'ssl', 'tls') NOT NULL DEFAULT '',
 		emailSmtpServer VARCHAR(100) DEFAULT NULL,
 		emailSmtpPort SMALLINT DEFAULT NULL,
@@ -108,13 +108,14 @@ function activate_email()
 		'emailSmtpUsername' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpPort",
 		'emailSmtpPassword' => "ALTER TABLE [table] ADD [column] VARCHAR(150) DEFAULT NULL AFTER emailSmtpUsername",
 		'emailSmtpHostname' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpPort",
-		'emailOutgoingType' => "ALTER TABLE [table] ADD [column] ENUM('smtp', 'ungapped') NOT NULL DEFAULT 'smtp' AFTER emailChecked",
+		'emailOutgoingType' => "ALTER TABLE [table] ADD [column] VARCHAR(20) NOT NULL DEFAULT 'smtp' AFTER emailChecked",
 	);
 
 	$arr_update_column[$wpdb->base_prefix."email"] = array(
 		'emailSmtpSSL' => "ALTER TABLE [table] CHANGE [column] [column] ENUM('', 'ssl', 'tls') NOT NULL DEFAULT ''",
 		'emailPassword' => "ALTER TABLE [table] CHANGE [column] [column] VARCHAR(150)",
 		'emailSmtpPassword' => "ALTER TABLE [table] CHANGE [column] [column] VARCHAR(150)",
+		'emailOutgoingType' => "ALTER TABLE [table] CHANGE [column] [column] VARCHAR(60)",
 	);
 
 	$arr_add_index[$wpdb->base_prefix."email"] = array(

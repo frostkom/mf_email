@@ -24,11 +24,6 @@ foreach($users as $user)
 	$arr_data_users[$user->ID] = $user->display_name;
 }
 
-$arr_data_outgoing = array(
-	'smtp' => __("SMTP", 'lang_email'),
-	'ungapped' => __("Ungapped", 'lang_email'),
-);
-
 echo "<div class='wrap'>
 	<h2>".__("Accounts", 'lang_email')."</h2>"
 	.get_notification()
@@ -49,40 +44,55 @@ echo "<div class='wrap'>
 						<h3 class='hndle'><span>".__("Incoming", 'lang_email')." (IMAP)</span></h3>
 						<div class='inside'>
 							<div class='flex_flow'>"
-								.show_textfield(array('name' => "strEmailServer", 'text' => __("Server", 'lang_email'), 'value' => $obj_email->server, 'placeholder' => "mail.".$placeholder_server))
-								.show_textfield(array('type' => 'number', 'name' => "intEmailPort", 'text' => __("Port", 'lang_email'), 'value' => $obj_email->port, 'placeholder' => 143))
-							."</div>
-							<div class='flex_flow'>"
-								.show_textfield(array('name' => "strEmailUsername", 'text' => __("Username", 'lang_email'), 'value' => $obj_email->username, 'xtra' => " autocomplete='off'"))
-								.show_password_field(array('name' => "strEmailPassword", 'text' => __("Password", 'lang_email'), 'value' => $obj_email->password, 'xtra' => " autocomplete='off'"))
-							."</div>
-						</div>
-					</div>
-					<div class='postbox'>
-						<h3 class='hndle'><span>".__("Outgoing", 'lang_email')."</span></h3>
-						<div class='inside'>
-							<div class='flex_flow'>"
-								.show_select(array('data' => $arr_data_outgoing, 'name' => "strEmailOutgoingType", 'text' => __("Type", 'lang_email'), 'value' => $obj_email->outgoing_type));
+								.show_textfield(array('name' => "strEmailServer", 'text' => __("Server", 'lang_email'), 'value' => $obj_email->server, 'placeholder' => "mail.".$placeholder_server));
 
-								if($obj_email->outgoing_type == 'smtp')
+								if(!($obj_email->id > 0) || $obj_email->server != '')
 								{
-									echo show_textfield(array('name' => "strEmailSmtpServer", 'text' => __("Server", 'lang_email'), 'value' => $obj_email->smtp_server, 'placeholder' => "mail.".$placeholder_server))
-									.show_textfield(array('type' => 'number', 'name' => "intEmailSmtpPort", 'text' => __("Port", 'lang_email'), 'value' => $obj_email->smtp_port, 'placeholder' => 587))
-									.show_select(array('data' => $obj_email->get_ssl_for_select(), 'name' => "strEmailSmtpSSL", 'text' => __("SSL", 'lang_email'), 'value' => $obj_email->smtp_ssl));
+									echo show_textfield(array('type' => 'number', 'name' => "intEmailPort", 'text' => __("Port", 'lang_email'), 'value' => $obj_email->port, 'placeholder' => 143));
 								}
 
 							echo "</div>";
 
-							if($obj_email->outgoing_type == 'smtp')
+							if(!($obj_email->id > 0) || $obj_email->server != '')
 							{
-								echo show_textfield(array('name' => "strEmailSmtpHostname", 'text' => __("Hostname", 'lang_email'), 'value' => $obj_email->smtp_hostname));
+								echo "<div class='flex_flow'>"
+									.show_textfield(array('name' => "strEmailUsername", 'text' => __("Username", 'lang_email'), 'value' => $obj_email->username, 'xtra' => " autocomplete='off'"))
+									.show_password_field(array('name' => "strEmailPassword", 'text' => __("Password", 'lang_email'), 'value' => $obj_email->password, 'xtra' => " autocomplete='off'"))
+								."</div>";
 							}
 
-							echo "<div class='flex_flow'>"
-								.show_textfield(array('name' => "strEmailSmtpUsername", 'text' => __("User", 'lang_email'), 'value' => $obj_email->smtp_username, 'xtra' => " autocomplete='off'"))
-								.show_password_field(array('name' => "strEmailSmtpPassword", 'text' => __("Password", 'lang_email'), 'value' => $obj_email->smtp_password, 'xtra' => " autocomplete='off'"))
-							."</div>
-						</div>
+						echo "</div>
+					</div>
+					<div class='postbox'>
+						<h3 class='hndle'><span>".__("Outgoing", 'lang_email')."</span></h3>
+						<div class='inside'>"
+							.show_select(array('data' => apply_filters('email_outgoing_alternatives', array('smtp' => __("SMTP", 'lang_email'))), 'name' => "strEmailOutgoingType", 'text' => __("Type", 'lang_email'), 'value' => $obj_email->outgoing_type));
+
+							switch($obj_email->outgoing_type)
+							{
+								case 'smtp':
+									echo "<div class='flex_flow'>"
+										.show_textfield(array('name' => "strEmailSmtpServer", 'text' => __("Server", 'lang_email'), 'value' => $obj_email->smtp_server, 'placeholder' => "mail.".$placeholder_server));
+
+										if(!($obj_email->id > 0) || $obj_email->smtp_server != '')
+										{
+											echo show_textfield(array('type' => 'number', 'name' => "intEmailSmtpPort", 'text' => __("Port", 'lang_email'), 'value' => $obj_email->smtp_port, 'placeholder' => 587))
+											.show_select(array('data' => $obj_email->get_ssl_for_select(), 'name' => "strEmailSmtpSSL", 'text' => __("SSL", 'lang_email'), 'value' => $obj_email->smtp_ssl));
+										}
+									echo "</div>"
+									.show_textfield(array('name' => "strEmailSmtpHostname", 'text' => __("Hostname", 'lang_email'), 'value' => $obj_email->smtp_hostname));
+								break;
+							}
+
+							if(!($obj_email->id > 0) || $obj_email->smtp_server != '' || $obj_email->outgoing_type != 'smtp')
+							{
+								echo "<div class='flex_flow'>"
+									.show_textfield(array('name' => "strEmailSmtpUsername", 'text' => __("User", 'lang_email'), 'value' => $obj_email->smtp_username, 'xtra' => " autocomplete='off'"))
+									.show_password_field(array('name' => "strEmailSmtpPassword", 'text' => __("Password", 'lang_email'), 'value' => $obj_email->smtp_password, 'xtra' => " autocomplete='off'"))
+								."</div>";
+							}
+
+						echo "</div>
 					</div>
 				</div>
 				<div id='postbox-container-1'>
