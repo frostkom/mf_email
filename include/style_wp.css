@@ -2,8 +2,8 @@
 {
 	a[rel='external']:after
 	{
-		font-family: 'FontAwesome';
-		content: ' \f08e';
+		font-family: 'Font Awesome 5 Free';
+		content: ' \f35d';
 		display: none;
 		font-size: .8em;
 		font-style: normal;

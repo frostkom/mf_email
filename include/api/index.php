@@ -79,7 +79,7 @@ if($arr_input[0] == "email")
 				switch($intFolderType)
 				{
 					case 6:		$image = 'fa fa-inbox green';	break;
-					case 5:		$image = 'far fa-edit';			break;
+					case 5:		$image = 'fa fa-edit';			break;
 					case 2:		$image = 'far fa-trash-alt';	break;
 					case 4:		$image = 'fa fa-upload';		break;
 					case 3:		$image = 'fa fa-ban red';		break;
