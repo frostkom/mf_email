@@ -78,12 +78,12 @@ if($arr_input[0] == "email")
 
 				switch($intFolderType)
 				{
-					case 6:		$image = 'fa-inbox green';	break;
-					case 5:		$image = 'fa-edit';			break;
-					case 2:		$image = 'fa-trash-o';		break;
-					case 4:		$image = 'fa-upload';		break;
-					case 3:		$image = 'fa-ban red';		break;
-					default:	$image = "fa-folder";		break;
+					case 6:		$image = 'fa fa-inbox green';	break;
+					case 5:		$image = 'far fa-edit';			break;
+					case 2:		$image = 'far fa-trash-alt';	break;
+					case 4:		$image = 'fa fa-upload';		break;
+					case 3:		$image = 'fa fa-ban red';		break;
+					default:	$image = "far fa-folder";		break;
 				}
 
 				$json_output['folders'][] = array(

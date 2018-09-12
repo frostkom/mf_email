@@ -45,7 +45,7 @@ echo $obj_base->get_templates(array('lost_connection', 'loading'));
 echo "<script type='text/template' id='template_folder_item'>
 	<tr id='folder<%= folderID %>' class='<%= folderClass %>'>
 		<td>
-			<i class='fa fa-lg <%= folderImage %>'></i>
+			<i class='<%= folderImage %> fa-lg'></i>
 		</td>
 		<td>
 			<a href='#email/folders/<%= folderName %>'>
@@ -84,7 +84,7 @@ echo "<script type='text/template' id='template_folder_item'>
 		<td>
 			<% if(messageDraggable)
 			{ %>
-				<i class='fa fa-arrows fa-lg'></i>
+				<i class='fas fa-arrows-alt fa-lg'></i>
 			<% } %>
 			<% if(messageAttachment)
 			{ %>
@@ -127,12 +127,12 @@ echo "<script type='text/template' id='template_folder_item'>
 		<td>
 			<% if(messageRead == 0)
 			{ %>
-				<a href='#email/read/<%= messageID %>'><i class='fa fa-lg fa-circle green'></i></a>
+				<a href='#email/read/<%= messageID %>'><i class='far fa-circle fa-lg green'></i></a>
 			<% }
 
 			else
 			{ %>
-				<a href='#email/unread/<%= messageID %>'><i class='fa fa-circle-thin'></i></a>
+				<a href='#email/unread/<%= messageID %>'><i class='far fa-circle'></i></a>
 			<% } %>
 		</td>
 		<td>

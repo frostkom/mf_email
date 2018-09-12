@@ -1509,12 +1509,12 @@ class mf_email_account_table extends mf_list_table
 
 				if($intEmailPublic == 1)
 				{
-					$out .= "<i class='fa fa-lg fa-check green'></i>";
+					$out .= "<i class='fa fa-check fa-lg green'></i>";
 				}
 
 				else if($strEmailRoles != '')
 				{
-					$out .= "<i class='fa fa-lg fa-users' title='".$strEmailRoles."'></i>";
+					$out .= "<i class='far fa-users fa-lg' title='".$strEmailRoles."'></i>";
 				}
 
 				else
@@ -1530,7 +1530,7 @@ class mf_email_account_table extends mf_list_table
 
 					if($strEmailUsers != '')
 					{
-						$out .= "<i class='fa fa-lg fa-users' title='".$strEmailUsers."'></i>";
+						$out .= "<i class='far fa-users fa-lg' title='".$strEmailUsers."'></i>";
 					}
 				}
 			break;
@@ -1548,13 +1548,13 @@ class mf_email_account_table extends mf_list_table
 						{
 							default:
 							case 0:
-								$out .= "<i class='fa fa-lg fa-question'></i>&nbsp;";
+								$out .= "<i class='fa fa-question fa-lg'></i>&nbsp;";
 
 								$row_actions .= ($row_actions != '' ? " | " : "")."<a href='".wp_nonce_url(admin_url("admin.php?page=mf_email/accounts/index.php&btnEmailVerify&intEmailID=".$intEmailID), 'email_verify_'.$intEmailID, '_wpnonce_email_verify')."'>".__("Verify", 'lang_email')."</a>";
 							break;
 
 							case 1:
-								$out .= "<i class='fa fa-lg fa-check green'></i>&nbsp;";
+								$out .= "<i class='fa fa-check fa-lg green'></i>&nbsp;";
 							break;
 
 							case -1:
@@ -1582,7 +1582,7 @@ class mf_email_account_table extends mf_list_table
 				{
 					if($dteEmailChecked < date("Y-m-d H:i:s", strtotime("-1 day")))
 					{
-						$out .= "<i class='fa fa-lg fa-ban red'></i>"
+						$out .= "<i class='fa fa-ban fa-lg red'></i>"
 						."<div class='row-actions'>".sprintf(__("Not been checked since %s", 'lang_email'), format_date($dteEmailChecked))."</div>";
 					}
 
@@ -1594,20 +1594,20 @@ class mf_email_account_table extends mf_list_table
 						{
 							if($dteEmailReceived < date("Y-m-d H:i:s", strtotime("-3 day")))
 							{
-								$out .= "<i class='fa fa-lg fa-ban red'></i>"
+								$out .= "<i class='fa fa-ban fa-lg red'></i>"
 								."<div class='row-actions'>".sprintf(__("No e-mails since %s", 'lang_email'), format_date($dteEmailReceived))."</div>";
 							}
 
 							else
 							{
-								$out .= "<i class='fa fa-lg fa-check green'></i> ".format_date($dteEmailReceived)
+								$out .= "<i class='fa fa-check fa-lg green'></i> ".format_date($dteEmailReceived)
 								."<div class='row-actions'>".__("Checked", 'lang_email')." ".format_date($dteEmailChecked)."</div>";
 							}
 						}
 
 						else
 						{
-							$out .= "<i class='fa fa-question-circle fa-lg'></i>"
+							$out .= "<i class='far fa-question-circle fa-lg'></i>"
 							."<div class='row-actions'>".__("No e-mails so far", 'lang_email')."</div>";
 						}
 					}
