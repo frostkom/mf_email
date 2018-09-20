@@ -691,8 +691,7 @@ class mf_email
 						$phpmailer->Password = $smtp_pass;
 					}
 
-					// You can add your own options here, see the phpmailer documentation for more info: http://phpmailer.sourceforge.net/docs/
-					$phpmailer = apply_filters('wp_mail_smtp_custom_options', $phpmailer);
+					//$phpmailer = apply_filters('wp_mail_smtp_custom_options', $phpmailer);
 				}
 			break;
 
@@ -1607,7 +1606,7 @@ class mf_email_account_table extends mf_list_table
 
 						else
 						{
-							$out .= "<i class='far fa-question-circle fa-lg'></i>"
+							$out .= "<i class='fa fa-question-circle fa-lg'></i>"
 							."<div class='row-actions'>".__("No e-mails so far", 'lang_email')."</div>";
 						}
 					}
