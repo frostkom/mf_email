@@ -1513,7 +1513,7 @@ class mf_email_account_table extends mf_list_table
 
 				else if($strEmailRoles != '')
 				{
-					$out .= "<i class='far fa-users fa-lg' title='".$strEmailRoles."'></i>";
+					$out .= "<i class='fa fa-users fa-lg' title='".$strEmailRoles."'></i>";
 				}
 
 				else
@@ -1529,7 +1529,7 @@ class mf_email_account_table extends mf_list_table
 
 					if($strEmailUsers != '')
 					{
-						$out .= "<i class='far fa-users fa-lg' title='".$strEmailUsers."'></i>";
+						$out .= "<i class='fa fa-users fa-lg' title='".$strEmailUsers."'></i>";
 					}
 				}
 			break;

@@ -84,7 +84,7 @@ echo "<script type='text/template' id='template_folder_item'>
 		<td>
 			<% if(messageDraggable)
 			{ %>
-				<i class='fas fa-arrows-alt fa-lg'></i>
+				<i class='fa fa-arrows-alt fa-lg'></i>
 			<% } %>
 			<% if(messageAttachment)
 			{ %>
@@ -127,12 +127,12 @@ echo "<script type='text/template' id='template_folder_item'>
 		<td>
 			<% if(messageRead == 0)
 			{ %>
-				<a href='#email/read/<%= messageID %>'><i class='far fa-circle fa-lg green'></i></a>
+				<a href='#email/read/<%= messageID %>'><i class='fa fa-circle fa-lg green'></i></a>
 			<% }
 
 			else
 			{ %>
-				<a href='#email/unread/<%= messageID %>'><i class='far fa-circle'></i></a>
+				<a href='#email/unread/<%= messageID %>'><i class='fa fa-circle'></i></a>
 			<% } %>
 		</td>
 		<td>
