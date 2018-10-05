@@ -454,7 +454,7 @@ class mf_email
 	function setting_smtp_test_callback()
 	{
 		echo show_textfield(array('name' => 'smtp_to', 'value' => '', 'placeholder' => __("E-mail to send test message to", 'lang_email')))
-		."<div class='form_buttons'>"
+		."<div>"
 			.show_button(array('type' => 'button', 'name' => 'btnSmtpTest', 'text' => __("Send", 'lang_email'), 'class' => 'button-secondary'))
 		."</div>
 		<div id='smtp_debug'></div>";
