@@ -65,8 +65,11 @@ echo "<div class='wrap'>
 					</div>
 					<div class='postbox'>
 						<h3 class='hndle'><span>".__("Outgoing", 'lang_email')."</span></h3>
-						<div class='inside'>"
-							.show_select(array('data' => apply_filters('email_outgoing_alternatives', array('smtp' => __("SMTP", 'lang_email'))), 'name' => "strEmailOutgoingType", 'text' => __("Type", 'lang_email'), 'value' => $obj_email->outgoing_type));
+						<div class='inside'>
+							<div class='flex_flow'>"
+								.show_select(array('data' => apply_filters('email_outgoing_alternatives', array('smtp' => __("SMTP", 'lang_email'))), 'name' => "strEmailOutgoingType", 'text' => __("Type", 'lang_email'), 'value' => $obj_email->outgoing_type))
+								.show_textfield(array('type' => 'number', 'name' => "intEmailLimitPerHour", 'text' => __("Outgoing e-mails per hour", 'lang_email'), 'value' => $obj_email->limit_per_hour))
+							."</div>";
 
 							switch($obj_email->outgoing_type)
 							{

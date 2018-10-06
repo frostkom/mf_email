@@ -108,7 +108,7 @@ class mf_email
 		return $out;
 	}
 
-	function run_cron()
+	function cron_base()
 	{
 		global $wpdb;
 
@@ -701,6 +701,89 @@ class mf_email
 		}
 	}
 
+	function get_emails_left_to_send($amount, $email, $type = '')
+	{
+		global $wpdb;
+
+		if($type != '' && isset($this->emails_left_to_send[$type][$email]))
+		{
+			//do_log("Email - ".$email." - Got from this: ".$this->emails_left_to_send[$type][$email]);
+
+			$amount_temp = $this->emails_left_to_send[$type][$email];
+		}
+
+		else
+		{
+			$amount_temp = 0;
+
+			if($email != '')
+			{
+				$emails_per_hour = $wpdb->get_var($wpdb->prepare("SELECT emailLimitPerHour FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s", $email));
+
+				if($emails_per_hour > 0)
+				{
+					$amount_temp += $emails_per_hour;
+				}
+
+				else
+				{
+					$amount_temp += 10000;
+				}
+			}
+
+			$query_where = "";
+
+			if($email != '')
+			{
+				$query_where = " AND emailAddress = '".esc_sql($email)."'";
+			}
+
+			$wpdb->get_results("SELECT messageID FROM ".$wpdb->base_prefix."email INNER JOIN ".$wpdb->base_prefix."email_folder USING (emailID) INNER JOIN ".$wpdb->base_prefix."email_message USING (folderID) WHERE messageFrom = '' AND messageCreated > DATE_SUB(NOW(), INTERVAL 1 HOUR)".$query_where);
+
+			$amount_temp -= $wpdb->num_rows;
+
+			if($type != '')
+			{
+				$this->emails_left_to_send[$type][$email] = $amount_temp;
+
+				//do_log("Email - ".$email." - Got from DB: ".$this->emails_left_to_send[$type][$email]." (".(isset($emails_per_hour) ? $emails_per_hour : '').", ".$wpdb->last_query." -> ".$wpdb->num_rows.")");
+			}
+		}
+
+		if($type != '')
+		{
+			$this->emails_left_to_send[$type][$email]--;
+		}
+
+		return ($amount + $amount_temp);
+	}
+
+	function get_hourly_release_time($datetime, $email)
+	{
+		global $wpdb;
+
+		if($datetime == '')
+		{
+			$datetime = date("Y-m-d H:i:s");
+		}
+
+		$query_where = "";
+
+		if($email != '')
+		{
+			$query_where = " AND emailAddress = '".esc_sql($email)."'";
+		}
+
+		$datetime_temp = $wpdb->get_var("SELECT messageCreated FROM ".$wpdb->base_prefix."email INNER JOIN ".$wpdb->base_prefix."email_folder USING (emailID) INNER JOIN ".$wpdb->base_prefix."email_message USING (folderID) WHERE messageFrom = '' AND messageCreated > DATE_SUB(NOW(), INTERVAL 1 HOUR)".$query_where." ORDER BY messageCreated ASC LIMIT 0, 1");
+
+		if($datetime_temp > DEFAULT_DATE && $datetime_temp < $datetime)
+		{
+			$datetime = $datetime_temp;
+		}
+
+		return $datetime;
+	}
+
 	function send_smtp_test()
 	{
 		global $phpmailer, $done_text, $error_text;
@@ -769,6 +852,8 @@ class mf_email
 
 	function fetch_request()
 	{
+		global $error_text;
+
 		switch($this->type)
 		{
 			case 'account_create':
@@ -789,8 +874,33 @@ class mf_email
 				$this->smtp_hostname = check_var('strEmailSmtpHostname');
 				$this->smtp_username = check_var('strEmailSmtpUsername');
 				$this->smtp_password = check_var('strEmailSmtpPassword');
+				$this->limit_per_hour = check_var('intEmailLimitPerHour');
 
 				$this->password_encrypted = $this->smtp_password_encrypted = "";
+			break;
+
+			case 'send_email':
+				$this->message_id = check_var('intMessageID');
+				$this->message_draft_id = check_var('intMessageDraftID');
+				$this->message_answer = isset($_GET['answer']) ? 1 : 0;
+				$this->message_forward = isset($_GET['forward']) ? 1 : 0;
+
+				$this->id = check_var('intEmailID', 'int', true, $this->get_from_last());
+				$this->message_to = check_var('strMessageTo');
+				$this->message_cc = check_var('strMessageCc');
+				$this->message_subject = check_var('strMessageSubject');
+				$this->message_text = check_var('strMessageText', 'raw');
+				$this->message_attachment = check_var('strMessageAttachment');
+				$this->text_source = check_var('intEmailTextSource');
+
+				$this->group_message_id = check_var('intGroupMessageID');
+
+				$this->all_left_to_send = apply_filters('get_emails_left_to_send', 0, '');
+
+				if($this->all_left_to_send == 0)
+				{
+					$error_text = __("The e-mail limit for the last hour has been reached so you can't send anymore e-mails at them moment. Save as a draft and check back in a moment", 'lang_email');
+				}
 			break;
 		}
 	}
@@ -961,6 +1071,256 @@ class mf_email
 					$done_text = __("The account was updated", 'lang_email');
 				}
 			break;
+
+			case 'send_email':
+				if(isset($_POST['btnMessageSend']) && wp_verify_nonce($_POST['_wpnonce_message_send'], 'message_send') && $error_text == '')
+				{
+					if($this->id > 0 && $this->message_to != '')
+					{
+						$result = $wpdb->get_results($wpdb->prepare("SELECT emailName, emailAddress FROM ".$wpdb->base_prefix."email WHERE emailID = '%d'", $this->id));
+
+						foreach($result as $r)
+						{
+							$strEmailName = $r->emailName;
+							$strEmailAddress = $r->emailAddress;
+
+							$this->message_to = $this->validate_email_string($this->message_to);
+							$this->message_cc = $this->validate_email_string($this->message_cc);
+
+							$mail_headers = "From: ".$strEmailName." <".$strEmailAddress.">\r\n";
+							$mail_headers .= "Cc: ".$this->message_cc."\r\n";
+
+							$mail_content = apply_filters('the_content', stripslashes($this->message_text));
+							list($mail_attachment, $rest) = get_attachment_to_send($this->message_attachment);
+
+							$sent = send_email(array('to' => $this->message_to, 'subject' => $this->message_subject, 'content' => $mail_content, 'headers' => $mail_headers, 'attachment' => $mail_attachment));
+
+							if($sent)
+							{
+								$intFolderID = get_folder_ids(__("Sent", 'lang_email'), 4, $this->id);
+
+								list($this->message_id, $affected_rows) = save_email(array('read' => 1, 'folder_id' => $intFolderID, 'to' => $this->message_to, 'cc' => $this->message_cc, 'subject' => $this->message_subject, 'content_html' => $this->message_text));
+
+								if($this->message_id > 0)
+								{
+									if($this->message_attachment != '')
+									{
+										$arr_attachments = explode(",", $this->message_attachment);
+
+										foreach($arr_attachments as $attachment)
+										{
+											@list($file_name, $file_url, $file_id) = explode("|", $attachment);
+
+											if($file_id > 0){}
+
+											else if($file_url != '')
+											{
+												$file_url_check = WP_CONTENT_DIR.str_replace(site_url()."/wp-content", "", $file_url);
+
+												if(file_exists($file_url_check))
+												{
+													$query = $wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_type = 'attachment' AND post_title = %s", $file_name);
+
+													$file_id = $wpdb->get_var($query);
+												}
+
+												else
+												{
+													$error_text = __("The file does not seem to exist", 'lang_email')." (".$file_url_check.")";
+												}
+											}
+
+											if($file_id > 0)
+											{
+												$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email_message_attachment SET messageID = '%d', fileID = '%d'", $this->message_id, $file_id));
+											}
+
+											else
+											{
+												$error_text = __("Could not save the attached file to DB, but it was successfully sent", 'lang_email');
+											}
+										}
+									}
+
+									if(!isset($error_text) || $error_text == '')
+									{
+										mf_redirect(admin_url("admin.php?page=mf_email/list/index.php&sent"));
+									}
+								}
+							}
+
+							else
+							{
+								$error_text = __("Unfortunately, I could not send the email for you. Please try again. If the problem persists, please contact my admin", 'lang_email');
+							}
+						}
+					}
+
+					else
+					{
+						$error_text = __("You have to enter all required fields", 'lang_email');
+					}
+				}
+
+				else if(isset($_POST['btnMessageDraft']) && wp_verify_nonce($_POST['_wpnonce_message_send'], 'message_send'))
+				{
+					$intFolderID = get_folder_ids(__("Draft", 'lang_email'), 5, $this->id);
+
+					list($this->message_id, $affected_rows) = save_email(array('id' => $this->message_draft_id, 'folder_id' => $intFolderID, 'to' => $this->message_to, 'cc' => $this->message_cc, 'subject' => $this->message_subject, 'content_html' => $this->message_text));
+
+					if($affected_rows > 0)
+					{
+						$done_text = __("The draft has been saved", 'lang_email');
+					}
+				}
+
+				else if($this->group_message_id > 0)
+				{
+					$result = $wpdb->get_results($wpdb->prepare("SELECT messageFrom, messageName, messageText FROM ".$wpdb->prefix."group_message WHERE messageID = '%d'", $this->group_message_id));
+
+					foreach($result as $r)
+					{
+						$this->message_subject = $r->messageName;
+						$this->message_text = stripslashes($r->messageText);
+					}
+				}
+
+				else if($this->text_source > 0)
+				{
+					$this->message_text = $wpdb->get_var($wpdb->prepare("SELECT post_content FROM ".$wpdb->posts." WHERE post_type = 'page' AND post_status = 'publish' AND ID = '%d'", $this->text_source));
+
+					$user_data = get_userdata(get_current_user_id());
+
+					$this->message_text = str_replace("[name]", $user_data->display_name, $this->message_text);
+				}
+
+				else if($this->message_cc == '' && $this->message_subject == '' && $this->message_text == '')
+				{
+					if($this->message_draft_id > 0)
+					{
+						$result = $wpdb->get_results($wpdb->prepare("SELECT emailID, messageTo, messageCc, messageName, messageText2 FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) WHERE messageDeleted = '0' AND messageID = '%d'", $this->message_draft_id));
+
+						foreach($result as $r)
+						{
+							$this->id = $r->emailID;
+							$this->message_to = $r->messageTo;
+							$this->message_cc = $r->messageCc;
+							$this->message_subject = $r->messageName;
+							$this->message_text = $r->messageText2;
+						}
+					}
+
+					else if($this->message_id > 0)
+					{
+						$result = $wpdb->get_results("SELECT ".$wpdb->base_prefix."email.emailID, emailAddress, messageFrom, messageFromName, messageTo, messageCc, messageReplyTo, messageName, messageText, messageCreated, ".$wpdb->base_prefix."email_message.userID FROM ".$wpdb->base_prefix."email_users RIGHT JOIN ".$wpdb->base_prefix."email USING (emailID) INNER JOIN ".$wpdb->base_prefix."email_folder USING (emailID) INNER JOIN ".$wpdb->base_prefix."email_message USING (folderID) WHERE ".$wpdb->base_prefix."email_message.messageID = '".esc_sql($this->message_id)."' AND (emailPublic = '1' OR emailRoles LIKE '%".get_current_user_role()."%' OR ".$wpdb->base_prefix."email.userID = '".get_current_user_id()."' OR ".$wpdb->base_prefix."email_users.userID = '".get_current_user_id()."') LIMIT 0, 1");
+
+						foreach($result as $r)
+						{
+							$this->id = $r->emailID;
+							$strEmailAddress = $r->emailAddress;
+							$strMailFrom = $r->messageFrom;
+							$strMailFromName = $r->messageFromName;
+							$strMailTo = $r->messageTo;
+							$this->message_subject_old = $r->messageName;
+							$this->message_text = $r->messageText;
+							$dteMessageCreated = $r->messageCreated;
+							$intUserID2 = $r->userID;
+
+							if($this->message_forward == 0)
+							{
+								$arrMessageReplyTo_temp = get_email_address_from_text($r->messageReplyTo);
+
+								if($arrMessageReplyTo_temp != '' && is_array($arrMessageReplyTo_temp))
+								{
+									foreach($arrMessageReplyTo_temp as $strMessageReplyTo_temp)
+									{
+										$this->message_to .= " ".$strMessageReplyTo_temp;
+									}
+								}
+
+								if($this->message_to == '')
+								{
+									$strMessageFrom_temp = $strMailFrom;
+
+									if($strMessageFrom_temp != '')
+									{
+										$this->message_to .= " ".$strMessageFrom_temp;
+									}
+								}
+
+								if($this->message_answer == 1)
+								{
+									$arrMessageTo_temp = get_email_address_from_text($strMailTo);
+
+									if(is_array($arrMessageTo_temp))
+									{
+										foreach($arrMessageTo_temp as $this->message_to_temp)
+										{
+											$this->message_cc .= " ".$this->message_to_temp;
+										}
+									}
+
+									else
+									{
+										$this->message_cc .= " ".$arrMessageTo_temp;
+									}
+
+									$arrMessageCc_temp = get_email_address_from_text($r->messageCc);
+
+									if(is_array($arrMessageCc_temp))
+									{
+										foreach($arrMessageCc_temp as $this->message_cc_temp)
+										{
+											$this->message_cc .= " ".$this->message_cc_temp;
+										}
+									}
+
+									else
+									{
+										$this->message_cc .= " ".$arrMessageCc_temp;
+									}
+								}
+
+								$this->message_to = trim(str_replace($strEmailAddress, "", $this->message_to));
+								$this->message_cc = trim(str_replace($strEmailAddress, "", $this->message_cc));
+							}
+
+							if($this->message_forward == 1 || $this->message_answer == 1)
+							{
+								$subject_prefix = $this->message_forward == 1 ? "Fwd: " : "Re: ";
+
+								$email_outgoing = $intUserID2 == '' || $strMailFrom != '' ? false : true;
+
+								$strFrom = $email_outgoing == false ? $strMailFromName." <".$strMailFrom.">" : $strEmailAddress;
+								$strTo = $email_outgoing == false ? $strEmailAddress." (".$strMailTo.")" : $strMailTo;
+
+								$this->message_subject = (substr($this->message_subject_old, 0, strlen($subject_prefix)) != $subject_prefix ? $subject_prefix : "").$this->message_subject_old;
+
+								$this->message_text = "<p></p><p>-------------------- ".__("Original message", 'lang_email')." --------------------</p>"
+								."<p>".__("From", 'lang_email').": ".$strFrom."</p>"
+								."<p>".__("To", 'lang_email').": ".$strTo."</p>"
+								."<p>".__("Subject", 'lang_email').": ".$this->message_subject."</p>"
+								."<p>".__("Date", 'lang_email').": ".$dteMessageCreated."</p>"
+								."<p>"."-------------------</p>"
+								."<p>".preg_replace('#^(.*?)$#m', '<br>&gt; \1', strip_tags($this->message_text, '<br>'))."</p>"
+								."<p>------------------ ".__("End original message", 'lang_email')." ------------------</p>";
+
+								if($this->message_forward == 1)
+								{
+									$result = $wpdb->get_results($wpdb->prepare("SELECT fileID FROM ".$wpdb->base_prefix."email_message_attachment WHERE messageID = '%d'", $this->message_id));
+
+									foreach($result as $r)
+									{
+										list($file_name, $file_url) = get_attachment_data_by_id($r->fileID);
+
+										$this->message_attachment .= ($this->message_attachment != '' ? "," : "").$file_name."|".$file_url."|".$r->fileID;
+									}
+								}
+							}
+						}
+					}
+				}
+			break;
 		}
 
 		return $out;
@@ -975,7 +1335,7 @@ class mf_email
 			case 'account_create':
 				if($this->id > 0)
 				{
-					$result = $wpdb->get_results($wpdb->prepare("SELECT emailPublic, emailRoles, emailServer, emailPort, emailUsername, emailAddress, emailName, emailOutgoingType, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailDeleted FROM ".$wpdb->base_prefix."email WHERE emailID = '%d'", $this->id));
+					$result = $wpdb->get_results($wpdb->prepare("SELECT emailPublic, emailRoles, emailServer, emailPort, emailUsername, emailAddress, emailName, emailOutgoingType, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailLimitPerHour, emailDeleted FROM ".$wpdb->base_prefix."email WHERE emailID = '%d'", $this->id));
 
 					foreach($result as $r)
 					{
@@ -992,6 +1352,7 @@ class mf_email
 						$this->smtp_port = $r->emailSmtpPort;
 						$this->smtp_hostname = $r->emailSmtpHostname;
 						$this->smtp_username = $r->emailSmtpUsername;
+						$this->limit_per_hour = $r->emailLimitPerHour;
 						$this->deleted = $r->emailDeleted;
 
 						$this->users = array();
@@ -1152,14 +1513,28 @@ class mf_email
 
 			$strEmailName = $strEmailName != '' ? $strEmailName." &lt;".$strEmailAddress."&gt;" : $strEmailAddress;
 
+			$key_prefix = "";
+
+			$left_to_send = apply_filters('get_emails_left_to_send', 0, $strEmailAddress);
+
+			if($left_to_send == 0)
+			{
+				$key_prefix = "disabled_";
+
+				$hourly_release_time = apply_filters('get_hourly_release_time', '', $strEmailAddress);
+				$mins = time_between_dates(array('start' => $hourly_release_time, 'end' => date("Y-m-d H:i:s"), 'type' => 'round', 'return' => 'minutes'));
+
+				$strEmailName .= " (".sprintf(__("Hourly Limit Reached. Wait %s min", 'lang_email'), (60 - $mins)).")";
+			}
+
 			switch($data['index'])
 			{
 				case 'id':
-					$arr_data[$intEmailID2] = $strEmailName;
+					$arr_data[$key_prefix.$intEmailID2] = $strEmailName;
 				break;
 
 				case 'address':
-					$arr_data[$strEmailName_orig."|".$strEmailAddress] = $strEmailName;
+					$arr_data[$key_prefix.$strEmailName_orig."|".$strEmailAddress] = $strEmailName;
 				break;
 			}
 		}
@@ -1319,7 +1694,7 @@ class mf_email
 
 		$this->encrypt_password();
 
-		$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailOutgoingType = %s, emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailCreated = NOW(), userID = '%d'", $wpdb->blogid, $this->public, @implode(",", $this->roles), $this->server, $this->port, $this->username, $this->address, $this->name, $this->outgoing_type, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, get_current_user_id()));
+		$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailOutgoingType = %s, emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailLimitPerHour = '%d', emailCreated = NOW(), userID = '%d'", $wpdb->blogid, $this->public, @implode(",", $this->roles), $this->server, $this->port, $this->username, $this->address, $this->name, $this->outgoing_type, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, $this->limit_per_hour, get_current_user_id()));
 
 		$this->id = $wpdb->insert_id;
 
@@ -1335,7 +1710,7 @@ class mf_email
 
 		$this->encrypt_password();
 
-		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailVerified = '0', emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailOutgoingType = %s, emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailDeleted = '0' WHERE emailID = '%d'", $wpdb->blogid, $this->public, @implode(",", $this->roles), $this->server, $this->port, $this->username, $this->address, $this->name, $this->outgoing_type, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, $this->id));
+		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailVerified = '0', emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailOutgoingType = %s, emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailLimitPerHour = '%d', emailDeleted = '0' WHERE emailID = '%d'", $wpdb->blogid, $this->public, @implode(",", $this->roles), $this->server, $this->port, $this->username, $this->address, $this->name, $this->outgoing_type, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, $this->limit_per_hour, $this->id));
 
 		$rows_affected = $wpdb->rows_affected;
 

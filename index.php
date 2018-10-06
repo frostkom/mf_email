@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: 
-Version: 5.11.12
+Version: 5.12.1
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://frostkom.se
@@ -20,7 +20,7 @@ include_once("include/functions.php");
 $obj_email = new mf_email();
 
 add_action('cron_base', 'activate_email', mt_rand(1, 10));
-add_action('cron_base', array($obj_email, 'run_cron'), mt_rand(1, 10));
+add_action('cron_base', array($obj_email, 'cron_base'), mt_rand(1, 10));
 
 if(is_admin())
 {
@@ -41,6 +41,9 @@ if(is_admin())
 add_filter('wp_mail_from', array($obj_email, 'wp_mail_from'));
 add_filter('wp_mail_from_name', array($obj_email, 'wp_mail_from_name'));
 add_action('phpmailer_init', array($obj_email, 'phpmailer_init'));
+
+add_filter('get_emails_left_to_send', array($obj_email, 'get_emails_left_to_send'), 10, 4);
+add_filter('get_hourly_release_time', array($obj_email, 'get_hourly_release_time'), 10, 3);
 
 add_action('wp_ajax_send_smtp_test', array($obj_email, 'send_smtp_test'));
 add_action('wp_ajax_nopriv_send_smtp_test', array($obj_email, 'send_smtp_test'));
@@ -87,6 +90,7 @@ function activate_email()
 		emailSmtpHostname VARCHAR(100) DEFAULT NULL,
 		emailSmtpUsername VARCHAR(100) DEFAULT NULL,
 		emailSmtpPassword VARCHAR(150) DEFAULT NULL,
+		emailLimitPerHour SMALLINT UNSIGNED DEFAULT '0',
 		userID INT UNSIGNED DEFAULT NULL,
 		emailDeleted ENUM('0','1') NOT NULL DEFAULT '0',
 		emailDeletedDate DATETIME DEFAULT NULL,
@@ -109,6 +113,7 @@ function activate_email()
 		'emailSmtpPassword' => "ALTER TABLE [table] ADD [column] VARCHAR(150) DEFAULT NULL AFTER emailSmtpUsername",
 		'emailSmtpHostname' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpPort",
 		'emailOutgoingType' => "ALTER TABLE [table] ADD [column] VARCHAR(20) NOT NULL DEFAULT 'smtp' AFTER emailChecked",
+		'emailLimitPerHour' => "ALTER TABLE [table] ADD [column] SMALLINT UNSIGNED DEFAULT '0' AFTER emailSmtpPassword",
 	);
 
 	$arr_update_column[$wpdb->base_prefix."email"] = array(
