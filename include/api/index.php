@@ -276,7 +276,7 @@ if($arr_input[0] == "email")
 				$post_guid = $r->guid;
 
 				$arr_attachments[] = array(
-					'title' => get_file_icon($post_guid)."&nbsp;".$post_title, //.".".get_file_suffix($post_guid)
+					'title' => get_file_icon(array('file' => $post_guid))."&nbsp;".$post_title,
 					'url' => $post_guid
 				);
 			}
