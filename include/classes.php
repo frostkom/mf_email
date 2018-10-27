@@ -1888,7 +1888,9 @@ class mf_email_account_table extends mf_list_table
 
 				else if($strEmailRoles != '')
 				{
-					$out .= "<i class='fa fa-users fa-lg' title='".$strEmailRoles."'></i>";
+					$arr_roles = get_roles_for_select(array('use_capability' => false));
+
+					$out .= "<i class='fa fa-users fa-lg' title='".$arr_roles[$strEmailRoles]."'></i>";
 				}
 
 				else
