@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: 
-Version: 5.12.4
+Version: 6.0.2
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://frostkom.se
@@ -41,6 +41,7 @@ if(is_admin())
 add_filter('wp_mail_from', array($obj_email, 'wp_mail_from'));
 add_filter('wp_mail_from_name', array($obj_email, 'wp_mail_from_name'));
 add_action('phpmailer_init', array($obj_email, 'phpmailer_init'));
+add_action('sent_email', array($obj_email, 'sent_email'));
 
 add_filter('get_emails_left_to_send', array($obj_email, 'get_emails_left_to_send'), 10, 4);
 add_filter('get_hourly_release_time', array($obj_email, 'get_hourly_release_time'), 10, 3);
@@ -90,6 +91,7 @@ function activate_email()
 		emailSmtpHostname VARCHAR(100) DEFAULT NULL,
 		emailSmtpUsername VARCHAR(100) DEFAULT NULL,
 		emailSmtpPassword VARCHAR(150) DEFAULT NULL,
+		emailSmtpChecked DATETIME,
 		emailLimitPerHour SMALLINT UNSIGNED DEFAULT '0',
 		userID INT UNSIGNED DEFAULT NULL,
 		emailDeleted ENUM('0','1') NOT NULL DEFAULT '0',
@@ -114,6 +116,7 @@ function activate_email()
 		'emailSmtpHostname' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpPort",
 		'emailOutgoingType' => "ALTER TABLE [table] ADD [column] VARCHAR(20) NOT NULL DEFAULT 'smtp' AFTER emailChecked",
 		'emailLimitPerHour' => "ALTER TABLE [table] ADD [column] SMALLINT UNSIGNED DEFAULT '0' AFTER emailSmtpPassword",
+		'emailSmtpChecked' => "ALTER TABLE [table] ADD [column] DATETIME AFTER emailSmtpPassword",
 	);
 
 	$arr_update_column[$wpdb->base_prefix."email"] = array(

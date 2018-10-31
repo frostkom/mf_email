@@ -1720,79 +1720,103 @@ class rcube_imap_generic
                 }
 
                 // create array with header field:data
-                if (!empty($headers)) {
+                if(!empty($headers))
+				{
                     $headers = explode("\n", trim($headers));
-                    foreach ($headers as $hid => $resln) {
-                        if (ord($resln[0]) <= 32) {
+
+                    foreach($headers as $hid => $resln)
+					{
+                        if(ord($resln[0]) <= 32)
+						{
                             $lines[$ln] .= (empty($lines[$ln]) ? '' : "\n") . trim($resln);
-                        } else {
+                        }
+
+						else
+						{
                             $lines[++$ln] = trim($resln);
                         }
                     }
 
-                    while (list($lines_key, $str) = each($lines)) {
+                    //while(list($lines_key, $str) = each($lines))
+					foreach($lines as $lines_key => $str)
+					{
                         list($field, $string) = explode(':', $str, 2);
 
                         $field  = strtolower($field);
                         $string = preg_replace('/\n[\t\s]*/', ' ', trim($string));
 
-                        switch ($field) {
+                        switch($field)
+						{
 							case 'date';
 								$result[$id]->date = $string;
 								$result[$id]->timestamp = $this->strToTime($string);
-								break;
+							break;
+
 							case 'from':
 								$result[$id]->from = $string;
-								break;
+							break;
+
 							case 'to':
 								$result[$id]->to = preg_replace('/undisclosed-recipients:[;,]*/', '', $string);
-								break;
+							break;
+
 							case 'subject':
 								$result[$id]->subject = $string;
-								break;
+							break;
+
 							case 'reply-to':
 								$result[$id]->replyto = $string;
-								break;
+							break;
+
 							case 'cc':
 								$result[$id]->cc = $string;
-								break;
+							break;
+
 							case 'bcc':
 								$result[$id]->bcc = $string;
-								break;
+							break;
+
 							case 'content-transfer-encoding':
 								$result[$id]->encoding = $string;
 							break;
+
 							case 'content-type':
 								$ctype_parts = preg_split('/[; ]/', $string);
 								$result[$id]->ctype = strtolower(array_shift($ctype_parts));
 								if (preg_match('/charset\s*=\s*"?([a-z0-9\-\.\_]+)"?/i', $string, $regs)) {
 									$result[$id]->charset = $regs[1];
 								}
-								break;
+							break;
+
 							case 'in-reply-to':
 								$result[$id]->in_reply_to = str_replace(array("\n", '<', '>'), '', $string);
-								break;
+							break;
+
 							case 'references':
 								$result[$id]->references = $string;
-								break;
+							break;
+
 							case 'return-receipt-to':
 							case 'disposition-notification-to':
 							case 'x-confirm-reading-to':
 								$result[$id]->mdn_to = $string;
-								break;
+							break;
+
 							case 'message-id':
 								$result[$id]->messageID = $string;
-								break;
+							break;
+
 							case 'x-priority':
 								if (preg_match('/^(\d+)/', $string, $matches)) {
 									$result[$id]->priority = intval($matches[1]);
 								}
-								break;
+							break;
+
 							default:
 								if (strlen($field) > 2) {
 									$result[$id]->others[$field] = $string;
 								}
-								break;
+							break;
                         }
                     }
                 }

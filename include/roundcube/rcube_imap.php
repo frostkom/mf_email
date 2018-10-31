@@ -127,7 +127,6 @@ class rcube_imap
         $this->conn = new rcube_imap_generic();
     }
 
-
     /**
      * Connect to an IMAP server
      *
@@ -198,7 +197,7 @@ class rcube_imap
         $this->port = $port;
         $this->ssl  = $use_ssl;
 
-		$log_message = sprintf(__("Login failed for %s from %s.", 'lang_email'), $user, (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : "(".__("Unknown IP", 'lang_email').")")); //rcmail_remote_ip()
+		$log_message = sprintf(__("Login failed for %s from %s.", 'lang_email'), $user, (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : "(".__("Unknown IP", 'lang_email').")")); //rcmail_remote_ip() //." (".substr($pass, 0, 5)."...)"
 
         if($this->conn->connected())
 		{

@@ -701,6 +701,15 @@ class mf_email
 		}
 	}
 
+	function sent_email($from)
+	{
+		global $wpdb;
+
+		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailSmtpChecked = NOW() WHERE emailAddress = %s AND emailSmtpServer != ''", $from));
+
+		do_log("sent_email(): ".$wpdb->last_query);
+	}
+
 	function get_emails_left_to_send($amount, $email, $type = '')
 	{
 		global $wpdb;
@@ -1733,32 +1742,74 @@ class mf_email_encryption
 	function __construct($type)
 	{
 		$this->set_key($type);
-		$this->iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND);
+
+		if(function_exists('mcrypt_create_iv'))
+		{
+			$this->iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND);
+		}
+
+		else
+		{
+			$this->encrypt_method = 'AES-256-CBC';
+
+			if(!in_array($this->encrypt_method, openssl_get_cipher_methods()))
+			{
+				do_log("Encryption: ".$this->encrypt_method." does not exist in ".var_export(openssl_get_cipher_methods(), true));
+			}
+
+			$this->iv = substr(hash('sha256', $this->key), 0, 16);
+		}
 	}
 
 	function set_key($type)
 	{
-		$this->key = substr("mf_crypt".$type, 0, 32);
+		if(function_exists('mcrypt_encrypt'))
+		{
+			$this->key = substr("mf_crypt".$type, 0, 32);
+		}
+
+		else
+		{
+			$this->key = hash('sha256', "mf_crypt".$type);
+		}
 	}
 
-	function encrypt($text, $key = "")
+	function encrypt($text, $key = '')
 	{
 		if($key != '')
 		{
 			$this->set_key($key);
 		}
 
-		return base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $this->key, $text, MCRYPT_MODE_ECB, $this->iv));
+		if(function_exists('mcrypt_encrypt'))
+		{
+			$text_encrypted = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $this->key, $text, MCRYPT_MODE_ECB, $this->iv));
+		}
+
+		else
+		{
+			$text_encrypted = base64_encode(openssl_encrypt($text, $this->encrypt_method, $this->key, 0, $this->iv));
+		}
+
+		return $text_encrypted;
 	}
 
-	function decrypt($text, $key = "")
+	function decrypt($text, $key = '')
 	{
 		if($key != '')
 		{
 			$this->set_key($key);
 		}
 
-		return trim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $this->key, base64_decode($text), MCRYPT_MODE_ECB, $this->iv));
+		if(function_exists('mcrypt_encrypt'))
+		{
+			return trim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $this->key, base64_decode($text), MCRYPT_MODE_ECB, $this->iv));
+		}
+
+		else
+		{
+			return openssl_decrypt(base64_decode($text), $this->encrypt_method, $this->key, 0, $this->iv);
+		}
 	}
 }
 
@@ -1804,7 +1855,6 @@ class mf_email_account_table extends mf_list_table
 			//'emailRoles' => __("Roles", 'lang_email'),
 			//'emailUsers' => __("Users", 'lang_email'),
 			'emailServer' => __("Incoming", 'lang_email'),
-			'emailChecked' => __("Status", 'lang_email'),
 			'emailSmtpServer' => __("Outgoing", 'lang_email'),
 		);
 
@@ -1883,7 +1933,7 @@ class mf_email_account_table extends mf_list_table
 
 				if($intEmailPublic == 1)
 				{
-					$out .= "<i class='fa fa-check fa-lg green'></i>";
+					$out .= "<i class='fa fa-check fa-lg green' title='".__("Public", 'lang_email')."'></i>";
 				}
 
 				else if($strEmailRoles != '')
@@ -1912,108 +1962,131 @@ class mf_email_account_table extends mf_list_table
 			break;
 
 			case 'emailServer':
-				$strEmailServer = $item[$column_name];
+				$strEmailServer = $item['emailServer'];
 
 				if($strEmailServer != '')
 				{
-					$row_actions = "";
+					$intEmailVerified = $item['emailVerified'];
+					$dteEmailChecked = $item['emailChecked'];
 
-					$out .= "<span class='nowrap'>";
+					$row_info = $row_actions = "";
 
-						switch($item['emailVerified'])
-						{
-							default:
-							case 0:
-								$out .= "<i class='fa fa-question fa-lg'></i>&nbsp;";
+					switch($intEmailVerified)
+					{
+						default:
+						case 0:
+							$row_info .= "<i class='fa fa-question fa-lg' title='".__("Needs to be Verified", 'lang_email')."'></i>";
 
-								$row_actions .= ($row_actions != '' ? " | " : "")."<a href='".wp_nonce_url(admin_url("admin.php?page=mf_email/accounts/index.php&btnEmailVerify&intEmailID=".$intEmailID), 'email_verify_'.$intEmailID, '_wpnonce_email_verify')."'>".__("Verify", 'lang_email')."</a>";
-							break;
+							$row_actions .= ($row_actions != '' ? " | " : "")."<a href='".wp_nonce_url(admin_url("admin.php?page=mf_email/accounts/index.php&btnEmailVerify&intEmailID=".$intEmailID), 'email_verify_'.$intEmailID, '_wpnonce_email_verify')."'>".__("Verify", 'lang_email')."</a>";
+						break;
 
-							case 1:
-								$out .= "<i class='fa fa-check fa-lg green'></i>&nbsp;";
-							break;
+						case 1:
+							if($dteEmailChecked > DEFAULT_DATE)
+							{
+								if($dteEmailChecked < date("Y-m-d H:i:s", strtotime("-1 day")))
+								{
+									$row_info .= "<i class='fa fa-ban fa-lg red' title='".sprintf(__("Last Checked %s", 'lang_email'), format_date($dteEmailChecked))."'></i>";
+								}
 
-							case -1:
-								$out .= "<span class='fa-stack'>
-									<i class='fa fa-search fa-stack-1x'></i>
-									<i class='fa fa-ban fa-stack-2x red'></i>
-								</span>&nbsp;";
-							break;
-						}
+								else
+								{
+									$dteEmailReceived = $wpdb->get_var($wpdb->prepare("SELECT messageReceived FROM ".$wpdb->base_prefix."email_folder INNER JOIN ".$wpdb->base_prefix."email_message USING (folderID) WHERE emailID = '%d' ORDER BY messageReceived DESC LIMIT 0, 1", $intEmailID));
 
-						$row_actions .= ($row_actions != '' ? " | " : "").$item['emailUsername'];
+									if($dteEmailReceived > DEFAULT_DATE)
+									{
+										if($dteEmailReceived < date("Y-m-d H:i:s", strtotime("-3 day")))
+										{
+											$row_info .= "<i class='fa fa-ban fa-lg red' title='".sprintf(__("Last E-mail %s", 'lang_email'), format_date($dteEmailReceived))."'></i>";
+										}
 
-						$out .= $strEmailServer.":".$item['emailPort']
-					."</span>"
-					."<div class='row-actions'>"
+										else
+										{
+											$row_info .= "<i class='fa fa-check fa-lg green' title='".sprintf(__("Checked %s, Received %s", 'lang_email'), format_date($dteEmailChecked), format_date($dteEmailReceived))."'></i>";
+										}
+									}
+
+									else
+									{
+										$row_info .= "<i class='fa fa-question-circle fa-lg' title='".__("No e-mails received so far", 'lang_email')."'></i>";
+									}
+								}
+							}
+
+							else
+							{
+								$row_info .= "<i class='fa fa-spinner fa-spin fa-lg'></i>
+								<div class='row-actions'>".__("Incoming has not been checked yet", 'lang_email')."</div>";
+							}
+						break;
+
+						case -1:
+							$row_info .= "<i class='fa fa-times fa-lg red' title='".__("Verification Failed", 'lang_email')."'></i>";
+						break;
+					}
+
+					$row_info .= "&nbsp;".$strEmailServer.":".$item['emailPort'];
+					$row_actions .= ($row_actions != '' ? " | " : "").$item['emailUsername'];
+
+					$out .= "<span class='nowrap'>"
+						.$row_info
+					."</span>
+					<div class='row-actions'>"
 						.$row_actions
 					."</div>";
 				}
 			break;
 
-			case 'emailChecked':
-				$dteEmailChecked = $item[$column_name];
+			case 'emailSmtpServer':
+				$strEmailSmtpServer = $item['emailSmtpServer'];
+				$strEmailOutgoingType = $item['emailOutgoingType'];
 
-				if($dteEmailChecked > DEFAULT_DATE && $item['emailServer'] != '')
+				if($strEmailSmtpServer != '' || $strEmailOutgoingType != 'smtp')
 				{
-					if($dteEmailChecked < date("Y-m-d H:i:s", strtotime("-1 day")))
-					{
-						$out .= "<i class='fa fa-ban fa-lg red'></i>"
-						."<div class='row-actions'>".sprintf(__("Not been checked since %s", 'lang_email'), format_date($dteEmailChecked))."</div>";
-					}
+					$dteEmailSmtpChecked = $item['emailSmtpChecked'];
 
-					else
-					{
-						$dteEmailReceived = $wpdb->get_var($wpdb->prepare("SELECT messageReceived FROM ".$wpdb->base_prefix."email_folder INNER JOIN ".$wpdb->base_prefix."email_message USING (folderID) WHERE emailID = '%d' ORDER BY messageReceived DESC LIMIT 0, 1", $intEmailID));
+					$row_info = $row_actions = "";
 
-						if($dteEmailReceived > DEFAULT_DATE)
+					if($dteEmailSmtpChecked > DEFAULT_DATE)
+					{
+						if($dteEmailSmtpChecked < date("Y-m-d H:i:s", strtotime("-7 day")))
 						{
-							if($dteEmailReceived < date("Y-m-d H:i:s", strtotime("-3 day")))
-							{
-								$out .= "<i class='fa fa-ban fa-lg red'></i>"
-								."<div class='row-actions'>".sprintf(__("No e-mails since %s", 'lang_email'), format_date($dteEmailReceived))."</div>";
-							}
-
-							else
-							{
-								$out .= "<i class='fa fa-check fa-lg green'></i> ".format_date($dteEmailReceived)
-								."<div class='row-actions'>".__("Checked", 'lang_email')." ".format_date($dteEmailChecked)."</div>";
-							}
+							$row_info .= "<i class='fa fa-ban fa-lg red' title='".sprintf(__("Last Checked %s", 'lang_email'), format_date($dteEmailSmtpChecked))."'></i>";
 						}
 
 						else
 						{
-							$out .= "<i class='fa fa-question-circle fa-lg'></i>"
-							."<div class='row-actions'>".__("No e-mails so far", 'lang_email')."</div>";
+							$row_info .= "<i class='fa fa-check fa-lg green' title='".sprintf(__("Checked %s", 'lang_email'), format_date($dteEmailSmtpChecked))."'></i>";
 						}
 					}
-				}
 
-				else if($item['emailVerified'] > 0)
-				{
-					$out .= "<i class='fa fa-spinner fa-spin fa-lg'></i>
-					<div class='row-actions'>".__("The e-mail has not been checked yet", 'lang_email')."</div>";
-				}
-			break;
+					else
+					{
+						$row_info .= "<i class='fa fa-spinner fa-spin fa-lg' title='".__("Outgoing has not been checked yet", 'lang_email')."'></i>";
+					}
 
-			case 'emailSmtpServer':
-				$strEmailSmtpServer = $item[$column_name];
-
-				if($strEmailSmtpServer != '')
-				{
-					switch($item['emailOutgoingType'])
+					switch($strEmailOutgoingType)
 					{
 						case 'smtp':
-							$out .= $strEmailSmtpServer.":".$item['emailSmtpPort'];
+							$row_info .= "&nbsp;".$strEmailSmtpServer.":".$item['emailSmtpPort'];
 						break;
 
 						default:
-							$out .= apply_filters('get_email_outgoing_alternative', $item['emailOutgoingType']);
+							$row_info_temp = apply_filters('get_email_outgoing_alternative', $strEmailOutgoingType);
+
+							if($row_info_temp != '')
+							{
+								$row_info .= "&nbsp;".$row_info_temp;
+							}
 						break;
 					}
 
-					$out .= "<div class='row-actions'>"
-						.$item['emailSmtpUsername']
+					$row_actions .= ($row_actions != '' ? " | " : "").$item['emailSmtpUsername'];
+
+					$out .= "<span class='nowrap'>"
+						.$row_info
+					."</span>
+					<div class='row-actions'>"
+						.$row_actions
 					."</div>";
 				}
 			break;

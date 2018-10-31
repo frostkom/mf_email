@@ -132,7 +132,7 @@ echo "<script type='text/template' id='template_folder_item'>
 
 			else
 			{ %>
-				<a href='#email/unread/<%= messageID %>'><i class='fa fa-circle'></i></a>
+				<a href='#email/unread/<%= messageID %>'><i class='far fa-circle fa-lg'></i></a>
 			<% } %>
 		</td>
 		<td>
