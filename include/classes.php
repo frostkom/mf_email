@@ -707,7 +707,7 @@ class mf_email
 
 		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailSmtpChecked = NOW() WHERE emailAddress = %s AND emailSmtpServer != ''", $from));
 
-		do_log("sent_email(): ".$wpdb->last_query);
+		//do_log("sent_email(): ".$wpdb->last_query);
 	}
 
 	function get_emails_left_to_send($amount, $email, $type = '')
