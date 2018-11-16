@@ -631,7 +631,7 @@ class mf_email
 		$outgoing_type = 'smtp';
 		$smtp_ssl = $smtp_host = $smtp_port = $smtp_hostname = $smtp_user = $smtp_pass = "";
 
-		$result = $wpdb->get_results($wpdb->prepare("SELECT emailName, emailOutgoingType, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailSmtpPassword FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s AND emailSmtpServer != ''", $phpmailer->From));
+		$result = $wpdb->get_results($wpdb->prepare("SELECT emailName, emailOutgoingType, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailSmtpPassword FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s", $phpmailer->From)); // AND emailSmtpServer != ''
 
 		if($wpdb->num_rows > 0)
 		{
@@ -705,7 +705,7 @@ class mf_email
 	{
 		global $wpdb;
 
-		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailSmtpChecked = NOW() WHERE emailAddress = %s AND emailSmtpServer != ''", $from));
+		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailSmtpChecked = NOW() WHERE emailAddress = %s", $from)); // AND emailSmtpServer != ''
 
 		//do_log("sent_email(): ".$wpdb->last_query);
 	}
