@@ -113,7 +113,7 @@ class mf_email
 		global $wpdb;
 
 		$obj_cron = new mf_cron();
-		$obj_cron->start(__FUNCTION__);
+		$obj_cron->start(__CLASS__);
 
 		if($obj_cron->is_running == false)
 		{
