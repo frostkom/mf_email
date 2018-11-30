@@ -631,7 +631,7 @@ class mf_email
 		$outgoing_type = 'smtp';
 		$smtp_ssl = $smtp_host = $smtp_port = $smtp_hostname = $smtp_user = $smtp_pass = "";
 
-		$result = $wpdb->get_results($wpdb->prepare("SELECT emailName, emailOutgoingType, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailSmtpPassword FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s", $phpmailer->From)); // AND emailSmtpServer != ''
+		$result = $wpdb->get_results($wpdb->prepare("SELECT emailName, emailOutgoingType, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailSmtpPassword FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s", $phpmailer->From));
 
 		if($wpdb->num_rows > 0)
 		{
@@ -1931,33 +1931,56 @@ class mf_email_account_table extends mf_list_table
 				$intEmailPublic = $item['emailPublic'];
 				$strEmailRoles = $item['emailRoles'];
 
+				$rights_icon = $rights_title = "";
+
 				if($intEmailPublic == 1)
 				{
-					$out .= "<i class='fa fa-check fa-lg green' title='".__("Public", 'lang_email')."'></i>";
+					$rights_icon = "fa fa-check green";
+					$rights_title = __("Public", 'lang_email');
 				}
 
 				else if($strEmailRoles != '')
 				{
 					$arr_roles = get_roles_for_select(array('use_capability' => false));
 
-					$out .= "<i class='fa fa-users fa-lg' title='".$arr_roles[$strEmailRoles]."'></i>";
+					$arrEmailRoles = explode(",", $strEmailRoles);
+
+					foreach($arrEmailRoles as $role)
+					{
+						$rights_title .= ($rights_title != '' ? ", " : "").$arr_roles[$role];
+					}
+
+					$rights_icon = "fa fa-users";
+
+					if(count($arrEmailRoles) == 1)
+					{
+						$rights_icon .= " grey";
+					}
 				}
 
 				else
 				{
-					$strEmailUsers = "";
-
 					$resultUsers = $wpdb->get_results($wpdb->prepare("SELECT userID FROM ".$wpdb->base_prefix."email_users WHERE emailID = '%d'", $intEmailID));
 
-					foreach($resultUsers as $r)
+					if($wpdb->num_rows > 0)
 					{
-						$strEmailUsers .= ($strEmailUsers != '' ? ", " : "").get_user_info(array('id' => $r->userID));
-					}
+						foreach($resultUsers as $r)
+						{
+							$rights_title .= ($rights_title != '' ? ", " : "").get_user_info(array('id' => $r->userID));
+						}
 
-					if($strEmailUsers != '')
-					{
-						$out .= "<i class='fa fa-users fa-lg' title='".$strEmailUsers."'></i>";
+						$rights_icon = "fa fa-user";
+
+						if(count($resultUsers) == 1)
+						{
+							$rights_icon .= " grey";
+						}
 					}
+				}
+
+				if($rights_icon != '')
+				{
+					$out .= "<i class='".$rights_icon." fa-lg' title='".$rights_title."'></i>";
 				}
 			break;
 
