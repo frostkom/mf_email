@@ -1743,7 +1743,7 @@ class mf_email_encryption
 	{
 		$this->set_key($type);
 
-		if(function_exists('mcrypt_create_iv'))
+		if(function_exists('mcrypt_create_iv') && function_exists('mcrypt_get_iv_size'))
 		{
 			$this->iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND);
 		}
