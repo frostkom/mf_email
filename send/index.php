@@ -50,7 +50,7 @@ echo "<div class='wrap'>
 							}
 
 							echo show_button(array('name' => 'btnMessageDraft', 'text' => __("Save draft", 'lang_email'), 'class' => "button"))
-							.input_hidden(array('name' => "intMessageDraftID", 'value' => $obj_email->message_draft_id))
+							.input_hidden(array('name' => 'intMessageDraftID', 'value' => $obj_email->message_draft_id))
 							.wp_nonce_field('message_send', '_wpnonce_message_send', true, false)
 						."</div>
 					</div>

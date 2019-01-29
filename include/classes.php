@@ -1752,7 +1752,7 @@ class mf_email_encryption
 		{
 			$this->encrypt_method = 'AES-256-CBC';
 
-			if(!in_array($this->encrypt_method, openssl_get_cipher_methods()))
+			if(!in_array($this->encrypt_method, openssl_get_cipher_methods()) && !in_array(strtolower($this->encrypt_method), openssl_get_cipher_methods()))
 			{
 				do_log("Encryption: ".$this->encrypt_method." does not exist in ".var_export(openssl_get_cipher_methods(), true));
 			}

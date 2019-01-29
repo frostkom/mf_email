@@ -1,8 +1,10 @@
 var EmailApp = Backbone.Router.extend(
 {
-	routes: {
+	routes:
+	{
 		"*actions": "the_rest"
 	},
+
 	the_rest: function(action_type)
 	{
 		if(jQuery('#txtFolders tbody tr').length == 0)
