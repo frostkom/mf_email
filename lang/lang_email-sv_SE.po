@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-31 12:23+0100\n"
+"POT-Creation-Date: 2019-01-31 09:12+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -13,8 +13,7 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Poedit-KeywordsList: esc_html__;esc_html_e;esc_attr__;esc_attr_e;__;_e\n"
 "X-Poedit-Basepath: .\n"
-"X-Poedit-SearchPath-0: .\n"
-"X-Poedit-SearchPath-1: ..\n"
+"X-Poedit-SearchPath-0: ..\n"
 
 #: ../accounts/index.php:10
 #: ../create/index.php:28
@@ -105,7 +104,7 @@ msgid "Settings"
 msgstr "Inställningar"
 
 #: ../create/index.php:112
-#: ../include/classes.php:1936
+#: ../include/classes.php:1939
 msgid "Public"
 msgstr "Publik"
 
@@ -162,7 +161,7 @@ msgstr "Det finns ett nytt meddelande i din inkorg"
 #: ../include/classes.php:228
 #: ../include/functions.php:139
 msgid "Spam"
-msgstr "Spam"
+msgstr "Skräp"
 
 #: ../include/classes.php:233
 #: ../include/classes.php:530
@@ -202,7 +201,6 @@ msgstr "Tappade uppkopplingen"
 #: ../include/classes.php:527
 #: ../include/classes.php:550
 #: ../list/index.php:23
-#: ../send/index.php:9
 msgid "E-mail"
 msgstr "E-post"
 
@@ -245,8 +243,6 @@ msgid "E-mail to send test message to"
 msgstr "E-post att skicka testmeddelande till"
 
 #: ../include/classes.php:458
-#: ../send/index.php:36
-#: ../send/index.php:41
 msgid "Send"
 msgstr "Skicka"
 
@@ -292,7 +288,7 @@ msgstr "Mer information om detta är sparat i loggen"
 
 #: ../include/classes.php:833
 msgid "SMTP debug"
-msgstr "SMTP debug"
+msgstr "SMTP-felsökning"
 
 #: ../include/classes.php:848
 msgid "I could not send the test email. Please make sure that the credentials are correct"
@@ -397,18 +393,15 @@ msgstr "Ursprungligt meddelande"
 
 #: ../include/classes.php:1309
 #: ../list/index.php:178
-#: ../send/index.php:18
 msgid "From"
 msgstr "Från"
 
 #: ../include/classes.php:1310
-#: ../send/index.php:21
 msgid "To"
 msgstr "Till"
 
 #: ../include/classes.php:1311
 #: ../list/index.php:177
-#: ../send/index.php:29
 msgid "Subject"
 msgstr "Ämne"
 
@@ -425,7 +418,6 @@ msgid "Choose Here"
 msgstr "Välj här"
 
 #: ../include/classes.php:1536
-#: ../send/index.php:49
 #, php-format
 msgid "Hourly Limit Reached. Wait %s min"
 msgstr "Timgränsen är nådd. Vänta %s min"
@@ -471,48 +463,48 @@ msgstr "Återställ"
 msgid "Received"
 msgstr "Mottagna"
 
-#: ../include/classes.php:1978
+#: ../include/classes.php:2001
 msgid "Needs to be Verified"
 msgstr "Behöver verifieras"
 
-#: ../include/classes.php:1980
+#: ../include/classes.php:2003
 msgid "Verify"
 msgstr "Verifera"
 
-#: ../include/classes.php:1988
-#: ../include/classes.php:2053
+#: ../include/classes.php:2011
+#: ../include/classes.php:2076
 #, php-format
 msgid "Last Checked %s"
 msgstr "Senast testad %s"
 
-#: ../include/classes.php:1999
+#: ../include/classes.php:2022
 #, php-format
 msgid "Last E-mail %s"
 msgstr "Senaste e-post %s"
 
-#: ../include/classes.php:2004
+#: ../include/classes.php:2027
 #, php-format
 msgid "Checked %s, Received %s"
 msgstr "Testad %s, Mottagna %s"
 
-#: ../include/classes.php:2010
+#: ../include/classes.php:2033
 msgid "No e-mails received so far"
 msgstr "Inga e-post mottagna än så länge"
 
-#: ../include/classes.php:2018
+#: ../include/classes.php:2041
 msgid "Incoming has not been checked yet"
 msgstr "Inkommande har inte testats ännu"
 
-#: ../include/classes.php:2023
+#: ../include/classes.php:2046
 msgid "Verification Failed"
 msgstr "Verifiering misslyckades"
 
-#: ../include/classes.php:2058
+#: ../include/classes.php:2081
 #, php-format
 msgid "Checked %s"
 msgstr "Testad %s"
 
-#: ../include/classes.php:2064
+#: ../include/classes.php:2087
 msgid "Outgoing has not been checked yet"
 msgstr "Utgående har inte testats ännu"
 
@@ -569,7 +561,6 @@ msgid "Restore"
 msgstr "Återställ"
 
 #: ../list/index.php:181
-#: ../send/index.php:25
 msgid "Cc"
 msgstr "Kopia"
 

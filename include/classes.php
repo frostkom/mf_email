@@ -595,7 +595,7 @@ class mf_email
 			if($intUnread > 0)
 			{
 				$array['reminder'][] = array(
-					'title' => $intUnread > 1 ? sprintf(__("There are %d unread emails in your inbox", 'lang_email'), $intUnread) : __("There is one unread email in your inbox", 'lang_email'),
+					'title' => $intUnread > 1 ? __("There are %d unread emails in your inbox", $intUnread) : "There is one unread email in your inbox",
 					'link' => admin_url("admin.php?page=mf_email/list/index.php"),
 				);
 			}
@@ -821,12 +821,6 @@ class mf_email
 			{
 				$error_text = "<p><strong>".__("I am sorry, but I could not send the message for you", 'lang_email')."</strong></p>"
 				."<p>".__("More information regarding this is saved in the log", 'lang_email')."</p>";
-
-				/*$error_text .= "<p>".__("The result I got back was", 'lang_email').":</p>
-				<pre>".var_export($sent, true)."</pre>";*/
-
-				/*$error_text .= "<p>".__("PHPmailer debug", 'lang_email').":</p>
-				<pre>".var_export($phpmailer, true)."</pre>";*/
 
 				if($smtp_debug != '')
 				{
@@ -1745,7 +1739,7 @@ class mf_email_encryption
 
 		if(function_exists('mcrypt_create_iv') && function_exists('mcrypt_get_iv_size'))
 		{
-			$this->iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND);
+			$this->iv = @mcrypt_create_iv(@mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND);
 		}
 
 		else
@@ -1803,7 +1797,7 @@ class mf_email_encryption
 
 		if(function_exists('mcrypt_encrypt'))
 		{
-			return trim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $this->key, base64_decode($text), MCRYPT_MODE_ECB, $this->iv));
+			return trim(@mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $this->key, base64_decode($text), MCRYPT_MODE_ECB, $this->iv));
 		}
 
 		else
@@ -1851,9 +1845,6 @@ class mf_email_account_table extends mf_list_table
 			'emailAddress' => __("Address", 'lang_email'),
 			'emailName' => __("Name", 'lang_email'),
 			'rights' => shorten_text(array('string' => __("Rights", 'lang_email'), 'limit' => 3)),
-			//'emailPublic' => __("Public", 'lang_email'),
-			//'emailRoles' => __("Roles", 'lang_email'),
-			//'emailUsers' => __("Users", 'lang_email'),
 			'emailServer' => __("Incoming", 'lang_email'),
 			'emailSmtpServer' => __("Outgoing", 'lang_email'),
 		);

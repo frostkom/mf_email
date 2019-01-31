@@ -149,8 +149,6 @@ if($arr_input[0] == "email")
 			$wpdb->get_results($wpdb->prepare("SELECT fileID FROM ".$wpdb->base_prefix."email_message_attachment WHERE messageID = '%d' LIMIT 0, 1", $intMessageID));
 			$has_attachment = $wpdb->num_rows > 0;
 
-			//$strMessageSpam = check_spam_reason($intMessageID);
-
 			$json_output['emails'][] = array(
 				'messageID' => $intMessageID,
 				'messageName' => $strMessageName,
