@@ -2010,7 +2010,7 @@ class mf_email_account_table extends mf_list_table
 									{
 										if($dteEmailReceived < date("Y-m-d H:i:s", strtotime("-3 day")))
 										{
-											$row_info .= "<i class='fa fa-ban fa-lg red' title='".sprintf(__("Last E-mail %s", 'lang_email'), format_date($dteEmailReceived))."'></i>";
+											$row_info .= "<i class='fa fa-exclamation-triangle fa-lg yellow' title='".sprintf(__("Last E-mail %s", 'lang_email'), format_date($dteEmailReceived))."'></i>";
 										}
 
 										else
