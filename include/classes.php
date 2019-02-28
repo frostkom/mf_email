@@ -705,9 +705,14 @@ class mf_email
 	{
 		global $wpdb;
 
-		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailSmtpChecked = NOW() WHERE emailAddress = %s", $from)); // AND emailSmtpServer != ''
+		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailSmtpVerified = '%d', emailSmtpChecked = NOW() WHERE emailAddress = %s", 1, $from));
+	}
 
-		//do_log("sent_email(): ".$wpdb->last_query);
+	function sent_email_error($from)
+	{
+		global $wpdb;
+
+		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailSmtpVerified = '%d', emailSmtpChecked = NOW() WHERE emailAddress = %s", -1, $from));
 	}
 
 	function get_emails_left_to_send($amount, $email, $type = '')
@@ -2056,26 +2061,38 @@ class mf_email_account_table extends mf_list_table
 
 				if($strEmailSmtpServer != '' || $strEmailOutgoingType != 'smtp')
 				{
+					$intEmailSmtpVerified = $item['emailSmtpVerified'];
 					$dteEmailSmtpChecked = $item['emailSmtpChecked'];
 
 					$row_info = $row_actions = "";
 
-					if($dteEmailSmtpChecked > DEFAULT_DATE)
+					switch($intEmailSmtpVerified)
 					{
-						if($dteEmailSmtpChecked < date("Y-m-d H:i:s", strtotime("-7 day")))
-						{
-							$row_info .= "<i class='fa fa-ban fa-lg red' title='".sprintf(__("Last Checked %s", 'lang_email'), format_date($dteEmailSmtpChecked))."'></i>";
-						}
+						default:
+						case 0:
+						case 1:
+							if($dteEmailSmtpChecked > DEFAULT_DATE)
+							{
+								if($dteEmailSmtpChecked < date("Y-m-d H:i:s", strtotime("-7 day")))
+								{
+									$row_info .= "<i class='fa fa-exclamation-triangle fa-lg yellow' title='".sprintf(__("Last Checked %s", 'lang_email'), format_date($dteEmailSmtpChecked))."'></i>";
+								}
 
-						else
-						{
-							$row_info .= "<i class='fa fa-check fa-lg green' title='".sprintf(__("Checked %s", 'lang_email'), format_date($dteEmailSmtpChecked))."'></i>";
-						}
-					}
+								else
+								{
+									$row_info .= "<i class='fa fa-check fa-lg green' title='".sprintf(__("Checked %s", 'lang_email'), format_date($dteEmailSmtpChecked))."'></i>";
+								}
+							}
 
-					else
-					{
-						$row_info .= "<i class='fa fa-spinner fa-spin fa-lg' title='".__("Outgoing has not been checked yet", 'lang_email')."'></i>";
+							else
+							{
+								$row_info .= "<i class='fa fa-question-circle fa-lg' title='".__("Outgoing has not been checked yet", 'lang_email')."'></i>";
+							}
+						break;
+
+						case -1:
+							$row_info .= "<i class='fa fa-times fa-lg red' title='".__("Connection Failed", 'lang_email')."'></i>";
+						break;
 					}
 
 					switch($strEmailOutgoingType)
