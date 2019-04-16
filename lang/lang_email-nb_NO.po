@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-21 07:22+0100\n"
+"POT-Creation-Date: 2019-03-22 09:52+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -18,9 +18,45 @@ msgstr ""
 msgid "Add New"
 msgstr "Legg til ny"
 
+msgid "Information"
+msgstr "Informasjon"
+
+msgid "Name"
+msgstr "Navn"
+
+msgid "Settings"
+msgstr "Innstillinger"
+
+msgid "Public"
+msgstr "Offentlig"
+
+msgid "or"
+msgstr "eller"
+
+msgid "Add"
+msgstr "Legg til"
+
+msgid "Account"
+msgstr "Konto"
+
 msgid "Add New Account"
 msgstr "Legg til ny konto"
 
 msgid "Add New Folder"
 msgstr "Legg til ny mappe"
+
+msgid "Date"
+msgstr "Dato"
+
+msgid "Choose Here"
+msgstr "Velg her"
+
+msgid "Address"
+msgstr "Adresse"
+
+msgid "Save draft"
+msgstr "Lagre Utkast"
+
+msgid "Advanced"
+msgstr "Avansert"
 

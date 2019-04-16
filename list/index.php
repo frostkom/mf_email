@@ -201,7 +201,7 @@ echo "<script type='text/template' id='template_folder_item'>
 			{ %>
 				<h3 class='nav-tab-wrapper'>
 					<a class='nav-tab'>".__("Plain", 'lang_email')."</a>
-					<a class='nav-tab nav-tab-active'>".__("HTML", 'lang_email')."</a>
+					<a class='nav-tab nav-tab-active'>HTML</a>
 				</h3>
 				<div class='hide'>
 					<%= messageText %>

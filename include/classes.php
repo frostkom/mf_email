@@ -23,8 +23,8 @@ class mf_email
 	{
 		$arr_data = array();
 		$arr_data[''] = __("No", 'lang_email');
-		$arr_data['ssl'] = __("SSL", 'lang_email');
-		$arr_data['tls'] = __("TLS", 'lang_email');
+		$arr_data['ssl'] = "SSL";
+		$arr_data['tls'] = "TLS";
 
 		return $arr_data;
 	}
@@ -367,16 +367,16 @@ class mf_email
 
 		if($wpdb->num_rows == 0)
 		{
-			$arr_settings['setting_smtp_server'] = __("SMTP Server", 'lang_email');
-			$arr_settings['setting_smtp_port'] = __("SMTP Port", 'lang_email');
-			$arr_settings['setting_smtp_ssl'] = __("SMTP SSL", 'lang_email');
-			$arr_settings['setting_smtp_username'] = __("SMTP Username", 'lang_email');
-			$arr_settings['setting_smtp_password'] = __("SMTP Password", 'lang_email');
+			$arr_settings['setting_smtp_server'] = sprintf(__("%s Server", 'lang_email'), "SMTP");
+			$arr_settings['setting_smtp_port'] = sprintf(__("%s Port", 'lang_email'), "SMTP");
+			$arr_settings['setting_smtp_ssl'] = "SMTP SSL";
+			$arr_settings['setting_smtp_username'] = sprintf(__("%s Username", 'lang_email'), "SMTP");
+			$arr_settings['setting_smtp_password'] = sprintf(__("%s Password", 'lang_email'), "SMTP");
 		}
 
 		else if($wpdb->num_rows > 0 || get_option('setting_smtp_server') != '')
 		{
-			$arr_settings['setting_smtp_test'] = __("Test SMTP", 'lang_email');
+			$arr_settings['setting_smtp_test'] = sprintf(__("Test %s", 'lang_email'), "SMTP");
 
 			delete_option('setting_smtp_server');
 			delete_option('setting_smtp_port');
@@ -829,7 +829,7 @@ class mf_email
 
 				if($smtp_debug != '')
 				{
-					$error_text .= "<p>".__("SMTP debug", 'lang_email').":</p>
+					$error_text .= "<p>".sprintf(__("Debug %s", 'lang_email'), "SMTP").":</p>
 					<pre>".$smtp_debug."</pre>";
 				}
 			}
@@ -1172,7 +1172,7 @@ class mf_email
 
 				else if(isset($_POST['btnMessageDraft']) && wp_verify_nonce($_POST['_wpnonce_message_send'], 'message_send'))
 				{
-					$intFolderID = get_folder_ids(__("Draft", 'lang_email'), 5, $this->id);
+					$intFolderID = get_folder_ids(__("Draft"), 5, $this->id);
 
 					list($this->message_id, $affected_rows) = save_email(array('id' => $this->message_draft_id, 'folder_id' => $intFolderID, 'to' => $this->message_to, 'cc' => $this->message_cc, 'subject' => $this->message_subject, 'content_html' => $this->message_text));
 
@@ -1875,7 +1875,7 @@ class mf_email_account_table extends mf_list_table
 		switch($column_name)
 		{
 			case 'emailAddress':
-				$strEmailAddress = $item[$column_name];
+				$strEmailAddress = $item['emailAddress'];
 				$intUserID = $item['userID'];
 				$intEmailDeleted = $item['emailDeleted'];
 
@@ -1903,7 +1903,7 @@ class mf_email_account_table extends mf_list_table
 			break;
 
 			case 'emailName':
-				$out .= $item[$column_name];
+				$out .= $item['emailName'];
 
 				$actions = array();
 
