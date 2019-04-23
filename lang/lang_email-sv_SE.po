@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-16 07:02+0100\n"
+"POT-Creation-Date: 2019-04-23 11:14+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -124,7 +124,7 @@ msgid "The e-mail already exists"
 msgstr "Meddelandet finns redan"
 
 msgid "Connection failed"
-msgstr "Tappade uppkopplingen"
+msgstr "Uppkopplingen misslyckades"
 
 msgid "E-mail"
 msgstr "E-post"
@@ -323,6 +323,9 @@ msgstr "Testad %s"
 
 msgid "Outgoing has not been checked yet"
 msgstr "Utgående har inte testats ännu"
+
+msgid "Connection Failed"
+msgstr "Uppkopplingen misslyckades"
 
 msgid "The e-mail was successfully sent"
 msgstr "Meddelandet skickades!"

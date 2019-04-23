@@ -874,6 +874,7 @@ class mf_email
 				$this->password = check_var('strEmailPassword');
 				$this->address = check_var('strEmailAddress');
 				$this->name = check_var('strEmailName');
+				$this->signature = check_var('strEmailSignature');
 
 				$this->outgoing_type = check_var('strEmailOutgoingType');
 				$this->smtp_server = check_var('strEmailSmtpServer');
@@ -1085,12 +1086,13 @@ class mf_email
 				{
 					if($this->id > 0 && $this->message_to != '')
 					{
-						$result = $wpdb->get_results($wpdb->prepare("SELECT emailName, emailAddress FROM ".$wpdb->base_prefix."email WHERE emailID = '%d'", $this->id));
+						$result = $wpdb->get_results($wpdb->prepare("SELECT emailName, emailAddress, emailSignature FROM ".$wpdb->base_prefix."email WHERE emailID = '%d'", $this->id));
 
 						foreach($result as $r)
 						{
 							$strEmailName = $r->emailName;
 							$strEmailAddress = $r->emailAddress;
+							$strEmailSignature = $r->emailSignature;
 
 							$this->message_to = $this->validate_email_string($this->message_to);
 							$this->message_cc = $this->validate_email_string($this->message_cc);
@@ -1098,10 +1100,12 @@ class mf_email
 							$mail_headers = "From: ".$strEmailName." <".$strEmailAddress.">\r\n";
 							$mail_headers .= "Cc: ".$this->message_cc."\r\n";
 
-							$mail_content = apply_filters('the_content', stripslashes($this->message_text));
+							$this->message_text = str_replace("[signature]", $strEmailSignature, $this->message_text);
+							$this->message_text = apply_filters('the_content', stripslashes($this->message_text));
+
 							list($mail_attachment, $rest) = get_attachment_to_send($this->message_attachment);
 
-							$sent = send_email(array('to' => $this->message_to, 'subject' => $this->message_subject, 'content' => $mail_content, 'headers' => $mail_headers, 'attachment' => $mail_attachment));
+							$sent = send_email(array('to' => $this->message_to, 'subject' => $this->message_subject, 'content' => $this->message_text, 'headers' => $mail_headers, 'attachment' => $mail_attachment));
 
 							if($sent)
 							{
@@ -1343,7 +1347,7 @@ class mf_email
 			case 'account_create':
 				if($this->id > 0)
 				{
-					$result = $wpdb->get_results($wpdb->prepare("SELECT emailPublic, emailRoles, emailServer, emailPort, emailUsername, emailAddress, emailName, emailOutgoingType, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailLimitPerHour, emailDeleted FROM ".$wpdb->base_prefix."email WHERE emailID = '%d'", $this->id));
+					$result = $wpdb->get_results($wpdb->prepare("SELECT emailPublic, emailRoles, emailServer, emailPort, emailUsername, emailAddress, emailName, emailSignature, emailOutgoingType, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailLimitPerHour, emailDeleted FROM ".$wpdb->base_prefix."email WHERE emailID = '%d'", $this->id));
 
 					foreach($result as $r)
 					{
@@ -1354,6 +1358,7 @@ class mf_email
 						$this->username = $r->emailUsername;
 						$this->address = $r->emailAddress;
 						$this->name = $r->emailName;
+						$this->signature = $r->emailSignature;
 						$this->outgoing_type = $r->emailOutgoingType;
 						$this->smtp_ssl = $r->emailSmtpSSL;
 						$this->smtp_server = $r->emailSmtpServer;
@@ -1376,6 +1381,18 @@ class mf_email
 						{
 							$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailDeleted = '0', emailDeletedID = '', emailDeletedDate = '' WHERE emailID = '%d' AND userID = '%d'", $this->id, get_current_user_id()));
 						}
+					}
+				}
+			break;
+
+			case 'send_email':
+				if($this->message_text == '' || !preg_match("/\[signature]/", $this->message_text))
+				{
+					$wpdb->get_results("SELECT emailID FROM ".$wpdb->base_prefix."email WHERE emailSignature != '' LIMIT 0, 1");
+
+					if($wpdb->num_rows > 0)
+					{
+						$this->message_text .= "\n\n[signature]";
 					}
 				}
 			break;
@@ -1702,7 +1719,7 @@ class mf_email
 
 		$this->encrypt_password();
 
-		$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailOutgoingType = %s, emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailLimitPerHour = '%d', emailCreated = NOW(), userID = '%d'", $wpdb->blogid, $this->public, @implode(",", $this->roles), $this->server, $this->port, $this->username, $this->address, $this->name, $this->outgoing_type, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, $this->limit_per_hour, get_current_user_id()));
+		$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailSignature = %s, emailOutgoingType = %s, emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailLimitPerHour = '%d', emailCreated = NOW(), userID = '%d'", $wpdb->blogid, $this->public, @implode(",", $this->roles), $this->server, $this->port, $this->username, $this->address, $this->name, $this->signature, $this->outgoing_type, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, $this->limit_per_hour, get_current_user_id()));
 
 		$this->id = $wpdb->insert_id;
 
@@ -1718,7 +1735,7 @@ class mf_email
 
 		$this->encrypt_password();
 
-		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailVerified = '0', emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailOutgoingType = %s, emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailLimitPerHour = '%d', emailDeleted = '0' WHERE emailID = '%d'", $wpdb->blogid, $this->public, @implode(",", $this->roles), $this->server, $this->port, $this->username, $this->address, $this->name, $this->outgoing_type, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, $this->limit_per_hour, $this->id));
+		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailVerified = '0', emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailSignature = %s, emailOutgoingType = %s, emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailLimitPerHour = '%d', emailDeleted = '0' WHERE emailID = '%d'", $wpdb->blogid, $this->public, @implode(",", $this->roles), $this->server, $this->port, $this->username, $this->address, $this->name, $this->signature, $this->outgoing_type, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, $this->limit_per_hour, $this->id));
 
 		$rows_affected = $wpdb->rows_affected;
 

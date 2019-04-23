@@ -3,7 +3,7 @@
 $obj_email = new mf_email(array('type' => 'send_email'));
 $obj_email->fetch_request();
 echo $obj_email->save_data();
-//$obj_email->get_from_db();
+$obj_email->get_from_db();
 
 echo "<div class='wrap'>
 	<h2>".__("E-mail", 'lang_email')."</h2>"

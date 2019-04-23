@@ -36,9 +36,10 @@ echo "<div class='wrap'>
 						<div class='inside'>
 							<div class='flex_flow'>"
 								.show_textfield(array('name' => 'strEmailName', 'text' => __("Name", 'lang_email'), 'value' => $obj_email->name, 'placeholder' => $placeholder_name))
-								.show_textfield(array('name' => 'strEmailAddress', 'text' => __("E-mail Address", 'lang_email'), 'value' => $obj_email->address, 'placeholder' => $placeholder_address))
-							."</div>
-						</div>
+								.show_textfield(array('name' => 'strEmailAddress', 'text' => __("Address", 'lang_email'), 'value' => $obj_email->address, 'placeholder' => $placeholder_address))
+							."</div>"
+							.show_textarea(array('name' => 'strEmailSignature', 'text' => __("Signature", 'lang_email'), 'value' => $obj_email->signature))
+						."</div>
 					</div>
 					<div class='postbox'>
 						<h3 class='hndle'><span>".__("Incoming", 'lang_email')." (IMAP)</span></h3>
