@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-23 11:14+0100\n"
+"POT-Creation-Date: 2019-05-02 08:56+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -24,8 +24,11 @@ msgstr "Skapa ny"
 msgid "Name"
 msgstr "Namn"
 
-msgid "E-mail Address"
-msgstr "E-postadress"
+msgid "Address"
+msgstr "Adress"
+
+msgid "Signature"
+msgstr "Signatur"
 
 msgid "Incoming"
 msgstr "Inkommande"
@@ -275,9 +278,6 @@ msgstr "Alla"
 
 msgid "Trash"
 msgstr "Papperskorg"
-
-msgid "Address"
-msgstr "Adress"
 
 msgid "Rights"
 msgstr "Behörighet"
