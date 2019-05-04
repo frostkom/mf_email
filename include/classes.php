@@ -631,7 +631,7 @@ class mf_email
 		$outgoing_type = 'smtp';
 		$smtp_ssl = $smtp_host = $smtp_port = $smtp_hostname = $smtp_user = $smtp_pass = "";
 
-		$result = $wpdb->get_results($wpdb->prepare("SELECT emailName, emailOutgoingType, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailSmtpPassword FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s", $phpmailer->From));
+		$result = $wpdb->get_results($wpdb->prepare("SELECT emailName, emailOutgoingType, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailSmtpPassword FROM ".$wpdb->base_prefix."email WHERE blogID = '%d' AND emailAddress = %s", $wpdb->blogid, $phpmailer->From));
 
 		if($wpdb->num_rows > 0)
 		{
