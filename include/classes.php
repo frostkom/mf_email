@@ -367,16 +367,16 @@ class mf_email
 
 		if($wpdb->num_rows == 0)
 		{
-			$arr_settings['setting_smtp_server'] = sprintf(__("%s Server", 'lang_email'), "SMTP");
-			$arr_settings['setting_smtp_port'] = sprintf(__("%s Port", 'lang_email'), "SMTP");
+			$arr_settings['setting_smtp_server'] = "SMTP ".__("Server", 'lang_email');
+			$arr_settings['setting_smtp_port'] = "SMTP ".__("Port", 'lang_email');
 			$arr_settings['setting_smtp_ssl'] = "SMTP SSL";
-			$arr_settings['setting_smtp_username'] = sprintf(__("%s Username", 'lang_email'), "SMTP");
-			$arr_settings['setting_smtp_password'] = sprintf(__("%s Password", 'lang_email'), "SMTP");
+			$arr_settings['setting_smtp_username'] = "SMTP ".__("Username", 'lang_email');
+			$arr_settings['setting_smtp_password'] = "SMTP ".__("Password", 'lang_email');
 		}
 
 		else if($wpdb->num_rows > 0 || get_option('setting_smtp_server') != '')
 		{
-			$arr_settings['setting_smtp_test'] = sprintf(__("Test %s", 'lang_email'), "SMTP");
+			$arr_settings['setting_smtp_test'] = __("Test", 'lang_email')." SMTP";
 
 			delete_option('setting_smtp_server');
 			delete_option('setting_smtp_port');

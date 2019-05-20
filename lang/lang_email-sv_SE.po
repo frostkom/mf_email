@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-02 08:56+0100\n"
+"POT-Creation-Date: 2019-05-20 08:55+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -18,8 +18,8 @@ msgstr ""
 msgid "Accounts"
 msgstr "Konton"
 
-msgid "Add New"
-msgstr "Skapa ny"
+msgid "Information"
+msgstr "Information"
 
 msgid "Name"
 msgstr "Namn"
@@ -32,6 +32,12 @@ msgstr "Signatur"
 
 msgid "Incoming"
 msgstr "Inkommande"
+
+msgid "Server"
+msgstr "Server"
+
+msgid "Port"
+msgstr "Port"
 
 msgid "Username"
 msgstr "Användarnamn"
@@ -69,6 +75,66 @@ msgstr "Behörighet"
 msgid "Users"
 msgstr "Användare"
 
+msgid "Inbox"
+msgstr "Inkorg"
+
+msgid "The e-mail was successfully sent"
+msgstr "Meddelandet skickades!"
+
+msgid "The folder was created"
+msgstr "Mappen skapades"
+
+msgid "The folder was updated"
+msgstr "Mappen uppdaterades"
+
+msgid "E-mail"
+msgstr "E-post"
+
+msgid "Send new"
+msgstr "Skicka nytt"
+
+msgid "Add New Folder"
+msgstr "Skapa ny mapp"
+
+msgid "Edit"
+msgstr "Redigera"
+
+msgid "Delete"
+msgstr "Radera"
+
+msgid "There is nothing to show"
+msgstr "Det finns inget att visa"
+
+msgid "Show more"
+msgstr "Visa fler"
+
+msgid "Mark as Spam"
+msgstr "Markera som spam"
+
+msgid "Restore"
+msgstr "Återställ"
+
+msgid "Subject"
+msgstr "Ämne"
+
+msgid "From"
+msgstr "Från"
+
+msgid "Cc"
+msgstr "Kopia"
+
+msgid "Answer"
+msgstr "Svara"
+
+msgid "Forward"
+msgstr "Vidarebefordra"
+
+msgid "Plain"
+msgstr "Oformaterad"
+
+msgid "Add New"
+msgstr "Skapa ny"
+
 msgid "The folder could not be updated"
 msgstr "Mappen gick inte att uppdatera"
 
@@ -83,21 +149,6 @@ msgstr "Lägg till"
 
 msgid "Account"
 msgstr "Konto"
-
-msgid "Inbox"
-msgstr "Inkorg"
-
-msgid "No subject"
-msgstr "Inget ämne"
-
-msgid "OpenSSL Not Available"
-msgstr "OpenSSL är inte tillgänglig"
-
-msgid "Login failed for %s from %s."
-msgstr "Inloggningen gick fel för %s från %s."
-
-msgid "Unknown IP"
-msgstr "Okänd IP"
 
 msgid "No"
 msgstr "Nej"
@@ -129,17 +180,11 @@ msgstr "Meddelandet finns redan"
 msgid "Connection failed"
 msgstr "Uppkopplingen misslyckades"
 
-msgid "E-mail"
-msgstr "E-post"
+msgid "Password"
+msgstr "Lösenord"
 
-msgid "%s Username"
-msgstr "%s-användarnamn"
-
-msgid "%s Password"
-msgstr "%s-lösenord"
-
-msgid "Test %s"
-msgstr "Testa %s"
+msgid "Test"
+msgstr "Testa"
 
 msgid "The e-mail %s is used as sender address so this must be white listed in the SMTP, otherwise it can be caught in the servers spam filter"
 msgstr "E-postadressen %s används som avsändaradress så den måste vara vitlistad i SMTP-servern, annars kan meddelandet fastna i serverns spamfilter"
@@ -161,9 +206,6 @@ msgstr "Skicka nytt"
 
 msgid "Add New Account"
 msgstr "Skapa nytt konto"
-
-msgid "Add New Folder"
-msgstr "Skapa ny mapp"
 
 msgid "Test mail to %s"
 msgstr "Testmeddelande till %s"
@@ -252,14 +294,8 @@ msgstr "Utkastet har sparats"
 msgid "Original message"
 msgstr "Ursprungligt meddelande"
 
-msgid "From"
-msgstr "Från"
-
 msgid "To"
 msgstr "Till"
-
-msgid "Subject"
-msgstr "Ämne"
 
 msgid "Date"
 msgstr "Datum"
@@ -281,12 +317,6 @@ msgstr "Papperskorg"
 
 msgid "Rights"
 msgstr "Behörighet"
-
-msgid "Edit"
-msgstr "Redigera"
-
-msgid "Delete"
-msgstr "Radera"
 
 msgid "Recover"
 msgstr "Återställ"
@@ -327,41 +357,17 @@ msgstr "Utgående har inte testats ännu"
 msgid "Connection Failed"
 msgstr "Uppkopplingen misslyckades"
 
-msgid "The e-mail was successfully sent"
-msgstr "Meddelandet skickades!"
+msgid "No subject"
+msgstr "Inget ämne"
 
-msgid "The folder was created"
-msgstr "Mappen skapades"
+msgid "OpenSSL Not Available"
+msgstr "OpenSSL är inte tillgänglig"
 
-msgid "The folder was updated"
-msgstr "Mappen uppdaterades"
+msgid "Login failed for %s from %s."
+msgstr "Inloggningen gick fel för %s från %s."
 
-msgid "Send new"
-msgstr "Skicka nytt"
-
-msgid "There is nothing to show"
-msgstr "Det finns inget att visa"
-
-msgid "Show more"
-msgstr "Visa fler"
-
-msgid "Mark as Spam"
-msgstr "Markera som spam"
-
-msgid "Restore"
-msgstr "Återställ"
-
-msgid "Cc"
-msgstr "Kopia"
-
-msgid "Answer"
-msgstr "Svara"
-
-msgid "Forward"
-msgstr "Vidarebefordra"
-
-msgid "Plain"
-msgstr "Oformaterad"
+msgid "Unknown IP"
+msgstr "Okänd IP"
 
 msgid "Message"
 msgstr "Meddelande"

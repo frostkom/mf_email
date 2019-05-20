@@ -68,7 +68,7 @@ jQuery(function($)
 				$.ajax(
 				{
 					url: script_email.plugin_url + 'api/?type=email/search',
-					dataType: "json",
+					dataType: 'json',
 					data: {
 						s: request.term
 					},
@@ -96,9 +96,9 @@ jQuery(function($)
 
 			$.ajax(
 			{
-				type: "post",
-				dataType: "json",
 				url: script_email.ajax_url,
+				type: 'post',
+				dataType: 'json',
 				data: {
 					action: "send_smtp_test",
 					smtp_to: smtp_to
