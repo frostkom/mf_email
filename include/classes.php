@@ -729,6 +729,7 @@ class mf_email
 		else
 		{
 			$amount_temp = 0;
+			$query_where = "";
 
 			if($email != '')
 			{
@@ -739,16 +740,19 @@ class mf_email
 					$amount_temp += $emails_per_hour;
 				}
 
-				else
+				else if($amount == 0)
 				{
 					$amount_temp += 10000;
 				}
 			}
 
-			$query_where = "";
-
-			if($email != '')
+			else
 			{
+				if($amount == 0)
+				{
+					$amount_temp += 10000;
+				}
+
 				$query_where = " AND emailAddress = '".esc_sql($email)."'";
 			}
 
@@ -1836,7 +1840,7 @@ class mf_email_account_table extends mf_list_table
 		global $wpdb;
 
 		$this->arr_settings['query_from'] = $wpdb->base_prefix."email";
-		$this->post_type = "";
+		$this->post_type = '';
 
 		$this->arr_settings['query_select_id'] = "emailID";
 		$this->arr_settings['query_all_id'] = "0";
