@@ -1,5 +1,12 @@
 <?php
 
+global $obj_base;
+
+if(!isset($obj_base))
+{
+	$obj_base = new mf_base();
+}
+
 $intFolderID = check_var('intFolderID');
 $strFolderName = check_var('strFolderName', '', true, __("Inbox", 'lang_email'));
 
@@ -37,12 +44,9 @@ echo "<div class='wrap'>
 			<div id='txtEmail' class='stuffbox'></div>
 		</div>
 	</div>
-</div>";
-
-$obj_base = new mf_base();
-echo $obj_base->get_templates(array('lost_connection', 'loading'));
-
-echo "<script type='text/template' id='template_folder_item'>
+</div>"
+.$obj_base->get_templates(array('lost_connection', 'loading'))
+."<script type='text/template' id='template_folder_item'>
 	<tr id='folder<%= folderID %>' class='<%= folderClass %>'>
 		<td>
 			<i class='<%= folderImage %> fa-lg'></i>
