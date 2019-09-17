@@ -912,7 +912,7 @@ class mf_email
 
 				if($this->all_left_to_send == 0)
 				{
-					$error_text = __("The e-mail limit for the last hour has been reached so you can't send anymore e-mails at them moment. Save as a draft and check back in a moment", 'lang_email');
+					$error_text = __("The e-mail limit for the last hour has been reached so you can not send anymore e-mails at them moment. Save as a draft and check back in a moment", 'lang_email');
 				}
 			break;
 		}
@@ -1046,7 +1046,7 @@ class mf_email
 								{
 									$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailVerified = '-1' WHERE emailID = '%d'", $this->id));
 
-									$error_text = __("The e-mail account didn't pass the verification", 'lang_email');
+									$error_text = __("The e-mail account did not pass the verification", 'lang_email');
 								}
 							}
 
@@ -1061,7 +1061,7 @@ class mf_email
 								$mail_to = $strEmailAddress;
 								$mail_headers = "From: ".$user_data->display_name." <".$user_data->user_email.">\r\n";
 								$mail_subject = sprintf(__("Please confirm your e-mail %s for use on %s", 'lang_email'), $strEmailAddress, $site_name);
-								$mail_content = sprintf(__("We've gotten a request to confirm the address %s from a user at %s (<a href='%s'>%s</a>). If this is a valid request please click <a href='%s'>here</a> to confirm the use of your e-mail address to send messages", 'lang_email'), $strEmailAddress, $site_name, $site_url, $confirm_url);
+								$mail_content = sprintf(__("We have gotten a request to confirm the address %s from a user at %s (%s). If this is a valid request please click %shere%s to confirm the use of your e-mail address to send messages", 'lang_email'), $strEmailAddress, $site_name, "<a href='".$site_url."'>".$site_url."</a>", "<a href='".$confirm_url."'>", "</a>");
 
 								$sent = send_email(array('to' => $mail_to, 'subject' => $mail_subject, 'content' => $mail_content, 'headers' => $mail_headers));
 
@@ -1849,6 +1849,11 @@ class mf_email_account_table extends mf_list_table
 
 		//$this->arr_settings['has_autocomplete'] = true;
 		//$this->arr_settings['plugin_name'] = 'mf_email';
+	}
+
+	function init_fetch()
+	{
+		global $wpdb;
 
 		$this->query_join .= " LEFT JOIN ".$wpdb->base_prefix."email_users USING (emailID)";
 		$this->query_where .= ($this->query_where != '' ? " AND " : "")."(emailPublic = '1' OR emailRoles LIKE '%".get_current_user_role()."%' OR ".$wpdb->base_prefix."email.userID = '".get_current_user_id()."' OR ".$wpdb->base_prefix."email_users.userID = '".get_current_user_id()."') AND (blogID = '".$wpdb->blogid."' OR blogID = '0')";
