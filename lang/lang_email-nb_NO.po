@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-22 09:52+0100\n"
+"POT-Creation-Date: 2019-10-10 08:45+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -23,6 +23,9 @@ msgstr "Informasjon"
 
 msgid "Name"
 msgstr "Navn"
+
+msgid "Address"
+msgstr "Adresse"
 
 msgid "Settings"
 msgstr "Innstillinger"
@@ -45,14 +48,23 @@ msgstr "Legg til ny konto"
 msgid "Add New Folder"
 msgstr "Legg til ny mappe"
 
+msgid "To"
+msgstr "Til"
+
 msgid "Date"
 msgstr "Dato"
 
 msgid "Choose Here"
 msgstr "Velg her"
 
-msgid "Address"
-msgstr "Adresse"
+msgid "Trash"
+msgstr "Søppel"
+
+msgid "Edit"
+msgstr "Rediger"
+
+msgid "Recover"
+msgstr "Gjenopprette"
 
 msgid "Save draft"
 msgstr "Lagre Utkast"
