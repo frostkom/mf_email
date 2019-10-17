@@ -1905,14 +1905,16 @@ class mf_email_account_table extends mf_list_table
 				$intUserID = $item['userID'];
 				$intEmailDeleted = $item['emailDeleted'];
 
-				$out .= "<a href='?page=mf_email/create/index.php&intEmailID=".$intEmailID."'>"
+				$email_url = admin_url("admin.php?page=mf_email/create/index.php&intEmailID=".$intEmailID);
+
+				$out .= "<a href='".$email_url."'>"
 					.$strEmailAddress
 				."</a>
 				<div class='row-actions'>";
 
 					if($intEmailDeleted == 0)
 					{
-						$out .= "<a href='?page=mf_email/create/index.php&intEmailID=".$intEmailID."'>".__("Edit", 'lang_email')."</a>";
+						$out .= "<a href='".$email_url."'>".__("Edit", 'lang_email')."</a>";
 
 						if($intUserID == get_current_user_id())
 						{
@@ -1922,7 +1924,7 @@ class mf_email_account_table extends mf_list_table
 
 					else
 					{
-						$out .= "<a href='?page=mf_email/create/index.php&intEmailID=".$intEmailID."'>".__("Recover", 'lang_email')."</a>";
+						$out .= "<a href='".$email_url."'>".__("Recover", 'lang_email')."</a>";
 					}
 
 				$out .= "</div>";

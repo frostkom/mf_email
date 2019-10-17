@@ -28,14 +28,13 @@ else if(isset($_GET['updated']))
 echo "<div class='wrap'>
 	<h2>"
 		.__("E-mail", 'lang_email')
-		."<a href='?page=mf_email/send/index.php' class='add-new-h2'>".__("Send new", 'lang_email')."</a>"
+		."<a href='".admin_url("admin.php?page=mf_email/folder/index.php")."' class='add-new-h2'>".__("Add New Folder", 'lang_email')."</a>"
+		."<a href='".admin_url("admin.php?page=mf_email/send/index.php")."' class='add-new-h2'>".__("Send new", 'lang_email')."</a>"
 	."</h2>"
 	.get_notification()
 	."<div class='flex_flow'>
 		<div>
 			<table id='txtFolders' class='widefat striped'><tbody></tbody></table>
-			<br>
-			<a class='add-new-h2' href='?page=mf_email/folder/index.php'>".__("Add New Folder", 'lang_email')."</a>
 		</div>
 		<div id='email_column'>
 			<div id='txtEmails'>
@@ -63,7 +62,7 @@ echo "<div class='wrap'>
 				<%= folderTotal %>
 				<% if(!(folderType > 0))
 				{ %>
-					| <a href='?page=mf_email/folder/index.php&intFolderID=<%= folderID %>'>".__("Edit", 'lang_email')."</a>
+					| <a href='".admin_url("admin.php?page=mf_email/folder/index.php&intFolderID=<%= folderID %>")."'>".__("Edit", 'lang_email')."</a>
 				<% }
 
 				if(folderTotal == 0)
@@ -102,7 +101,7 @@ echo "<div class='wrap'>
 			{
 				if(folderType == 5)
 				{ %>
-					<a href='?page=mf_email/send/index.php&intMessageDraftID=<%= messageID %>'>
+					<a href='".admin_url("admin.php?page=mf_email/send/index.php&intMessageDraftID=<%= messageID %>")."'>
 				<% }
 
 				else
@@ -184,7 +183,7 @@ echo "<div class='wrap'>
 		{ %>
 			<li><strong>".__("Cc", 'lang_email').":</strong> <%= messageCc %></li>
 		<% } %>
-		<li><a href='?page=mf_email/send/index.php&intMessageID=<%= messageID %>&answer' class='button'><i class='fa fa-chevron-left'></i> ".__("Answer", 'lang_email')."</a> <a href='?page=mf_email/send/index.php&intMessageID=<%= messageID %>&forward' class='button'>".__("Forward", 'lang_email')." <i class='fa fa-chevron-right'></i></a></li>
+		<li><a href='".admin_url("admin.php?page=mf_email/send/index.php&intMessageID=<%= messageID %>&answer")."' class='button'><i class='fa fa-chevron-left'></i> ".__("Answer", 'lang_email')."</a> <a href='?page=mf_email/send/index.php&intMessageID=<%= messageID %>&forward' class='button'>".__("Forward", 'lang_email')." <i class='fa fa-chevron-right'></i></a></li>
 		<% if(messageAttachment.length > 0)
 		{ %>
 			<li>&nbsp;</li>

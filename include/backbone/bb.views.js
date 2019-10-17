@@ -1,6 +1,6 @@
 var EmailView = Backbone.View.extend(
 {
-	el: jQuery('body'),
+	el: jQuery("body"),
 
 	initialize: function()
 	{
@@ -26,25 +26,25 @@ var EmailView = Backbone.View.extend(
 	{
 		var dom_obj = jQuery(e.currentTarget);
 
-		dom_obj.parent('h3').siblings('div').toggleClass('hide');
-		dom_obj.addClass('nav-tab-active').siblings('a').removeClass('nav-tab-active');
+		dom_obj.parent("h3").siblings("div").toggleClass('hide');
+		dom_obj.addClass('nav-tab-active').siblings("a").removeClass('nav-tab-active');
 	},
 
 	init_dropzone: function()
 	{
 		var self = this;
 
-		jQuery('.draggable .fa-arrows').draggable(
+		jQuery(".draggable .fa-arrows-alt").draggable(
 		{
 			revert: true
 		});
 
-		jQuery('.droppable').droppable(
+		jQuery(".droppable").droppable(
 		{
 			hoverClass: 'color_active',
 			drop: function(e, ui)
 			{
-				var this_drag_id = jQuery(ui.draggable).parents('tr').attr('id'),
+				var this_drag_id = jQuery(ui.draggable).parents("tr").attr('id'),
 					this_drop_id = jQuery(this).attr('id');
 
 				self.loadPage("email/move/" + this_drag_id + "/" + this_drop_id)
@@ -70,7 +70,7 @@ var EmailView = Backbone.View.extend(
 
 		if(response != '')
 		{
-			jQuery('#' + response).remove();
+			jQuery("#" + response).remove();
 
 			this.model.set({"remove_id" : ""});
 		}
@@ -84,23 +84,23 @@ var EmailView = Backbone.View.extend(
 
 		if(count_temp > 0)
 		{
-			var dom_template = jQuery('#template_folder_item').html();
+			var dom_template = jQuery("#template_folder_item").html();
 
 			for(var i = 0; i < count_temp; i++)
 			{
 				html += _.template(dom_template)(response[i]);
 			}
 
-			jQuery('#txtFolders tbody').html(html);
+			jQuery("#txtFolders tbody").html(html);
 
 			this.mark_current_message(0);
 		}
 
 		else
 		{
-			html = _.template(jQuery('#template_folder_message').html())("");
+			html = _.template(jQuery("#template_folder_message").html())("");
 
-			jQuery('#txtFolders tbody').html(html);
+			jQuery("#txtFolders tbody").html(html);
 		}
 	},
 
@@ -114,7 +114,7 @@ var EmailView = Backbone.View.extend(
 
 		if(count_temp > 0)
 		{
-			var dom_template = jQuery('#template_email_item').html();
+			var dom_template = jQuery("#template_email_item").html();
 
 			for(var i = 0; i < count_temp; i++)
 			{
@@ -123,21 +123,21 @@ var EmailView = Backbone.View.extend(
 
 			if(limit_start == 0)
 			{
-				jQuery('#txtEmails tbody').html(html);
+				jQuery("#txtEmails tbody").html(html);
 			}
 
 			else
 			{
-				jQuery('#txtEmails tbody tr.show_more').remove();
+				jQuery("#txtEmails tbody tr.show_more").remove();
 
-				jQuery('#txtEmails tbody').append(html);
+				jQuery("#txtEmails tbody").append(html);
 			}
 
 			if(limit_amount >= script_email_views.emails2show)
 			{
-				html = _.template(jQuery('#template_email_more').html())({'folderName': this.model.get("folderName"), 'limit_start': parseInt(limit_start) + parseInt(script_email_views.emails2show)});
+				html = _.template(jQuery("#template_email_more").html())({'folderName': this.model.get("folderName"), 'limit_start': parseInt(limit_start) + parseInt(script_email_views.emails2show)});
 
-				jQuery('#txtEmails tbody').append(html);
+				jQuery("#txtEmails tbody").append(html);
 			}
 
 			this.mark_current_message();
@@ -146,18 +146,18 @@ var EmailView = Backbone.View.extend(
 
 		else
 		{
-			html = _.template(jQuery('#template_email_message').html())("");
+			html = _.template(jQuery("#template_email_message").html())("");
 
-			jQuery('#txtEmails tbody').html(html);
+			jQuery("#txtEmails tbody").html(html);
 		}
 	},
 
 	show_render_row: function()
 	{
 		var response = this.model.get("render_row"),
-			html = _.template(jQuery('#template_email_item').html())(response);
+			html = _.template(jQuery("#template_email_item").html())(response);
 
-		jQuery('#message' + response.messageID).replaceWith(html);
+		jQuery("#message" + response.messageID).replaceWith(html);
 
 		this.mark_current_message();
 		this.init_dropzone();
@@ -166,11 +166,11 @@ var EmailView = Backbone.View.extend(
 	show_email: function()
 	{
 		var response = this.model.get("email"),
-			html = _.template(jQuery('#template_email_show').html())(response);
+			html = _.template(jQuery("#template_email_show").html())(response);
 
 		this.mark_current_message(response.messageID);
 
-		jQuery('#txtEmail').html(html);
+		jQuery("#txtEmail").html(html);
 	},
 
 	mark_current_message: function(currentMessageID)
@@ -179,13 +179,13 @@ var EmailView = Backbone.View.extend(
 		{
 			if(currentMessageID > 0)
 			{
-				jQuery('#email_column').addClass('flex_vertical');
+				jQuery("#email_column").addClass('flex_vertical');
 			}
 
 			else
 			{
-				jQuery('#txtEmail').empty();
-				jQuery('#email_column').removeClass('flex_vertical');
+				jQuery("#txtEmail").empty();
+				jQuery("#email_column").removeClass('flex_vertical');
 			}
 
 			this.currentMessageID = currentMessageID;
@@ -193,7 +193,7 @@ var EmailView = Backbone.View.extend(
 
 		if(this.currentMessageID > 0)
 		{
-			jQuery('#message' + this.currentMessageID).addClass('color_active yellow').siblings('tr').removeClass('color_active yellow');
+			jQuery("#message" + this.currentMessageID).addClass('color_active yellow').siblings("tr").removeClass('color_active yellow');
 		}
 	}
 });
