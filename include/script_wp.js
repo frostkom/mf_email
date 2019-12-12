@@ -109,7 +109,7 @@ jQuery(function($)
 
 					if(data.success)
 					{
-						$('button[name=btnSmtpTest]').attr('disabled', true);
+						$('button[name=btnSmtpTest]').addClass('is_disabled').attr('disabled', true);
 						$('#smtp_debug').html(data.message);
 					}
 

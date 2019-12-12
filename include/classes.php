@@ -477,7 +477,7 @@ class mf_email
 		if($pagenow == 'admin.php' && check_var('page') == 'mf_email/list/index.php')
 		{
 			mf_enqueue_style('style_email_wp', $plugin_include_url."style_wp.css", $plugin_version);
-			mf_enqueue_style('style_bb', $plugin_base_include_url."backbone/style.css", $plugin_version);
+			mf_enqueue_style('style_base_bb', $plugin_base_include_url."backbone/style.css", $plugin_version);
 
 			wp_enqueue_script('jquery-ui-draggable');
 			wp_enqueue_script('jquery-ui-droppable');
