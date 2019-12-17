@@ -614,6 +614,63 @@ class mf_email
 		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email_message SET userID = '%d' WHERE userID = '%d'", get_current_user_id(), $user_id));
 	}
 
+	function wp_trash_post($post_id)
+	{
+		global $wpdb;
+
+		$wpdb->get_results($wpdb->prepare("SELECT fileID FROM ".$wpdb->base_prefix."email_message_attachment WHERE fileID = '%d'", $post_id));
+
+		if($wpdb->num_rows > 0)
+		{
+			//do_log("Remove ".$wpdb->base_prefix."email_message_attachment.fileID because ".$post_id." was trashed");
+
+			$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->base_prefix."email_message_attachment WHERE fileID = '%d'", $post_id));
+		}
+	}
+
+	function filter_is_file_used($arr_used)
+	{
+		global $wpdb;
+
+		$result = $wpdb->get_results($wpdb->prepare("SELECT messageID FROM ".$wpdb->base_prefix."email_message WHERE messageDeleted = '0' AND (messageText LIKE %s OR messageText2 LIKE %s)", "%".$arr_used['file_url']."%", "%".$arr_used['file_url']."%"));
+		$rows = $wpdb->num_rows;
+
+		if($rows > 0)
+		{
+			$arr_used['amount'] += $rows;
+
+			foreach($result as $r)
+			{
+				if($arr_used['example'] != '')
+				{
+					break;
+				}
+
+				$arr_used['example'] = admin_url("admin.php?page=mf_email/list/index.php#email/show/".$r->messageID);
+			}
+		}
+
+		$result = $wpdb->get_results($wpdb->prepare("SELECT messageID FROM ".$wpdb->base_prefix."email_message_attachment WHERE fileID = '%d'", $arr_used['id']));
+		$rows = $wpdb->num_rows;
+
+		if($rows > 0)
+		{
+			$arr_used['amount'] += $rows;
+
+			foreach($result as $r)
+			{
+				if($arr_used['example'] != '')
+				{
+					break;
+				}
+
+				$arr_used['example'] = admin_url("admin.php?page=mf_email/list/index.php#email/show/".$r->messageID);
+			}
+		}
+
+		return $arr_used;
+	}
+
 	function wp_mail_from($old)
 	{
 		return (substr($old, 0, 10) == "wordpress@" ? get_option('admin_email') : $old);
