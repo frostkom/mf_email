@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: 
-Version: 6.1.1
+Version: 6.1.2
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://frostkom.se
@@ -15,7 +15,6 @@ GitHub Plugin URI: frostkom/mf_email
 */
 
 include_once("include/classes.php");
-include_once("include/functions.php");
 
 $obj_email = new mf_email();
 
@@ -37,6 +36,7 @@ if(is_admin())
 	//add_filter('get_user_reminders', array($obj_email, 'get_user_reminders'), 10, 1);
 	add_action('deleted_user', array($obj_email, 'deleted_user'));
 	add_action('wp_trash_post', array($obj_email, 'wp_trash_post'));
+	add_action('delete_post', array($obj_email, 'wp_trash_post'));
 }
 
 add_filter('wp_mail_from', array($obj_email, 'wp_mail_from'));
@@ -110,32 +110,14 @@ function activate_email()
 	) DEFAULT CHARSET=".$default_charset);
 
 	$arr_add_column[$wpdb->base_prefix."email"] = array(
-		//'emailVerified' => "ALTER TABLE [table] ADD [column] ENUM('-1', '0', '1') NOT NULL DEFAULT '0' AFTER emailID",
-		//'emailPublic' => "ALTER TABLE [table] ADD [column] ENUM('0', '1') NOT NULL DEFAULT '0' AFTER emailID",
-		//'emailRoles' => "ALTER TABLE [table] ADD [column] VARCHAR(100) AFTER emailPublic",
-		//'blogID' => "ALTER TABLE [table] ADD [column] TINYINT UNSIGNED NOT NULL DEFAULT '0' AFTER emailID",
-		//'emailChecked' => "ALTER TABLE [table] ADD [column] DATETIME AFTER emailCreated",
-		//'emailSmtpServer' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpSSL",
-		//'emailSmtpPort' => "ALTER TABLE [table] ADD [column] SMALLINT DEFAULT NULL AFTER emailSmtpServer",
-		//'emailSmtpUsername' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpPort",
-		//'emailSmtpPassword' => "ALTER TABLE [table] ADD [column] VARCHAR(150) DEFAULT NULL AFTER emailSmtpUsername",
-		//'emailSmtpHostname' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpPort",
-		//'emailOutgoingType' => "ALTER TABLE [table] ADD [column] VARCHAR(20) NOT NULL DEFAULT 'smtp' AFTER emailChecked",
-		//'emailLimitPerHour' => "ALTER TABLE [table] ADD [column] SMALLINT UNSIGNED DEFAULT '0' AFTER emailSmtpPassword",
-		//'emailSmtpChecked' => "ALTER TABLE [table] ADD [column] DATETIME AFTER emailSmtpPassword",
-		//'emailSmtpVerified' => "ALTER TABLE [table] ADD [column] ENUM('-1', '0', '1') NOT NULL DEFAULT '0' AFTER emailOutgoingType",
 		//'emailSignature' => "ALTER TABLE [table] ADD [column] TEXT AFTER emailName",
 	);
 
 	$arr_update_column[$wpdb->base_prefix."email"] = array(
-		//'emailSmtpSSL' => "ALTER TABLE [table] CHANGE [column] [column] ENUM('', 'ssl', 'tls') NOT NULL DEFAULT ''",
-		//'emailPassword' => "ALTER TABLE [table] CHANGE [column] [column] VARCHAR(150)",
-		//'emailSmtpPassword' => "ALTER TABLE [table] CHANGE [column] [column] VARCHAR(150)",
 		//'emailOutgoingType' => "ALTER TABLE [table] CHANGE [column] [column] VARCHAR(60)",
 	);
 
 	$arr_add_index[$wpdb->base_prefix."email"] = array(
-		//'emailDeleted' => "ALTER TABLE [table] ADD INDEX [column] ([column])",
 		//'emailAddress' => "ALTER TABLE [table] ADD INDEX [column] ([column])",
 	);
 
@@ -196,7 +178,6 @@ function activate_email()
 	) DEFAULT CHARSET=".$default_charset);
 
 	$arr_update_column[$wpdb->base_prefix."email_message"] = array(
-		//'messageHeader' => "ALTER TABLE [table] DROP [column]",
 		//'messageRecieved' => "ALTER TABLE [table] CHANGE [column] messageReceived DATETIME DEFAULT NULL",
 	);
 
@@ -224,75 +205,6 @@ function activate_email()
 	update_columns($arr_update_column);
 	add_columns($arr_add_column);
 	add_index($arr_add_index);
-
-	delete_base(array(
-		'table_prefix' => $wpdb->base_prefix,
-		'table' => "email_folder",
-		'field_prefix' => "folder",
-		'child_tables' => array(
-			'email_message' => array(
-				'action' => "trash",
-				'field_prefix' => "message",
-			),
-		),
-	));
-
-	delete_base(array(
-		'table_prefix' => $wpdb->base_prefix,
-		'table' => "email_message",
-		'field_prefix' => "message",
-		'child_tables' => array(
-			'email_message_attachment' => array(
-				'action' => "delete",
-			),
-		),
-	));
-
-	delete_base(array(
-		'table_prefix' => $wpdb->base_prefix,
-		'table' => "email",
-		'field_prefix' => "email",
-		'child_tables' => array(
-			'email_folder' => array(
-				'action' => "trash",
-				'field_prefix' => "folder",
-			),
-			'email_users' => array(
-				'action' => "delete",
-			),
-			'email_spam' => array(
-				'action' => "delete",
-			),
-		),
-	));
-
-	// Clean up spam folders where messages has not been deleted
-	####################################
-	$result = $wpdb->get_results("SELECT folderID FROM ".$wpdb->base_prefix."email_folder WHERE folderType = '3'");
-
-	foreach($result as $r)
-	{
-		$intFolderID = $r->folderID;
-
-		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email_message SET messageDeleted = '1', messageDeletedDate = NOW() WHERE folderID = '%d' AND messageDeleted = '0'", $intFolderID));
-	}
-	####################################
-
-	// Remove fileIDs that do not exist anymore as IDs
-	####################################
-	$result = $wpdb->get_results("SELECT fileID FROM ".$wpdb->base_prefix."email_message_attachment LEFT JOIN ".$wpdb->posts." ON fileID = ID WHERE ID IS null");
-
-	foreach($result as $r)
-	{
-		//do_log("Remove fileID: ".$wpdb->base_prefix."email_message_attachment.fileID does not exist anymore in ".$wpdb->posts.".ID (SELECT * FROM ".$wpdb->posts." WHERE ID = '".$r->fileID."')");
-
-		$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->base_prefix."email_message_attachment WHERE fileID = '%d'", $r->fileID));
-	}
-	####################################
-
-	mf_uninstall_plugin(array(
-		'options' => array('setting_smtp_test'),
-	));
 }
 
 function uninstall_email()
