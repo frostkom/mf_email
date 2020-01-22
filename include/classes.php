@@ -322,320 +322,323 @@ class mf_email
 
 		if($obj_cron->is_running == false)
 		{
-			####################################
-			$arr_bounce_subject = array(
-				'Returned mail: see transcript for details',
-				'Undelivered Mail Returned to Sender'
-			);
-
-			$arr_bounce_from_name = array(
-				'Mail Delivery Subsystem'
-			);
-
-			$result = $wpdb->get_results("SELECT emailID, emailServer, emailPort, emailUsername, emailPassword, emailAddress FROM ".$wpdb->base_prefix."email WHERE emailDeleted = '0' AND emailVerified = '1' GROUP BY emailUsername");
-
-			foreach($result as $r)
+			if(is_main_site())
 			{
-				$intEmailID = $r->emailID;
-				$strEmailServer = $r->emailServer;
-				$intEmailPort = $r->emailPort;
-				$strEmailUsername = $r->emailUsername;
-				$strEmailPassword = $r->emailPassword;
-				$strEmailAddress = $r->emailAddress;
+				####################################
+				$arr_bounce_subject = array(
+					'Returned mail: see transcript for details',
+					'Undelivered Mail Returned to Sender'
+				);
 
-				//$obj_email = new mf_email($intEmailID);
-				$this->id = $intEmailID;
-				$obj_encryption = new mf_email_encryption("email");
+				$arr_bounce_from_name = array(
+					'Mail Delivery Subsystem'
+				);
 
-				$strEmailPassword = $obj_encryption->decrypt($strEmailPassword, md5($strEmailAddress));
+				$result = $wpdb->get_results("SELECT emailID, emailServer, emailPort, emailUsername, emailPassword, emailAddress FROM ".$wpdb->base_prefix."email WHERE emailDeleted = '0' AND emailVerified = '1' GROUP BY emailUsername");
 
-				list($is_connected, $connection) = $this->email_connect(array('server' => $strEmailServer, 'port' => $intEmailPort, 'username' => $strEmailUsername, 'password' => $strEmailPassword));
-
-				if($is_connected == true)
+				foreach($result as $r)
 				{
-					foreach($connection->list_headers() as $header)
+					$intEmailID = $r->emailID;
+					$strEmailServer = $r->emailServer;
+					$intEmailPort = $r->emailPort;
+					$strEmailUsername = $r->emailUsername;
+					$strEmailPassword = $r->emailPassword;
+					$strEmailAddress = $r->emailAddress;
+
+					//$obj_email = new mf_email($intEmailID);
+					$this->id = $intEmailID;
+					$obj_encryption = new mf_email_encryption("email");
+
+					$strEmailPassword = $obj_encryption->decrypt($strEmailPassword, md5($strEmailAddress));
+
+					list($is_connected, $connection) = $this->email_connect(array('server' => $strEmailServer, 'port' => $intEmailPort, 'username' => $strEmailUsername, 'password' => $strEmailPassword));
+
+					if($is_connected == true)
 					{
-						$logical = new rcube_message($connection, $header->uid);
-
-						$intMessageStatus = isset($header->flags['SEEN']) && $header->flags['SEEN'] == true ? 1 : 0;
-						$strMessageTextID = $header->messageID;
-						//$strMessageReferences = $header->references;
-						$strMessageFrom = $logical->sender['mailto'];
-						$strMessageFromName = $logical->sender['name'];
-						$strMessageTo = $logical->receiver['mailto'];
-						$strMessageCc = $header->cc;
-						$strMessageReplyTo = $header->replyto;
-						$strMessageSubject = $this->convert_email_subject(array('subject' => $header->subject));
-						$strMessageTextPlain = $logical->first_text_part();
-						$strMessageTextHTML = $logical->first_html_part();
-						$strMessageCreated = date("Y-m-d H:i:s", $header->timestamp);
-
-						$bounce_from_name = preg_match('/('. implode('|', $arr_bounce_from_name) .')/i', $strMessageFromName);
-						$bounce_subject = preg_match('/('. implode('|', $arr_bounce_subject) .')/i', $strMessageSubject);
-
-						if($bounce_from_name == true || $bounce_subject == true)
+						foreach($connection->list_headers() as $header)
 						{
-							$arr_emails = get_match_all('/[a-z0-9][-a-z0-9\._]+@[a-z0-9][-a-z0-9\._]+\.[a-z]{2,6}/is', $strMessageTextPlain, true);
-							$arr_emails = array_unique($arr_emails);
+							$logical = new rcube_message($connection, $header->uid);
 
-							if(count($arr_emails) > 0)
+							$intMessageStatus = isset($header->flags['SEEN']) && $header->flags['SEEN'] == true ? 1 : 0;
+							$strMessageTextID = $header->messageID;
+							//$strMessageReferences = $header->references;
+							$strMessageFrom = $logical->sender['mailto'];
+							$strMessageFromName = $logical->sender['name'];
+							$strMessageTo = $logical->receiver['mailto'];
+							$strMessageCc = $header->cc;
+							$strMessageReplyTo = $header->replyto;
+							$strMessageSubject = $this->convert_email_subject(array('subject' => $header->subject));
+							$strMessageTextPlain = $logical->first_text_part();
+							$strMessageTextHTML = $logical->first_html_part();
+							$strMessageCreated = date("Y-m-d H:i:s", $header->timestamp);
+
+							$bounce_from_name = preg_match('/('. implode('|', $arr_bounce_from_name) .')/i', $strMessageFromName);
+							$bounce_subject = preg_match('/('. implode('|', $arr_bounce_subject) .')/i', $strMessageSubject);
+
+							if($bounce_from_name == true || $bounce_subject == true)
 							{
-								$error_text = "Found bounce: ".var_export($arr_emails, true)." (".$strMessageSubject.")<br>";
+								$arr_emails = get_match_all('/[a-z0-9][-a-z0-9\._]+@[a-z0-9][-a-z0-9\._]+\.[a-z]{2,6}/is', $strMessageTextPlain, true);
+								$arr_emails = array_unique($arr_emails);
 
-								if(is_plugin_active("mf_address/index.php"))
+								if(count($arr_emails) > 0)
 								{
-									foreach($arr_emails as $email)
+									$error_text = "Found bounce: ".var_export($arr_emails, true)." (".$strMessageSubject.")<br>";
+
+									if(is_plugin_active("mf_address/index.php"))
 									{
-										$obj_address = new mf_address();
-										$obj_address->get_address_id(array('email' => $email));
-
-										if($obj_address->id > 0)
+										foreach($arr_emails as $email)
 										{
-											$obj_address->update_errors(array('action' => 'reset'));
+											$obj_address = new mf_address();
+											$obj_address->get_address_id(array('email' => $email));
 
-											$intQueueID = $wpdb->get_var($wpdb->prepare("SELECT queueID FROM ".$wpdb->prefix."group_queue WHERE addressID = '%d' AND queueSent = '1' AND queueSentTime <= '".$strMessageCreated."' ORDER BY queueSentTime DESC LIMIT 0, 1", $obj_address->id));
-
-											if($intQueueID > 0)
+											if($obj_address->id > 0)
 											{
-												$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->prefix."group_queue SET queueReceived = '-1' WHERE queueID = '%d' AND addressID = '%d'", $intQueueID, $obj_address->id));
+												$obj_address->update_errors(array('action' => 'reset'));
+
+												$intQueueID = $wpdb->get_var($wpdb->prepare("SELECT queueID FROM ".$wpdb->prefix."group_queue WHERE addressID = '%d' AND queueSent = '1' AND queueSentTime <= '".$strMessageCreated."' ORDER BY queueSentTime DESC LIMIT 0, 1", $obj_address->id));
+
+												if($intQueueID > 0)
+												{
+													$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->prefix."group_queue SET queueReceived = '-1' WHERE queueID = '%d' AND addressID = '%d'", $intQueueID, $obj_address->id));
+												}
+
+												else
+												{
+													$error_text = "No group message sent to that address (".$email.", ".$obj_address->id.")<br>";
+												}
 											}
 
 											else
 											{
-												$error_text = "No group message sent to that address (".$email.", ".$obj_address->id.")<br>";
+												$error_text = "No address with that e-mail (".$email.")<br>";
 											}
 										}
-
-										else
-										{
-											$error_text = "No address with that e-mail (".$email.")<br>";
-										}
 									}
+								}
+
+								else
+								{
+									$error_text = "No rows (".$strMessageSubject.")<br>";
 								}
 							}
 
 							else
 							{
-								$error_text = "No rows (".$strMessageSubject.")<br>";
-							}
-						}
+								$strMessageMd5 = md5($strMessageTextID.$strMessageFrom.$strMessageTextPlain.$strMessageTextHTML);
 
-						else
-						{
-							$strMessageMd5 = md5($strMessageTextID.$strMessageFrom.$strMessageTextPlain.$strMessageTextHTML);
+								$resultExists_md5 = $wpdb->get_results($wpdb->prepare("SELECT messageID FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) WHERE emailID = '%d' AND messageMd5 != '' AND messageMd5 = %s LIMIT 0, 2", $intEmailID, $strMessageMd5));
 
-							$resultExists_md5 = $wpdb->get_results($wpdb->prepare("SELECT messageID FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) WHERE emailID = '%d' AND messageMd5 != '' AND messageMd5 = %s LIMIT 0, 2", $intEmailID, $strMessageMd5));
-
-							if(count($resultExists_md5) == 0 && ($strMessageCreated >= date("Y-m-d H:i:s", strtotime("-7 day")))) // || $rowsTotal == 0
-							{
-								$intSpamID = $this->check_if_spam(array('from' => $strMessageFrom));
-
-								if($intSpamID > 0)
+								if(count($resultExists_md5) == 0 && ($strMessageCreated >= date("Y-m-d H:i:s", strtotime("-7 day")))) // || $rowsTotal == 0
 								{
-									$intFolderID = $this->get_folder_ids(__("Spam", 'lang_email'), 3, $intEmailID);
-								}
+									$intSpamID = $this->check_if_spam(array('from' => $strMessageFrom));
 
-								else
-								{
-									$intFolderID = $this->get_folder_ids(__("Inbox", 'lang_email'), 6, $intEmailID);
-								}
-
-								list($intMessageID, $affected_rows) = $this->save_email(array('folder_id' => $intFolderID, 'text_id' => $strMessageTextID, 'md5' => $strMessageMd5, 'from' => $strMessageFrom, 'from_name' => $strMessageFromName, 'to' => $strMessageTo, 'cc' => $strMessageCc, 'subject' => $strMessageSubject, 'content' => $strMessageTextPlain, 'content_html' => $strMessageTextHTML, 'created' => $strMessageCreated));
-
-								if($affected_rows > 0)
-								{
 									if($intSpamID > 0)
 									{
-										$arr_temp = array();
-
-										$this->set_mail_info(array('message_id' => $intMessageID, 'mail_spam' => 1), $arr_temp);
-										$this->mark_spam(array('message_id' => $intMessageID, 'spam' => true));
+										$intFolderID = $this->get_folder_ids(__("Spam", 'lang_email'), 3, $intEmailID);
 									}
 
-									$done_text = __("Inserted", 'lang_email').": ".$strMessageSubject."<br>";
-
-									$arr_file_id = array();
-
-									foreach($logical->attachments as $attachment)
+									else
 									{
-										$data = array(
-											'content' => "",
-											'mime' => "",
-											'name' => "",
-										);
+										$intFolderID = $this->get_folder_ids(__("Inbox", 'lang_email'), 6, $intEmailID);
+									}
 
-										foreach($attachment as $key => $value)
+									list($intMessageID, $affected_rows) = $this->save_email(array('folder_id' => $intFolderID, 'text_id' => $strMessageTextID, 'md5' => $strMessageMd5, 'from' => $strMessageFrom, 'from_name' => $strMessageFromName, 'to' => $strMessageTo, 'cc' => $strMessageCc, 'subject' => $strMessageSubject, 'content' => $strMessageTextPlain, 'content_html' => $strMessageTextHTML, 'created' => $strMessageCreated));
+
+									if($affected_rows > 0)
+									{
+										if($intSpamID > 0)
 										{
-											if($key == "mime_id")
-											{
-												$data['content'] = $logical->get_part_content($value);
-											}
+											$arr_temp = array();
 
-											else if($key == "mimetype")
-											{
-												$data['mime'] = $value;
-											}
-
-											else if($key == "filename")
-											{
-												$data['name'] = $value;
-											}
+											$this->set_mail_info(array('message_id' => $intMessageID, 'mail_spam' => 1), $arr_temp);
+											$this->mark_spam(array('message_id' => $intMessageID, 'spam' => true));
 										}
 
-										$intFileID = insert_attachment($data);
+										$done_text = __("Inserted", 'lang_email').": ".$strMessageSubject."<br>";
 
-										if($intMessageID > 0 && $intFileID > 0)
+										$arr_file_id = array();
+
+										foreach($logical->attachments as $attachment)
 										{
-											$taxonomy = 'category';
-											$post_id = $intFileID;
+											$data = array(
+												'content' => "",
+												'mime' => "",
+												'name' => "",
+											);
 
-											$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email_message_attachment SET messageID = '%d', fileID = '%d'", $intMessageID, $intFileID));
+											foreach($attachment as $key => $value)
+											{
+												if($key == "mime_id")
+												{
+													$data['content'] = $logical->get_part_content($value);
+												}
 
-											$term_attachment = $this->create_term_if_not_exists(array('taxonomy' => $taxonomy, 'term_slug' => 'email_attachment', 'term_name' => __("E-mail attachments", 'lang_email')));
+												else if($key == "mimetype")
+												{
+													$data['mime'] = $value;
+												}
 
-											wp_set_object_terms($post_id, array((int)$term_attachment['term_id']), $taxonomy, false);
+												else if($key == "filename")
+												{
+													$data['name'] = $value;
+												}
+											}
 
-											$done_text = __("The attachment was saved", 'lang_email').": ".$intFileID." -> ".$intMessageID;
+											$intFileID = insert_attachment($data);
+
+											if($intMessageID > 0 && $intFileID > 0)
+											{
+												$taxonomy = 'category';
+												$post_id = $intFileID;
+
+												$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email_message_attachment SET messageID = '%d', fileID = '%d'", $intMessageID, $intFileID));
+
+												$term_attachment = $this->create_term_if_not_exists(array('taxonomy' => $taxonomy, 'term_slug' => 'email_attachment', 'term_name' => __("E-mail attachments", 'lang_email')));
+
+												wp_set_object_terms($post_id, array((int)$term_attachment['term_id']), $taxonomy, false);
+
+												$done_text = __("The attachment was saved", 'lang_email').": ".$intFileID." -> ".$intMessageID;
+											}
 										}
+									}
+
+									else
+									{
+										$error_text = __("The email was not able to be saved", 'lang_email').": ".$strMessageSubject."<br>";
+									}
+									########################
+								}
+
+								else
+								{
+									$error_text = __("The e-mail already exists", 'lang_email').": ".$strMessageSubject."<br>";
+
+									/*$r = $resultExists_md5[0];
+									$intMessageStatus = $r->mailStatus;
+
+									if($intMessageStatus > 0)
+									{
+										$read_email_message = true;
+									}
+
+									if($strMessageCreated < date("Y-m-d H:i:s", strtotime("-14 day")) && $error_text == '')
+									{
+										$delete_email_message = true;
+									}*/
+								}
+
+								/*if(isset($read_email_message) && $read_email_message == true)
+								{
+									if(isset($delete_email_message) && $delete_email_message == true)
+									{
+										$imap->delete_message($header->uid);
+									}
+
+									else
+									{
+										//$imap->set_flag($header->uid, 'SEEN', 'INBOX');
 									}
 								}
 
 								else
 								{
-									$error_text = __("The email was not able to be saved", 'lang_email').": ".$strMessageSubject."<br>";
-								}
-								########################
-							}
-
-							else
-							{
-								$error_text = __("The e-mail already exists", 'lang_email').": ".$strMessageSubject."<br>";
-
-								/*$r = $resultExists_md5[0];
-								$intMessageStatus = $r->mailStatus;
-
-								if($intMessageStatus > 0)
-								{
-									$read_email_message = true;
-								}
-
-								if($strMessageCreated < date("Y-m-d H:i:s", strtotime("-14 day")) && $error_text == '')
-								{
-									$delete_email_message = true;
+									//$imap->unset_flag($header->uid, 'SEEN', 'INBOX');
 								}*/
 							}
-
-							/*if(isset($read_email_message) && $read_email_message == true)
-							{
-								if(isset($delete_email_message) && $delete_email_message == true)
-								{
-									$imap->delete_message($header->uid);
-								}
-
-								else
-								{
-									//$imap->set_flag($header->uid, 'SEEN', 'INBOX');
-								}
-							}
-
-							else
-							{
-								//$imap->unset_flag($header->uid, 'SEEN', 'INBOX');
-							}*/
 						}
+
+						$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailChecked = NOW() WHERE emailID = '%d'", $intEmailID));
 					}
 
-					$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailChecked = NOW() WHERE emailID = '%d'", $intEmailID));
+					else
+					{
+						$error_text = __("Connection failed", 'lang_email');
+					}
 				}
+				####################################
 
-				else
+				// Clean up spam folders where messages has not been deleted
+				####################################
+				$result = $wpdb->get_results("SELECT folderID FROM ".$wpdb->base_prefix."email_folder WHERE folderType = '3'");
+
+				foreach($result as $r)
 				{
-					$error_text = __("Connection failed", 'lang_email');
+					$intFolderID = $r->folderID;
+
+					$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email_message SET messageDeleted = '1', messageDeletedDate = NOW() WHERE folderID = '%d' AND messageDeleted = '0'", $intFolderID));
 				}
+				####################################
+
+				// Remove fileIDs that do not exist anymore as IDs
+				####################################
+				$result = $wpdb->get_results("SELECT fileID FROM ".$wpdb->base_prefix."email_message_attachment LEFT JOIN ".$wpdb->posts." ON fileID = ID WHERE ID IS null");
+
+				foreach($result as $r)
+				{
+					$this->remove_attachment(array('file_id' => $r->fileID));
+				}
+				####################################
+
+				delete_base(array(
+					'table_prefix' => $wpdb->base_prefix,
+					'table' => "email_folder",
+					'field_prefix' => "folder",
+					'child_tables' => array(
+						'email_message' => array(
+							'action' => "trash",
+							'field_prefix' => "message",
+						),
+					),
+				));
+
+				/*delete_base(array(
+					'table_prefix' => $wpdb->base_prefix,
+					'table' => "email_message",
+					'field_prefix' => "message",
+					'child_tables' => array(
+						'email_message_attachment' => array(
+							'action' => "delete",
+						),
+					),
+				));*/
+
+				$empty_trash_days = defined('EMPTY_TRASH_DAYS') ? EMPTY_TRASH_DAYS : 30;
+
+				$result = $wpdb->get_results("SELECT messageID FROM ".$wpdb->base_prefix."email_message WHERE messageDeleted = '1' AND messageDeletedDate < DATE_SUB(NOW(), INTERVAL ".$empty_trash_days." DAY)");
+
+				foreach($result as $r)
+				{
+					$intMessageID = $r->messageID;
+
+					//do_log("The message (".$intMessageID.") was permanently removed because it was placed in the trash ".$empty_trash_days." days ago");
+
+					//$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->base_prefix."email_message_attachment WHERE messageID = '%d'", $intMessageID));
+					$this->remove_attachment(array('message_id' => $intMessageID));
+					$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->base_prefix."email_message WHERE messageID = '%d'", $intMessageID));
+				}
+
+				delete_base(array(
+					'table_prefix' => $wpdb->base_prefix,
+					'table' => "email",
+					'field_prefix' => "email",
+					'child_tables' => array(
+						'email_folder' => array(
+							'action' => "trash",
+							'field_prefix' => "folder",
+						),
+						'email_users' => array(
+							'action' => "delete",
+						),
+						'email_spam' => array(
+							'action' => "delete",
+						),
+					),
+				));
+
+				mf_uninstall_plugin(array(
+					'options' => array('setting_smtp_test'),
+				));
 			}
-			####################################
-
-			// Clean up spam folders where messages has not been deleted
-			####################################
-			$result = $wpdb->get_results("SELECT folderID FROM ".$wpdb->base_prefix."email_folder WHERE folderType = '3'");
-
-			foreach($result as $r)
-			{
-				$intFolderID = $r->folderID;
-
-				$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email_message SET messageDeleted = '1', messageDeletedDate = NOW() WHERE folderID = '%d' AND messageDeleted = '0'", $intFolderID));
-			}
-			####################################
-
-			// Remove fileIDs that do not exist anymore as IDs
-			####################################
-			$result = $wpdb->get_results("SELECT fileID FROM ".$wpdb->base_prefix."email_message_attachment LEFT JOIN ".$wpdb->posts." ON fileID = ID WHERE ID IS null");
-
-			foreach($result as $r)
-			{
-				$this->remove_attachment(array('file_id' => $r->fileID));
-			}
-			####################################
-
-			delete_base(array(
-				'table_prefix' => $wpdb->base_prefix,
-				'table' => "email_folder",
-				'field_prefix' => "folder",
-				'child_tables' => array(
-					'email_message' => array(
-						'action' => "trash",
-						'field_prefix' => "message",
-					),
-				),
-			));
-
-			/*delete_base(array(
-				'table_prefix' => $wpdb->base_prefix,
-				'table' => "email_message",
-				'field_prefix' => "message",
-				'child_tables' => array(
-					'email_message_attachment' => array(
-						'action' => "delete",
-					),
-				),
-			));*/
-
-			$empty_trash_days = defined('EMPTY_TRASH_DAYS') ? EMPTY_TRASH_DAYS : 30;
-
-			$result = $wpdb->get_results("SELECT messageID FROM ".$wpdb->base_prefix."email_message WHERE messageDeleted = '1' AND messageDeletedDate < DATE_SUB(NOW(), INTERVAL ".$empty_trash_days." DAY)");
-
-			foreach($result as $r)
-			{
-				$intMessageID = $r->messageID;
-
-				//do_log("The message (".$intMessageID.") was permanently removed because it was placed in the trash ".$empty_trash_days." days ago");
-
-				//$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->base_prefix."email_message_attachment WHERE messageID = '%d'", $intMessageID));
-				$this->remove_attachment(array('message_id' => $intMessageID));
-				$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->base_prefix."email_message WHERE messageID = '%d'", $intMessageID));
-			}
-
-			delete_base(array(
-				'table_prefix' => $wpdb->base_prefix,
-				'table' => "email",
-				'field_prefix' => "email",
-				'child_tables' => array(
-					'email_folder' => array(
-						'action' => "trash",
-						'field_prefix' => "folder",
-					),
-					'email_users' => array(
-						'action' => "delete",
-					),
-					'email_spam' => array(
-						'action' => "delete",
-					),
-				),
-			));
-
-			mf_uninstall_plugin(array(
-				'options' => array('setting_smtp_test'),
-			));
 		}
 
 		$obj_cron->end();
@@ -1886,7 +1889,7 @@ class mf_email
 	{
 		$this->message_id = $message_id;
 
-		if($this->from_address != '')
+		if(!isset($this->from_address) || $this->from_address == '')
 		{
 			$this->get_message_info();
 		}
