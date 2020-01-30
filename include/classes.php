@@ -1610,10 +1610,7 @@ class mf_email
 				else if($this->text_source > 0)
 				{
 					$this->message_text = $wpdb->get_var($wpdb->prepare("SELECT post_content FROM ".$wpdb->posts." WHERE post_type = 'page' AND post_status = 'publish' AND ID = '%d'", $this->text_source));
-
-					$user_data = get_userdata(get_current_user_id());
-
-					$this->message_text = str_replace("[name]", $user_data->display_name, $this->message_text);
+					$this->message_text = str_replace("[name]", get_user_info(), $this->message_text);
 				}
 
 				else if($this->message_cc == '' && $this->message_subject == '' && $this->message_text == '')
