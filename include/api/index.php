@@ -271,6 +271,15 @@ switch($arr_input[0])
 
 					$result = $wpdb->get_results($wpdb->prepare("SELECT post_title, guid FROM ".$wpdb->base_prefix."email_message_attachment INNER JOIN ".$wpdb->posts." ON ".$wpdb->base_prefix."email_message_attachment.fileID = ".$wpdb->posts.".ID AND post_type = 'attachment' WHERE messageID = '%d'", $intMessageID));
 
+					// A temporary fix because the messages are fetched only on the parent site
+					if(count($result) == 0)
+					{
+						$wpdb->get_results($wpdb->prepare("SELECT fileID FROM ".$wpdb->base_prefix."email_message_attachment WHERE messageID = '%d' LIMIT 0, 1", $intMessageID));
+						$has_attachment = $wpdb->num_rows > 0;
+
+						$result = $wpdb->get_results($wpdb->prepare("SELECT post_title, guid FROM ".$wpdb->base_prefix."email_message_attachment INNER JOIN ".$wpdb->base_prefix."posts ON ".$wpdb->base_prefix."email_message_attachment.fileID = ".$wpdb->base_prefix."posts.ID AND post_type = 'attachment' WHERE messageID = '%d'", $intMessageID));
+					}
+
 					foreach($result as $r)
 					{
 						$post_title = $r->post_title;

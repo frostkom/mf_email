@@ -334,16 +334,19 @@ class mf_email
 					'Mail Delivery Subsystem'
 				);
 
-				$result = $wpdb->get_results("SELECT emailID, emailServer, emailPort, emailUsername, emailPassword, emailAddress FROM ".$wpdb->base_prefix."email WHERE emailDeleted = '0' AND emailVerified = '1' GROUP BY emailUsername");
+				$result = $wpdb->get_results("SELECT emailID, blogID, emailServer, emailPort, emailUsername, emailPassword, emailAddress FROM ".$wpdb->base_prefix."email WHERE emailDeleted = '0' AND emailVerified = '1' GROUP BY emailUsername");
 
 				foreach($result as $r)
 				{
 					$intEmailID = $r->emailID;
+					$intBlogID = $r->blogID;
 					$strEmailServer = $r->emailServer;
 					$intEmailPort = $r->emailPort;
 					$strEmailUsername = $r->emailUsername;
 					$strEmailPassword = $r->emailPassword;
 					$strEmailAddress = $r->emailAddress;
+
+					switch_to_blog($intBlogID);
 
 					//$obj_email = new mf_email($intEmailID);
 					$this->id = $intEmailID;
@@ -554,6 +557,8 @@ class mf_email
 					{
 						$error_text = __("Connection failed", 'lang_email');
 					}
+
+					restore_current_blog();
 				}
 				####################################
 
