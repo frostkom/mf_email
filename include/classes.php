@@ -128,8 +128,6 @@ class mf_email
 	{
 		global $wpdb;
 
-		//$obj_email = new mf_email();
-
 		$intSpamID = 0;
 		$intEmailID = $this->get_email_id($data['message_id']);
 		$strMessageFrom = $this->get_from_address($data['message_id']);
@@ -1849,17 +1847,15 @@ class mf_email
 	{
 		global $wpdb;
 
-		$array = array();
-
 		$intFolderID = $this->get_folder_ids(__("Sent", 'lang_email'), 4, $id);
 
-		$array['sent'] = $wpdb->get_var($wpdb->prepare("SELECT COUNT(messageID) FROM ".$wpdb->base_prefix."email_message WHERE folderID = '%d' AND messageDeleted = '0'", $intFolderID));
+		$sent = $wpdb->get_var($wpdb->prepare("SELECT COUNT(messageID) FROM ".$wpdb->base_prefix."email_message WHERE folderID = '%d' AND messageDeleted = '0'", $intFolderID));
+		$received = $wpdb->get_var($wpdb->prepare("SELECT COUNT(messageID) FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) WHERE emailID = '%d' AND messageDeleted = '0'", $id));
 
-		$array['received'] = $wpdb->get_var($wpdb->prepare("SELECT COUNT(messageID) FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) WHERE emailID = '%d' AND messageDeleted = '0'", $id));
-
-		$array['received'] -= $array['sent'];
-
-		return $array;
+		return array(
+			'sent' => $sent,
+			'received' => ($received - $sent),
+		);
 	}
 
 	function get_message_info()
@@ -2284,6 +2280,8 @@ class mf_email_account_table extends mf_list_table
 			'emailAddress' => __("Address", 'lang_email'),
 			'emailName' => __("Name", 'lang_email'),
 			'rights' => shorten_text(array('string' => __("Rights", 'lang_email'), 'limit' => 3)),
+			//'received' => __("Received", 'lang_email'),
+			//'sent' => __("Sent", 'lang_email'),
 			'emailServer' => __("Incoming", 'lang_email'),
 			'emailSmtpServer' => __("Outgoing", 'lang_email'),
 		);
@@ -2300,7 +2298,7 @@ class mf_email_account_table extends mf_list_table
 
 	function column_default($item, $column_name)
 	{
-		global $wpdb, $obj_group;
+		global $wpdb, $obj_email;
 
 		$out = "";
 
@@ -2341,10 +2339,7 @@ class mf_email_account_table extends mf_list_table
 			case 'emailName':
 				$out .= $item['emailName'];
 
-				$actions = array();
-
-				//$obj_email = new mf_email();
-				$arr_message_amount = $this->get_message_amount($intEmailID);
+				$arr_message_amount = $obj_email->get_message_amount($intEmailID);
 
 				if($arr_message_amount['received'] > 0)
 				{
@@ -2415,6 +2410,18 @@ class mf_email_account_table extends mf_list_table
 					$out .= "<i class='".$rights_icon." fa-lg' title='".$rights_title."'></i>";
 				}
 			break;
+
+			/*case 'received':
+				$arr_message_amount = $obj_email->get_message_amount($intEmailID);
+
+				$out .= $arr_message_amount['received'];
+			break;
+
+			case 'sent':
+				$arr_message_amount = $obj_email->get_message_amount($intEmailID);
+
+				$out .= $arr_message_amount['sent'];
+			break;*/
 
 			case 'emailServer':
 				$strEmailServer = $item['emailServer'];

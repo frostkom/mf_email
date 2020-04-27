@@ -234,7 +234,7 @@ switch($arr_input[0])
 			break;
 
 			case 'show':
-				$obj_email = new mf_email();
+				//$obj_email = new mf_email();
 
 				$intMessageID = $arr_input[2];
 
