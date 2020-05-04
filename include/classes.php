@@ -2339,6 +2339,8 @@ class mf_email_account_table extends mf_list_table
 			case 'emailName':
 				$out .= $item['emailName'];
 
+				$actions = array();
+
 				$arr_message_amount = $obj_email->get_message_amount($intEmailID);
 
 				if($arr_message_amount['received'] > 0)
