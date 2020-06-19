@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: 
-Version: 6.1.8
+Version: 6.1.9
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://frostkom.se
@@ -36,7 +36,6 @@ if(is_admin())
 	//add_filter('get_user_reminders', array($obj_email, 'get_user_reminders'), 10, 1);
 	add_action('deleted_user', array($obj_email, 'deleted_user'));
 	add_action('wp_trash_post', array($obj_email, 'wp_trash_post'));
-	add_action('delete_post', array($obj_email, 'wp_trash_post'));
 }
 
 add_filter('wp_mail_from', array($obj_email, 'wp_mail_from'));

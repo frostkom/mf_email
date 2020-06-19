@@ -54,25 +54,25 @@ var EmailView = Backbone.View.extend(
 
 	next_request: function()
 	{
-		var response = this.model.get("next_request");
+		var response = this.model.get('next_request');
 
 		if(response != '')
 		{
 			this.model.getPage(response);
 
-			this.model.set({"next_request" : ""});
+			this.model.set({'next_request' : ""});
 		}
 	},
 
 	remove_id: function()
 	{
-		var response = this.model.get("remove_id");
+		var response = this.model.get('remove_id');
 
 		if(response != '')
 		{
 			jQuery("#" + response).remove();
 
-			this.model.set({"remove_id" : ""});
+			this.model.set({'remove_id' : ""});
 		}
 	},
 
