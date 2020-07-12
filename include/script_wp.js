@@ -27,25 +27,25 @@ jQuery(function($)
 		}
 	}
 
-	$(document).on('blur', 'input[name=strEmailAddress]', function()
+	$(document).on('blur', "input[name=strEmailAddress]", function()
 	{
-		clone_value_if_empty($(this), $('input[name=strEmailUsername]'));
+		clone_value_if_empty($(this), $("input[name=strEmailUsername]"));
 	});
 
-	$(document).on('blur', 'input[name=strEmailServer]', function()
+	$(document).on('blur', "input[name=strEmailServer]", function()
 	{
-		clone_value_if_empty($(this), $('input[name=strEmailSmtpServer]'));
+		clone_value_if_empty($(this), $("input[name=strEmailSmtpServer]"));
 	});
 
-	$(document).on('blur', 'input[name=strEmailUsername]', function()
+	$(document).on('blur', "input[name=strEmailUsername]", function()
 	{
-		clone_value_if_empty($(this), $('input[name=strEmailSmtpUsername]'));
+		clone_value_if_empty($(this), $("input[name=strEmailSmtpUsername]"));
 	});
 
-	$(document).on('blur', 'input[name=strEmailAddress]', function()
+	$(document).on('blur', "input[name=strEmailAddress]", function()
 	{
 		var self_obj = $(this),
-			to_obj = $('input[name=strEmailSmtpHostname]');
+			to_obj = $("input[name=strEmailSmtpHostname]");
 
 		var dom_from_val = self_obj.val(),
 			dom_to_val = to_obj.val();
@@ -88,11 +88,11 @@ jQuery(function($)
 	/* Settings */
 	$(document).on('click', "button[name=btnSmtpTest]", function()
 	{
-		var smtp_to = $('#smtp_to').val();
+		var smtp_to = $("#smtp_to").val();
 
 		if(typeof smtp_to != undefined && smtp_to != '')
 		{
-			$('#smtp_debug').html("<i class='fa fa-spinner fa-spin fa-2x'></i>");
+			$("#smtp_debug").html("<i class='fa fa-spinner fa-spin fa-2x'></i>");
 
 			$.ajax(
 			{
@@ -105,17 +105,17 @@ jQuery(function($)
 				},
 				success: function(data)
 				{
-					$('#smtp_debug').empty();
+					$("#smtp_debug").empty();
 
 					if(data.success)
 					{
-						$('button[name=btnSmtpTest]').addClass('is_disabled').attr('disabled', true);
-						$('#smtp_debug').html(data.message);
+						$("button[name=btnSmtpTest]").addClass('is_disabled'); /*.attr('disabled', true)*/
+						$("#smtp_debug").html(data.message);
 					}
 
 					else
 					{
-						$('#smtp_debug').html(data.error);
+						$("#smtp_debug").html(data.error);
 					}
 				}
 			});
