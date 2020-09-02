@@ -2056,12 +2056,12 @@ class mf_email
 	{
 		$obj_encryption = new mf_email_encryption("email");
 
-		if($this->password != '' && $this->address != '')
+		if(isset($this->password) && $this->password != '' && $this->address != '')
 		{
 			$this->password_encrypted = $obj_encryption->encrypt($this->password, md5($this->address));
 		}
 
-		if($this->smtp_password != '' && $this->address != '')
+		if(isset($this->smtp_password) && $this->smtp_password != '' && $this->address != '')
 		{
 			$this->smtp_password_encrypted = $obj_encryption->encrypt($this->smtp_password, md5($this->address));
 		}
