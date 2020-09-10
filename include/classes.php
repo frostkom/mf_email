@@ -1974,10 +1974,11 @@ class mf_email
 
 		if(count($arr_data) <= 1 && $allow_fallback == true)
 		{
-			$current_user = wp_get_current_user();
+			//$current_user = wp_get_current_user();
+			$user_data = get_userdata(get_current_user_id());
 
-			$user_name = $current_user->display_name;
-			$user_email = $current_user->user_email;
+			$user_name = $user_data->display_name;
+			$user_email = $user_data->user_email;
 			$admin_name = get_bloginfo('name');
 			$admin_email = get_bloginfo('admin_email');
 
