@@ -431,7 +431,7 @@ class mf_email
 
 								if(count($resultExists_md5) == 0 && ($strMessageCreated >= date("Y-m-d H:i:s", strtotime("-7 day")))) // || $rowsTotal == 0
 								{
-									$intSpamID = $this->check_if_spam(array('from' => $strMessageFrom));
+									$intSpamID = $this->check_if_spam(array('from' => $strMessageFrom, 'subject' => $strMessageSubject));
 
 									if($intSpamID > 0)
 									{
@@ -2053,9 +2053,37 @@ class mf_email
 	{
 		global $wpdb;
 
-		$wpdb->get_results($wpdb->prepare("SELECT spamID FROM ".$wpdb->base_prefix."email_spam WHERE emailID = '%d' AND messageFrom = %s LIMIT 0, 1", $this->id, $data['from']));
+		if(!isset($data['from'])){		$data['from'] = '';}
+		if(!isset($data['subject'])){	$data['subject'] = '';}
 
-		return $wpdb->num_rows > 0 ? true : false;
+		$is_spam = false;
+
+		if($is_spam == false && $data['subject'] != '')
+		{
+			$arr_spam = array('*****SPAM*****');
+
+			foreach($arr_spam as $str_spam)
+			{
+				if(strpos($data['subject'], $str_spam))
+				{
+					$is_spam = true;
+
+					break;
+				}
+			}
+		}
+
+		if($is_spam == false && $data['from'] != '')
+		{
+			$wpdb->get_results($wpdb->prepare("SELECT spamID FROM ".$wpdb->base_prefix."email_spam WHERE emailID = '%d' AND messageFrom = %s LIMIT 0, 1", $this->id, $data['from']));
+
+			if($wpdb->num_rows > 0)
+			{
+				$is_spam = true;
+			}
+		}
+
+		return $is_spam;
 	}
 
 	function encrypt_password()
