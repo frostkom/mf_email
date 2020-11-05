@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: 
-Version: 6.2.0
+Version: 6.2.1
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://frostkom.se
@@ -109,15 +109,15 @@ function activate_email()
 	) DEFAULT CHARSET=".$default_charset);
 
 	$arr_add_column[$wpdb->base_prefix."email"] = array(
-		//'emailSignature' => "ALTER TABLE [table] ADD [column] TEXT AFTER emailName",
+		//'' => "ALTER TABLE [table] ADD [column]  AFTER ",
 	);
 
 	$arr_update_column[$wpdb->base_prefix."email"] = array(
-		//'emailOutgoingType' => "ALTER TABLE [table] CHANGE [column] [column] VARCHAR(60)",
+		//'' => "ALTER TABLE [table] CHANGE [column] [column] ",
 	);
 
 	$arr_add_index[$wpdb->base_prefix."email"] = array(
-		//'emailAddress' => "ALTER TABLE [table] ADD INDEX [column] ([column])",
+		//'' => "ALTER TABLE [table] ADD INDEX [column] ([column])",
 	);
 
 	$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email_users (
@@ -144,10 +144,6 @@ function activate_email()
 		KEY folderType (folderType),
 		KEY folderName (folderName)
 	) DEFAULT CHARSET=".$default_charset);
-
-	$arr_add_index[$wpdb->base_prefix."email_folder"] = array(
-		//'folderName' => "ALTER TABLE [table] ADD INDEX [column] ([column])",
-	);
 
 	$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email_message (
 		messageID INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -176,10 +172,6 @@ function activate_email()
 		KEY messageCreated (messageCreated)
 	) DEFAULT CHARSET=".$default_charset);
 
-	$arr_update_column[$wpdb->base_prefix."email_message"] = array(
-		//'messageRecieved' => "ALTER TABLE [table] CHANGE [column] messageReceived DATETIME DEFAULT NULL",
-	);
-
 	$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email_message_attachment (
 		messageID INT UNSIGNED NOT NULL,
 		fileID INT UNSIGNED DEFAULT NULL,
@@ -196,10 +188,6 @@ function activate_email()
 		KEY emailID (emailID),
 		KEY messageFrom (messageFrom)
 	) DEFAULT CHARSET=".$default_charset);
-
-	$arr_add_index[$wpdb->base_prefix."email_spam"] = array(
-		//'messageFrom' => "ALTER TABLE [table] ADD INDEX [column] ([column])",
-	);
 
 	update_columns($arr_update_column);
 	add_columns($arr_add_column);
