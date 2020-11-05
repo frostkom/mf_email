@@ -26,7 +26,7 @@ echo "<div class='wrap'>
 									."<span id='txtMessageCc'></span>
 								</div>
 							</div>"
-							.show_textfield(array('name' => 'strMessageSubject', 'text' => __("Subject", 'lang_email'), 'value' => $obj_email->message_subject, 'required' => 1, 'max_length' => 200))
+							.show_textfield(array('name' => 'strMessageSubject', 'text' => __("Subject", 'lang_email'), 'value' => $obj_email->message_subject, 'required' => 1, 'maxlength' => 200))
 							.show_wp_editor(array('name' => 'strMessageText', 'value' => $obj_email->message_text))
 						."</div>
 					</div>
