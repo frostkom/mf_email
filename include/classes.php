@@ -2271,344 +2271,347 @@ class mf_email_encryption
 	}
 }
 
-class mf_email_account_table extends mf_list_table
+if(class_exists('mf_list_table'))
 {
-	function set_default()
+	class mf_email_account_table extends mf_list_table
 	{
-		global $wpdb;
-
-		$this->arr_settings['query_from'] = $wpdb->base_prefix."email";
-		$this->post_type = '';
-
-		$this->arr_settings['query_select_id'] = "emailID";
-		$this->arr_settings['query_all_id'] = "0";
-		$this->arr_settings['query_trash_id'] = "1";
-		$this->orderby_default = "emailDeleted ASC, ".$wpdb->base_prefix."email.userID ASC, emailUsername";
-
-		//$this->arr_settings['has_autocomplete'] = true;
-		//$this->arr_settings['plugin_name'] = 'mf_email';
-	}
-
-	function init_fetch()
-	{
-		global $wpdb;
-
-		$this->query_join .= " LEFT JOIN ".$wpdb->base_prefix."email_users USING (emailID)";
-		$this->query_where .= ($this->query_where != '' ? " AND " : "")."(emailPublic = '1' OR emailRoles LIKE '%".get_current_user_role()."%' OR ".$wpdb->base_prefix."email.userID = '".get_current_user_id()."' OR ".$wpdb->base_prefix."email_users.userID = '".get_current_user_id()."') AND (blogID = '".$wpdb->blogid."' OR blogID = '0')";
-
-		if($this->search != '')
+		function set_default()
 		{
-			$this->query_where .= ($this->query_where != '' ? " AND " : "")."(emailAddress LIKE '%".$this->search."%' OR emailName LIKE '%".$this->search."%' OR emailUsername LIKE '%".$this->search."%' OR emailServer LIKE '%".$this->search."%')";
+			global $wpdb;
+
+			$this->arr_settings['query_from'] = $wpdb->base_prefix."email";
+			$this->post_type = '';
+
+			$this->arr_settings['query_select_id'] = "emailID";
+			$this->arr_settings['query_all_id'] = "0";
+			$this->arr_settings['query_trash_id'] = "1";
+			$this->orderby_default = "emailDeleted ASC, ".$wpdb->base_prefix."email.userID ASC, emailUsername";
+
+			//$this->arr_settings['has_autocomplete'] = true;
+			//$this->arr_settings['plugin_name'] = 'mf_email';
 		}
 
-		$this->set_views(array(
-			'db_field' => 'emailDeleted',
-			'types' => array(
-				'0' => __("All", 'lang_email'),
-				'1' => __("Trash", 'lang_email')
-			),
-		));
-
-		$arr_columns = array(
-			//'cb' => '<input type="checkbox">',
-			'emailAddress' => __("Address", 'lang_email'),
-			'emailName' => __("Name", 'lang_email'),
-			'rights' => shorten_text(array('string' => __("Rights", 'lang_email'), 'limit' => 3)),
-			//'received' => __("Received", 'lang_email'),
-			//'sent' => __("Sent", 'lang_email'),
-			'emailServer' => __("Incoming", 'lang_email'),
-			'emailSmtpServer' => __("Outgoing", 'lang_email'),
-		);
-
-		$this->set_columns($arr_columns);
-
-		$this->set_sortable_columns(array(
-			'emailAddress',
-			'emailName',
-			'emailServer',
-			'emailSmtpServer',
-		));
-	}
-
-	function column_default($item, $column_name)
-	{
-		global $wpdb, $obj_email;
-
-		$out = "";
-
-		$intEmailID = $item['emailID'];
-
-		switch($column_name)
+		function init_fetch()
 		{
-			case 'emailAddress':
-				$strEmailAddress = $item['emailAddress'];
-				$intUserID = $item['userID'];
-				$intEmailDeleted = $item['emailDeleted'];
+			global $wpdb;
 
-				$email_url = admin_url("admin.php?page=mf_email/create/index.php&intEmailID=".$intEmailID);
+			$this->query_join .= " LEFT JOIN ".$wpdb->base_prefix."email_users USING (emailID)";
+			$this->query_where .= ($this->query_where != '' ? " AND " : "")."(emailPublic = '1' OR emailRoles LIKE '%".get_current_user_role()."%' OR ".$wpdb->base_prefix."email.userID = '".get_current_user_id()."' OR ".$wpdb->base_prefix."email_users.userID = '".get_current_user_id()."') AND (blogID = '".$wpdb->blogid."' OR blogID = '0')";
 
-				$out .= "<a href='".$email_url."'>"
-					.$strEmailAddress
-				."</a>
-				<div class='row-actions'>";
+			if($this->search != '')
+			{
+				$this->query_where .= ($this->query_where != '' ? " AND " : "")."(emailAddress LIKE '%".$this->search."%' OR emailName LIKE '%".$this->search."%' OR emailUsername LIKE '%".$this->search."%' OR emailServer LIKE '%".$this->search."%')";
+			}
 
-					if($intEmailDeleted == 0)
-					{
-						$out .= "<a href='".$email_url."'>".__("Edit", 'lang_email')."</a>";
+			$this->set_views(array(
+				'db_field' => 'emailDeleted',
+				'types' => array(
+					'0' => __("All", 'lang_email'),
+					'1' => __("Trash", 'lang_email')
+				),
+			));
 
-						if($intUserID == get_current_user_id())
+			$arr_columns = array(
+				//'cb' => '<input type="checkbox">',
+				'emailAddress' => __("Address", 'lang_email'),
+				'emailName' => __("Name", 'lang_email'),
+				'rights' => shorten_text(array('string' => __("Rights", 'lang_email'), 'limit' => 3)),
+				//'received' => __("Received", 'lang_email'),
+				//'sent' => __("Sent", 'lang_email'),
+				'emailServer' => __("Incoming", 'lang_email'),
+				'emailSmtpServer' => __("Outgoing", 'lang_email'),
+			);
+
+			$this->set_columns($arr_columns);
+
+			$this->set_sortable_columns(array(
+				'emailAddress',
+				'emailName',
+				'emailServer',
+				'emailSmtpServer',
+			));
+		}
+
+		function column_default($item, $column_name)
+		{
+			global $wpdb, $obj_email;
+
+			$out = "";
+
+			$intEmailID = $item['emailID'];
+
+			switch($column_name)
+			{
+				case 'emailAddress':
+					$strEmailAddress = $item['emailAddress'];
+					$intUserID = $item['userID'];
+					$intEmailDeleted = $item['emailDeleted'];
+
+					$email_url = admin_url("admin.php?page=mf_email/create/index.php&intEmailID=".$intEmailID);
+
+					$out .= "<a href='".$email_url."'>"
+						.$strEmailAddress
+					."</a>
+					<div class='row-actions'>";
+
+						if($intEmailDeleted == 0)
 						{
-							$out .= " | <a href='".wp_nonce_url(admin_url("admin.php?page=mf_email/accounts/index.php&btnEmailDelete&intEmailID=".$intEmailID), 'email_delete_'.$intEmailID, '_wpnonce_email_delete')."' rel='confirm'>".__("Delete", 'lang_email')."</a>";
+							$out .= "<a href='".$email_url."'>".__("Edit", 'lang_email')."</a>";
+
+							if($intUserID == get_current_user_id())
+							{
+								$out .= " | <a href='".wp_nonce_url(admin_url("admin.php?page=mf_email/accounts/index.php&btnEmailDelete&intEmailID=".$intEmailID), 'email_delete_'.$intEmailID, '_wpnonce_email_delete')."' rel='confirm'>".__("Delete", 'lang_email')."</a>";
+							}
+						}
+
+						else
+						{
+							$out .= "<a href='".$email_url."'>".__("Recover", 'lang_email')."</a>";
+						}
+
+					$out .= "</div>";
+				break;
+
+				case 'emailName':
+					$out .= $item['emailName'];
+
+					$actions = array();
+
+					$arr_message_amount = $obj_email->get_message_amount($intEmailID);
+
+					if($arr_message_amount['received'] > 0)
+					{
+						$actions['received'] = __("Received", 'lang_email').": ".$arr_message_amount['received'];
+					}
+
+					if($arr_message_amount['sent'] > 0)
+					{
+						$actions['sent'] = __("Sent", 'lang_email').": ".$arr_message_amount['sent'];
+					}
+
+					$out .= $this->row_actions($actions);
+				break;
+
+				case 'rights':
+					$intEmailPublic = $item['emailPublic'];
+					$strEmailRoles = $item['emailRoles'];
+
+					$rights_icon = $rights_title = "";
+
+					if($intEmailPublic == 1)
+					{
+						$rights_icon = "fa fa-check green";
+						$rights_title = __("Public", 'lang_email');
+					}
+
+					else if($strEmailRoles != '')
+					{
+						$arr_roles = get_roles_for_select(array('use_capability' => false));
+
+						$arrEmailRoles = explode(",", $strEmailRoles);
+
+						foreach($arrEmailRoles as $role)
+						{
+							$rights_title .= ($rights_title != '' ? ", " : "").$arr_roles[$role];
+						}
+
+						$rights_icon = "fa fa-users";
+
+						if(count($arrEmailRoles) == 1)
+						{
+							$rights_icon .= " grey";
 						}
 					}
 
 					else
 					{
-						$out .= "<a href='".$email_url."'>".__("Recover", 'lang_email')."</a>";
-					}
+						$resultUsers = $wpdb->get_results($wpdb->prepare("SELECT userID FROM ".$wpdb->base_prefix."email_users WHERE emailID = '%d'", $intEmailID));
 
-				$out .= "</div>";
-			break;
-
-			case 'emailName':
-				$out .= $item['emailName'];
-
-				$actions = array();
-
-				$arr_message_amount = $obj_email->get_message_amount($intEmailID);
-
-				if($arr_message_amount['received'] > 0)
-				{
-					$actions['received'] = __("Received", 'lang_email').": ".$arr_message_amount['received'];
-				}
-
-				if($arr_message_amount['sent'] > 0)
-				{
-					$actions['sent'] = __("Sent", 'lang_email').": ".$arr_message_amount['sent'];
-				}
-
-				$out .= $this->row_actions($actions);
-			break;
-
-			case 'rights':
-				$intEmailPublic = $item['emailPublic'];
-				$strEmailRoles = $item['emailRoles'];
-
-				$rights_icon = $rights_title = "";
-
-				if($intEmailPublic == 1)
-				{
-					$rights_icon = "fa fa-check green";
-					$rights_title = __("Public", 'lang_email');
-				}
-
-				else if($strEmailRoles != '')
-				{
-					$arr_roles = get_roles_for_select(array('use_capability' => false));
-
-					$arrEmailRoles = explode(",", $strEmailRoles);
-
-					foreach($arrEmailRoles as $role)
-					{
-						$rights_title .= ($rights_title != '' ? ", " : "").$arr_roles[$role];
-					}
-
-					$rights_icon = "fa fa-users";
-
-					if(count($arrEmailRoles) == 1)
-					{
-						$rights_icon .= " grey";
-					}
-				}
-
-				else
-				{
-					$resultUsers = $wpdb->get_results($wpdb->prepare("SELECT userID FROM ".$wpdb->base_prefix."email_users WHERE emailID = '%d'", $intEmailID));
-
-					if($wpdb->num_rows > 0)
-					{
-						foreach($resultUsers as $r)
+						if($wpdb->num_rows > 0)
 						{
-							$rights_title .= ($rights_title != '' ? ", " : "").get_user_info(array('id' => $r->userID));
-						}
-
-						$rights_icon = "fa fa-user";
-
-						if(count($resultUsers) == 1)
-						{
-							$rights_icon .= " grey";
-						}
-					}
-				}
-
-				if($rights_icon != '')
-				{
-					$out .= "<i class='".$rights_icon." fa-lg' title='".$rights_title."'></i>";
-				}
-			break;
-
-			/*case 'received':
-				$arr_message_amount = $obj_email->get_message_amount($intEmailID);
-
-				$out .= $arr_message_amount['received'];
-			break;
-
-			case 'sent':
-				$arr_message_amount = $obj_email->get_message_amount($intEmailID);
-
-				$out .= $arr_message_amount['sent'];
-			break;*/
-
-			case 'emailServer':
-				$strEmailServer = $item['emailServer'];
-
-				if($strEmailServer != '')
-				{
-					$intEmailVerified = $item['emailVerified'];
-					$dteEmailChecked = $item['emailChecked'];
-
-					$row_info = $row_actions = "";
-
-					switch($intEmailVerified)
-					{
-						default:
-						case 0:
-							$row_info .= "<i class='fa fa-question fa-lg' title='".__("Needs to be Verified", 'lang_email')."'></i>";
-
-							$row_actions .= ($row_actions != '' ? " | " : "")."<a href='".wp_nonce_url(admin_url("admin.php?page=mf_email/accounts/index.php&btnEmailVerify&intEmailID=".$intEmailID), 'email_verify_'.$intEmailID, '_wpnonce_email_verify')."'>".__("Verify", 'lang_email')."</a>";
-						break;
-
-						case 1:
-							if($dteEmailChecked > DEFAULT_DATE)
+							foreach($resultUsers as $r)
 							{
-								if($dteEmailChecked < date("Y-m-d H:i:s", strtotime("-1 day")))
-								{
-									$row_info .= "<i class='fa fa-ban fa-lg red' title='".sprintf(__("Last Checked %s", 'lang_email'), format_date($dteEmailChecked))."'></i>";
-								}
+								$rights_title .= ($rights_title != '' ? ", " : "").get_user_info(array('id' => $r->userID));
+							}
 
-								else
-								{
-									$dteEmailReceived = $wpdb->get_var($wpdb->prepare("SELECT messageReceived FROM ".$wpdb->base_prefix."email_folder INNER JOIN ".$wpdb->base_prefix."email_message USING (folderID) WHERE emailID = '%d' ORDER BY messageReceived DESC LIMIT 0, 1", $intEmailID));
+							$rights_icon = "fa fa-user";
 
-									if($dteEmailReceived > DEFAULT_DATE)
+							if(count($resultUsers) == 1)
+							{
+								$rights_icon .= " grey";
+							}
+						}
+					}
+
+					if($rights_icon != '')
+					{
+						$out .= "<i class='".$rights_icon." fa-lg' title='".$rights_title."'></i>";
+					}
+				break;
+
+				/*case 'received':
+					$arr_message_amount = $obj_email->get_message_amount($intEmailID);
+
+					$out .= $arr_message_amount['received'];
+				break;
+
+				case 'sent':
+					$arr_message_amount = $obj_email->get_message_amount($intEmailID);
+
+					$out .= $arr_message_amount['sent'];
+				break;*/
+
+				case 'emailServer':
+					$strEmailServer = $item['emailServer'];
+
+					if($strEmailServer != '')
+					{
+						$intEmailVerified = $item['emailVerified'];
+						$dteEmailChecked = $item['emailChecked'];
+
+						$row_info = $row_actions = "";
+
+						switch($intEmailVerified)
+						{
+							default:
+							case 0:
+								$row_info .= "<i class='fa fa-question fa-lg' title='".__("Needs to be Verified", 'lang_email')."'></i>";
+
+								$row_actions .= ($row_actions != '' ? " | " : "")."<a href='".wp_nonce_url(admin_url("admin.php?page=mf_email/accounts/index.php&btnEmailVerify&intEmailID=".$intEmailID), 'email_verify_'.$intEmailID, '_wpnonce_email_verify')."'>".__("Verify", 'lang_email')."</a>";
+							break;
+
+							case 1:
+								if($dteEmailChecked > DEFAULT_DATE)
+								{
+									if($dteEmailChecked < date("Y-m-d H:i:s", strtotime("-1 day")))
 									{
-										if($dteEmailReceived < date("Y-m-d H:i:s", strtotime("-3 day")))
-										{
-											$row_info .= "<i class='fa fa-exclamation-triangle fa-lg yellow' title='".sprintf(__("Last E-mail %s", 'lang_email'), format_date($dteEmailReceived))."'></i>";
-										}
-
-										else
-										{
-											$row_info .= "<i class='fa fa-check fa-lg green' title='".sprintf(__("Checked %s, Received %s", 'lang_email'), format_date($dteEmailChecked), format_date($dteEmailReceived))."'></i>";
-										}
+										$row_info .= "<i class='fa fa-ban fa-lg red' title='".sprintf(__("Last Checked %s", 'lang_email'), format_date($dteEmailChecked))."'></i>";
 									}
 
 									else
 									{
-										$row_info .= "<i class='fa fa-question-circle fa-lg' title='".__("No e-mails received so far", 'lang_email')."'></i>";
+										$dteEmailReceived = $wpdb->get_var($wpdb->prepare("SELECT messageReceived FROM ".$wpdb->base_prefix."email_folder INNER JOIN ".$wpdb->base_prefix."email_message USING (folderID) WHERE emailID = '%d' ORDER BY messageReceived DESC LIMIT 0, 1", $intEmailID));
+
+										if($dteEmailReceived > DEFAULT_DATE)
+										{
+											if($dteEmailReceived < date("Y-m-d H:i:s", strtotime("-3 day")))
+											{
+												$row_info .= "<i class='fa fa-exclamation-triangle fa-lg yellow' title='".sprintf(__("Last E-mail %s", 'lang_email'), format_date($dteEmailReceived))."'></i>";
+											}
+
+											else
+											{
+												$row_info .= "<i class='fa fa-check fa-lg green' title='".sprintf(__("Checked %s, Received %s", 'lang_email'), format_date($dteEmailChecked), format_date($dteEmailReceived))."'></i>";
+											}
+										}
+
+										else
+										{
+											$row_info .= "<i class='fa fa-question-circle fa-lg' title='".__("No e-mails received so far", 'lang_email')."'></i>";
+										}
 									}
-								}
-							}
-
-							else
-							{
-								$row_info .= "<i class='fa fa-spinner fa-spin fa-lg'></i>
-								<div class='row-actions'>".__("Incoming has not been checked yet", 'lang_email')."</div>";
-							}
-						break;
-
-						case -1:
-							$row_info .= "<i class='fa fa-times fa-lg red' title='".__("Verification Failed", 'lang_email')."'></i>";
-						break;
-					}
-
-					$row_info .= "&nbsp;".$strEmailServer.":".$item['emailPort'];
-					$row_actions .= ($row_actions != '' ? " | " : "").$item['emailUsername'];
-
-					$out .= "<span class='nowrap'>"
-						.$row_info
-					."</span>
-					<div class='row-actions'>"
-						.$row_actions
-					."</div>";
-				}
-			break;
-
-			case 'emailSmtpServer':
-				$strEmailSmtpServer = $item['emailSmtpServer'];
-				$strEmailOutgoingType = $item['emailOutgoingType'];
-
-				if($strEmailSmtpServer != '' || $strEmailOutgoingType != 'smtp')
-				{
-					$intEmailSmtpVerified = $item['emailSmtpVerified'];
-					$dteEmailSmtpChecked = $item['emailSmtpChecked'];
-
-					$row_info = $row_actions = "";
-
-					switch($intEmailSmtpVerified)
-					{
-						default:
-						case 0:
-						case 1:
-							if($dteEmailSmtpChecked > DEFAULT_DATE)
-							{
-								if($dteEmailSmtpChecked < date("Y-m-d H:i:s", strtotime("-7 day")))
-								{
-									$row_info .= "<i class='fa fa-exclamation-triangle fa-lg yellow' title='".sprintf(__("Last Checked %s", 'lang_email'), format_date($dteEmailSmtpChecked))."'></i>";
 								}
 
 								else
 								{
-									$row_info .= "<i class='fa fa-check fa-lg green' title='".sprintf(__("Checked %s", 'lang_email'), format_date($dteEmailSmtpChecked))."'></i>";
+									$row_info .= "<i class='fa fa-spinner fa-spin fa-lg'></i>
+									<div class='row-actions'>".__("Incoming has not been checked yet", 'lang_email')."</div>";
 								}
-							}
+							break;
 
-							else
-							{
-								$row_info .= "<i class='fa fa-question-circle fa-lg' title='".__("Outgoing has not been checked yet", 'lang_email')."'></i>";
-							}
-						break;
+							case -1:
+								$row_info .= "<i class='fa fa-times fa-lg red' title='".__("Verification Failed", 'lang_email')."'></i>";
+							break;
+						}
 
-						case -1:
-							$row_info .= "<i class='fa fa-times fa-lg red' title='".__("Connection Failed", 'lang_email')."'></i>";
-						break;
+						$row_info .= "&nbsp;".$strEmailServer.":".$item['emailPort'];
+						$row_actions .= ($row_actions != '' ? " | " : "").$item['emailUsername'];
+
+						$out .= "<span class='nowrap'>"
+							.$row_info
+						."</span>
+						<div class='row-actions'>"
+							.$row_actions
+						."</div>";
 					}
+				break;
 
-					switch($strEmailOutgoingType)
+				case 'emailSmtpServer':
+					$strEmailSmtpServer = $item['emailSmtpServer'];
+					$strEmailOutgoingType = $item['emailOutgoingType'];
+
+					if($strEmailSmtpServer != '' || $strEmailOutgoingType != 'smtp')
 					{
-						case 'smtp':
-							$row_info .= "&nbsp;".$strEmailSmtpServer.":".$item['emailSmtpPort'];
-						break;
+						$intEmailSmtpVerified = $item['emailSmtpVerified'];
+						$dteEmailSmtpChecked = $item['emailSmtpChecked'];
 
-						default:
-							$row_info_temp = apply_filters('get_email_outgoing_alternative', $strEmailOutgoingType);
+						$row_info = $row_actions = "";
 
-							if($row_info_temp != '')
-							{
-								$row_info .= "&nbsp;".$row_info_temp;
-							}
-						break;
+						switch($intEmailSmtpVerified)
+						{
+							default:
+							case 0:
+							case 1:
+								if($dteEmailSmtpChecked > DEFAULT_DATE)
+								{
+									if($dteEmailSmtpChecked < date("Y-m-d H:i:s", strtotime("-7 day")))
+									{
+										$row_info .= "<i class='fa fa-exclamation-triangle fa-lg yellow' title='".sprintf(__("Last Checked %s", 'lang_email'), format_date($dteEmailSmtpChecked))."'></i>";
+									}
+
+									else
+									{
+										$row_info .= "<i class='fa fa-check fa-lg green' title='".sprintf(__("Checked %s", 'lang_email'), format_date($dteEmailSmtpChecked))."'></i>";
+									}
+								}
+
+								else
+								{
+									$row_info .= "<i class='fa fa-question-circle fa-lg' title='".__("Outgoing has not been checked yet", 'lang_email')."'></i>";
+								}
+							break;
+
+							case -1:
+								$row_info .= "<i class='fa fa-times fa-lg red' title='".__("Connection Failed", 'lang_email')."'></i>";
+							break;
+						}
+
+						switch($strEmailOutgoingType)
+						{
+							case 'smtp':
+								$row_info .= "&nbsp;".$strEmailSmtpServer.":".$item['emailSmtpPort'];
+							break;
+
+							default:
+								$row_info_temp = apply_filters('get_email_outgoing_alternative', $strEmailOutgoingType);
+
+								if($row_info_temp != '')
+								{
+									$row_info .= "&nbsp;".$row_info_temp;
+								}
+							break;
+						}
+
+						$row_actions .= ($row_actions != '' ? " | " : "").$item['emailSmtpUsername'];
+
+						$out .= "<span class='nowrap'>"
+							.$row_info
+						."</span>
+						<div class='row-actions'>"
+							.$row_actions
+						."</div>";
 					}
+				break;
 
-					$row_actions .= ($row_actions != '' ? " | " : "").$item['emailSmtpUsername'];
+				default:
+					if(isset($item[$column_name]))
+					{
+						$out .= $item[$column_name];
+					}
+				break;
+			}
 
-					$out .= "<span class='nowrap'>"
-						.$row_info
-					."</span>
-					<div class='row-actions'>"
-						.$row_actions
-					."</div>";
-				}
-			break;
-
-			default:
-				if(isset($item[$column_name]))
-				{
-					$out .= $item[$column_name];
-				}
-			break;
+			return $out;
 		}
-
-		return $out;
 	}
 }
