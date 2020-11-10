@@ -1059,7 +1059,12 @@ class mf_email
 					$phpmailer->SMTPDebug = defined('SMTPDebug') ? SMTPDebug : false;
 
 					$phpmailer->Mailer = 'smtp';
-					$phpmailer->SMTPSecure = $smtp_ssl;
+
+					if($smtp_ssl != '')
+					{
+						$phpmailer->SMTPSecure = $smtp_ssl;
+					}
+
 					$phpmailer->Host = $smtp_host;
 
 					if($smtp_port > 0)
