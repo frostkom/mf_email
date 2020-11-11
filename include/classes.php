@@ -657,28 +657,24 @@ class mf_email
 
 		$arr_settings = array();
 		$arr_settings['setting_email'] = __("E-mail", 'lang_email');
+		$arr_settings['setting_smtp_server'] = "SMTP ".__("Server", 'lang_email');
+		$arr_settings['setting_smtp_port'] = "SMTP ".__("Port", 'lang_email');
+		$arr_settings['setting_smtp_ssl'] = "SMTP SSL";
+		$arr_settings['setting_smtp_username'] = "SMTP ".__("Username", 'lang_email');
+		$arr_settings['setting_smtp_password'] = "SMTP ".__("Password", 'lang_email');
 
 		$admin_email = get_bloginfo('admin_email');
 		$wpdb->get_results($wpdb->prepare("SELECT emailID FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s AND emailSmtpServer != ''", $admin_email));
 
-		if($wpdb->num_rows == 0)
-		{
-			$arr_settings['setting_smtp_server'] = "SMTP ".__("Server", 'lang_email');
-			$arr_settings['setting_smtp_port'] = "SMTP ".__("Port", 'lang_email');
-			$arr_settings['setting_smtp_ssl'] = "SMTP SSL";
-			$arr_settings['setting_smtp_username'] = "SMTP ".__("Username", 'lang_email');
-			$arr_settings['setting_smtp_password'] = "SMTP ".__("Password", 'lang_email');
-		}
-
-		else if($wpdb->num_rows > 0 || get_option('setting_smtp_server') != '')
+		if($wpdb->num_rows > 0 || get_option('setting_smtp_server') != '')
 		{
 			$arr_settings['setting_smtp_test'] = __("Test", 'lang_email')." SMTP";
 
-			delete_option('setting_smtp_server');
+			/*delete_option('setting_smtp_server');
 			delete_option('setting_smtp_port');
 			delete_option('setting_smtp_ssl');
 			delete_option('setting_smtp_username');
-			delete_option('setting_smtp_password');
+			delete_option('setting_smtp_password');*/
 		}
 
 		show_settings_fields(array('area' => $options_area, 'object' => $this, 'settings' => $arr_settings));
@@ -1060,7 +1056,12 @@ class mf_email
 
 					$phpmailer->Mailer = 'smtp';
 
-					if($smtp_ssl != '')
+					if($smtp_ssl == '')
+					{
+						$phpmailer->SMTPAutoTLS = false;
+					}
+
+					else
 					{
 						$phpmailer->SMTPSecure = $smtp_ssl;
 					}
