@@ -827,14 +827,14 @@ class mf_email
 			$menu_title = __("Inbox", 'lang_email');
 			add_submenu_page($menu_start, $menu_title, $menu_title, $menu_capability, $menu_start);
 
-			$menu_title = __("Send New", 'lang_email');
+			$menu_title = " - ".__("Send New", 'lang_email');
 			add_submenu_page($menu_start, $menu_title, $menu_title, $menu_capability, $menu_root."send/index.php");
 
 			$menu_title = __("Accounts", 'lang_email');
 			add_submenu_page($menu_start, $menu_title, $menu_title, $menu_capability, $menu_root."accounts/index.php");
 
-			$menu_title = __("Add New Account", 'lang_email');
-			add_submenu_page($menu_start, $menu_title, $menu_title, $menu_capability, $menu_root."create/index.php");
+			$menu_title = __("Add New", 'lang_email');
+			add_submenu_page($menu_root, $menu_title, $menu_title, $menu_capability, $menu_root."create/index.php");
 
 			$menu_title = __("Add New Folder", 'lang_email');
 			add_submenu_page($menu_root, $menu_title, $menu_title, $menu_capability, $menu_root."folder/index.php");
@@ -850,7 +850,7 @@ class mf_email
 			$menu_title = __("Accounts", 'lang_email');
 			add_submenu_page($menu_start, $menu_title, $menu_title, $menu_capability, $menu_start);
 
-			$menu_title = __("Add New Account", 'lang_email');
+			$menu_title = " - ".__("Add New", 'lang_email');
 			add_submenu_page($menu_start, $menu_title, $menu_title, $menu_capability, $menu_root."create/index.php");
 		}
 	}

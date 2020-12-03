@@ -67,7 +67,7 @@ echo "<div class='wrap'>
 
 				if(folderTotal == 0)
 				{ %>
-					 | <a href='#email/folders/<%= folderID %>/delete'>".__("Delete", 'lang_email')."</a>
+					 | <a href='#email/folders/<%= folderID %>/delete' rel='confirm'>".__("Delete", 'lang_email')."</a>
 				<% } %>
 			</div>
 		</td>
@@ -123,7 +123,7 @@ echo "<div class='wrap'>
 
 				else
 				{ %>
-					<a href='#email/restore/<%= messageID %>' rel='confirm'>".__("Restore", 'lang_email')."</a>
+					<a href='#email/restore/<%= messageID %>' rel='confirm' title='".sprintf(__("Removed %s"), "<%= messageDeletedDate %>")."'>".__("Restore", 'lang_email')."</a>
 				<% } %>
 			</div>
 		</td>
