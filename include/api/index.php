@@ -210,7 +210,7 @@ switch($arr_input[0])
 					$strEmailAddress = $r->emailAddress;
 
 					$email_outgoing = ($strMessageFrom == '');
-					$is_draggable = $intFolderType == 0 || $intFolderType == 6;
+					$is_draggable = ($intFolderType == 0 || $intFolderType == 6);
 
 					$class = "";
 					if($intMessageRead == 0){	$class .= ($class != '' ? " " : "")."strong";}
@@ -252,14 +252,14 @@ switch($arr_input[0])
 				if($rows > 0)
 				{
 					$r = $result[0];
-					$strMailMessageID = $r->messageTextID;
-					$intMailRead = $r->messageRead;
-					$strMailFrom = $r->messageFrom;
-					$strMailFromName = $r->messageFromName != '' ? $r->messageFromName : $strMailFrom;
-					$strMailTo = $r->messageTo;
-					$strMailCc = $r->messageCc;
-					$strPop3Address = $r->emailAddress;
-					$strMailName = $r->messageName != '' ? $r->messageName : "(".__("No subject", 'lang_email').")";
+					$strMessageTextID = $r->messageTextID;
+					$intMessageRead = $r->messageRead;
+					$strMessageFrom = $r->messageFrom;
+					$strMessageFromName = $r->messageFromName != '' ? $r->messageFromName : $strMessageFrom;
+					$strMessageTo = $r->messageTo;
+					$strMessageCc = $r->messageCc;
+					$strEmailAddress = $r->emailAddress;
+					$strMessageName = $r->messageName != '' ? $r->messageName : "(".__("No subject", 'lang_email').")";
 					$strMessageText = $r->messageText;
 					$strMessageText2 = $r->messageText2;
 					$strMailCreated = $r->messageCreated;
@@ -270,18 +270,18 @@ switch($arr_input[0])
 					$strMessageText2 = $obj_email->filter_text($strMessageText2);
 
 					$email_outgoing = ($strMessageFrom == '');
-					//$email_outgoing = $intUserID2 == '' || $strMailFrom != '' ? false : true;
+					//$email_outgoing = ($intUserID2 > 0 && $strMessageFrom == '');
 
 					if($email_outgoing)
 					{
-						$strFrom = $strPop3Address;
-						$strTo = $strMailTo;
+						$strFrom = $strEmailAddress;
+						$strTo = $strMessageTo;
 					}
 
 					else
 					{
-						$strFrom = $strMailFromName." <".$strMailFrom.">";
-						$strTo = $strPop3Address.($strMailTo != $strPop3Address ? " (".$strMailTo.")" : "");
+						$strFrom = $strMessageFromName." <".$strMessageFrom.">";
+						$strTo = $strEmailAddress.($strMessageTo != $strEmailAddress ? " (".$strMessageTo.")" : "");
 					}
 
 					$arr_attachments = array();
@@ -310,16 +310,16 @@ switch($arr_input[0])
 
 					$json_output['email'] = array(
 						'messageID' => $intMessageID,
-						'messageName' => $strMailName,
+						'messageName' => $strMessageName,
 						'messageFrom' => $strFrom,
 						'messageTo' => $strTo,
-						'messageCc' => $strMailCc,
+						'messageCc' => $strMessageCc,
 						'messageAttachment' => $arr_attachments,
 						'messageText' => nl2br($strMessageText),
 						'messageText2' => $strMessageText2,
 					);
 
-					if($intMailRead == 0)
+					if($intMessageRead == 0)
 					{
 						$obj_email->set_mail_info(array('message_id' => $intMessageID, 'mail_read' => 1), $json_output);
 					}
@@ -428,9 +428,7 @@ switch($arr_input[0])
 
 				foreach($result as $r)
 				{
-					$strMessageTo = $r->messageTo;
-
-					$json_output[] = $strMessageTo;
+					$json_output[] = $r->messageTo;
 				}
 
 				$json_output['amount'] = $wpdb->num_rows;
