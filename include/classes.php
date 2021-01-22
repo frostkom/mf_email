@@ -656,7 +656,13 @@ class mf_email
 		add_settings_section($options_area, "", array($this, $options_area."_callback"), BASE_OPTIONS_PAGE);
 
 		$arr_settings = array();
-		$arr_settings['setting_email'] = __("E-mail", 'lang_email');
+
+		if(function_exists('is_plugin_active') && is_plugin_active("mf_log/index.php") && get_option('setting_log_activate') == 'yes')
+		{
+			$arr_settings['setting_email_log'] = __("Log Outgoing Messages", 'lang_email');
+		}
+
+		$arr_settings['setting_email_info'] = __("E-mail", 'lang_email');
 		$arr_settings['setting_smtp_server'] = "SMTP ".__("Server", 'lang_email');
 		$arr_settings['setting_smtp_port'] = "SMTP ".__("Port", 'lang_email');
 		$arr_settings['setting_smtp_ssl'] = "SMTP SSL";
@@ -687,7 +693,27 @@ class mf_email
 		echo settings_header($setting_key, __("E-mail", 'lang_email'));
 	}
 
-	function setting_email_callback()
+	function setting_email_log_callback()
+	{
+		$setting_key = get_setting_key(__FUNCTION__);
+		$option = get_option($setting_key);
+
+		$arr_data = array(
+			'core' => __("Core", 'lang_email'),
+			'plugin' => __("Plugin", 'lang_email'),
+		);
+
+		if(function_exists('is_plugin_active') && is_plugin_active("mf_group/index.php"))
+		{
+			$arr_data['group'] = __("Group", 'lang_email');
+		}
+
+		$description = sprintf(__("The log can be viewed by going to %sTools -> Log -> Notice%s", 'lang_email'), "<a href='".admin_url("admin.php?page=mf_log/list/index.php&post_status=notification")."'>", "</a>");
+
+		echo show_select(array('data' => $arr_data, 'name' => $setting_key."[]", 'value' => $option, 'description' => $description));
+	}
+
+	function setting_email_info_callback()
 	{
 		global $wpdb;
 
@@ -1010,8 +1036,27 @@ class mf_email
 
 	function phpmailer_init($phpmailer)
 	{
-		global $wpdb;
+		global $wpdb, $obj_base;
 
+		/* Log Messages */
+		########################################
+		$setting_email_log = get_option('setting_email_log');
+
+		if(is_array($setting_email_log) && in_array('core', $setting_email_log))
+		{
+			if(!isset($obj_base))
+			{
+				$obj_base = new mf_base();
+			}
+
+			$obj_base->filter_phpmailer_data();
+
+			do_log(__("Message Sent", 'lang_email')." (core): ".var_export($obj_base->phpmailer_temp, true), 'notification');
+		}
+		########################################
+
+		/* SMTP Settings */
+		########################################
 		$outgoing_type = 'smtp';
 		$smtp_ssl = $smtp_host = $smtp_port = $smtp_hostname = $smtp_user = $smtp_pass = "";
 
@@ -1093,6 +1138,7 @@ class mf_email
 				do_action('email_outgoing_process', $outgoing_type, $smtp_user, $smtp_pass);
 			break;
 		}
+		########################################
 	}
 
 	function sent_email($from)

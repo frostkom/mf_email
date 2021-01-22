@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: 
-Version: 6.2.10
+Version: 6.3.0
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://frostkom.se
@@ -192,12 +192,16 @@ function activate_email()
 	update_columns($arr_update_column);
 	add_columns($arr_add_column);
 	add_index($arr_add_index);
+
+	mf_uninstall_plugin(array(
+		'options' => array('setting_email', 'setting_email_info'),
+	));
 }
 
 function uninstall_email()
 {
 	mf_uninstall_plugin(array(
-		'options' => array('setting_email', 'setting_smtp_test', 'setting_smtp_server', 'setting_smtp_port', 'setting_smtp_ssl', 'setting_smtp_username', 'setting_smtp_password'),
+		'options' => array('setting_email', 'setting_email_info', 'setting_smtp_test', 'setting_smtp_server', 'setting_smtp_port', 'setting_smtp_ssl', 'setting_smtp_username', 'setting_smtp_password'),
 		'tables' => array('email', 'email_users', 'email_folders', 'email_message', 'email_message_attachment', 'email_spam'),
 	));
 }
