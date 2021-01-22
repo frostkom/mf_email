@@ -711,6 +711,8 @@ class mf_email
 		$description = sprintf(__("The log can be viewed by going to %sTools -> Log -> Notice%s", 'lang_email'), "<a href='".admin_url("admin.php?page=mf_log/list/index.php&post_status=notification")."'>", "</a>");
 
 		echo show_select(array('data' => $arr_data, 'name' => $setting_key."[]", 'value' => $option, 'description' => $description));
+
+		setting_time_limit(array('key' => $setting_key, 'value' => $option, 'time_limit' => 24));
 	}
 
 	function setting_email_info_callback()
