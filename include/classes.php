@@ -2170,7 +2170,7 @@ class mf_email
 	{
 		global $wpdb;
 
-		$intEmailID = $wpdb->get_var($wpdb->prepare("SELECT emailID FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s", $this->address));
+		$intEmailID = $wpdb->get_var($wpdb->prepare("SELECT emailID FROM ".$wpdb->base_prefix."email WHERE blogID = '%d' AND emailAddress = %s", $wpdb->blogid, $this->address));
 
 		return $intEmailID;
 	}
@@ -2416,8 +2416,9 @@ if(class_exists('mf_list_table'))
 
 					$out .= "<a href='".$email_url."'>"
 						.$strEmailAddress
-					."</a>
-					<div class='row-actions'>";
+					."</a>";
+
+					/*$out .= "<div class='row-actions'>";
 
 						if($intEmailDeleted == 0)
 						{
@@ -2434,7 +2435,28 @@ if(class_exists('mf_list_table'))
 							$out .= "<a href='".$email_url."'>".__("Recover", 'lang_email')."</a>";
 						}
 
-					$out .= "</div>";
+					$out .= "</div>";*/
+
+					$actions = array();
+
+					if($intEmailDeleted == 0)
+					{
+						$actions['edit'] = "<a href='".$email_url."'>".__("Edit", 'lang_email')."</a>";
+
+						if($intUserID == get_current_user_id())
+						{
+							$actions['delete'] = "<a href='".wp_nonce_url(admin_url("admin.php?page=mf_email/accounts/index.php&btnEmailDelete&intEmailID=".$intEmailID), 'email_delete_'.$intEmailID, '_wpnonce_email_delete')."' rel='confirm'>".__("Delete", 'lang_email')."</a>";
+						}
+
+						$actions['send'] = "<a href='".admin_url("admin.php?page=mf_email/send/index.php&intEmailID=".$intEmailID)."'><i class='fa fa-paper-plane fa-lg'></i></a>";
+					}
+
+					else
+					{
+						$out .= "<a href='".$email_url."'>".__("Recover", 'lang_email')."</a>";
+					}
+
+					$out .= $this->row_actions($actions);
 				break;
 
 				case 'emailName':
@@ -2579,8 +2601,9 @@ if(class_exists('mf_list_table'))
 
 								else
 								{
-									$row_info .= "<i class='fa fa-spinner fa-spin fa-lg'></i>
-									<div class='row-actions'>".__("Incoming has not been checked yet", 'lang_email')."</div>";
+									$row_info .= "<i class='fa fa-spinner fa-spin fa-lg'></i>";
+
+									$row_actions .= ($row_actions != '' ? " | " : "").__("Incoming has not been checked yet", 'lang_email');
 								}
 							break;
 
@@ -2590,7 +2613,11 @@ if(class_exists('mf_list_table'))
 						}
 
 						$row_info .= "&nbsp;".$strEmailServer.":".$item['emailPort'];
-						$row_actions .= ($row_actions != '' ? " | " : "").$item['emailUsername'];
+
+						if($item['emailUsername'] != '')
+						{
+							$row_actions .= ($row_actions != '' ? " | " : "").$item['emailUsername'];
+						}
 
 						$out .= "<span class='nowrap'>"
 							.$row_info
@@ -2657,7 +2684,10 @@ if(class_exists('mf_list_table'))
 							break;
 						}
 
-						$row_actions .= ($row_actions != '' ? " | " : "").$item['emailSmtpUsername'];
+						if($item['emailSmtpUsername'] != '')
+						{
+							$row_actions .= ($row_actions != '' ? " | " : "").$item['emailSmtpUsername'];
+						}
 
 						$out .= "<span class='nowrap'>"
 							.$row_info
