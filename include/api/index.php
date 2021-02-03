@@ -19,7 +19,12 @@ $arr_input = explode("/", trim($strAjaxInput, "/"));
 switch($arr_input[0])
 {
 	case 'email':
-		$strFolderName = $arr_input[2];
+		$strFolderName = (isset($arr_input[2]) ? $arr_input[2] : "");
+
+		if(!isset($arr_input[2]))
+		{
+			do_log("API - email: No folder name (".$strAjaxInput.")");
+		}
 
 		$query_where = " AND emailID IN ('".implode("','", $obj_email->get_email_accounts_permission())."')";
 

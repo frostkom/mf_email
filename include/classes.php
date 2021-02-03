@@ -21,12 +21,11 @@ class mf_email
 
 	function get_ssl_for_select()
 	{
-		$arr_data = array();
-		$arr_data[''] = __("No", 'lang_email');
-		$arr_data['ssl'] = "SSL";
-		$arr_data['tls'] = "TLS";
-
-		return $arr_data;
+		return array(
+			'' => __("No", 'lang_email'),
+			'ssl' => "SSL",
+			'tls' => "TLS",
+		);
 	}
 
 	function get_email_accounts_permission()
@@ -346,7 +345,6 @@ class mf_email
 
 					switch_to_blog($intBlogID);
 
-					//$obj_email = new mf_email($intEmailID);
 					$this->id = $intEmailID;
 					$obj_encryption = new mf_email_encryption("email");
 
@@ -362,7 +360,6 @@ class mf_email
 
 							$intMessageStatus = isset($header->flags['SEEN']) && $header->flags['SEEN'] == true ? 1 : 0;
 							$strMessageTextID = $header->messageID;
-							//$strMessageReferences = $header->references;
 							$strMessageFrom = $logical->sender['mailto'];
 							$strMessageFromName = $logical->sender['name'];
 							$strMessageTo = $logical->receiver['mailto'];
@@ -594,17 +591,6 @@ class mf_email
 					),
 				));
 
-				/*delete_base(array(
-					'table_prefix' => $wpdb->base_prefix,
-					'table' => "email_message",
-					'field_prefix' => "message",
-					'child_tables' => array(
-						'email_message_attachment' => array(
-							'action' => "delete",
-						),
-					),
-				));*/
-
 				$empty_trash_days = defined('EMPTY_TRASH_DAYS') ? EMPTY_TRASH_DAYS : 30;
 
 				$result = $wpdb->get_results("SELECT messageID FROM ".$wpdb->base_prefix."email_message WHERE messageDeleted = '1' AND messageDeletedDate < DATE_SUB(NOW(), INTERVAL ".$empty_trash_days." DAY)");
@@ -613,9 +599,6 @@ class mf_email
 				{
 					$intMessageID = $r->messageID;
 
-					//do_log("The message (".$intMessageID.") was permanently removed because it was placed in the trash ".$empty_trash_days." days ago");
-
-					//$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->base_prefix."email_message_attachment WHERE messageID = '%d'", $intMessageID));
 					$this->remove_attachment(array('message_id' => $intMessageID));
 					$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->base_prefix."email_message WHERE messageID = '%d'", $intMessageID));
 				}
@@ -675,12 +658,6 @@ class mf_email
 		if($wpdb->num_rows > 0 || get_option('setting_smtp_server') != '')
 		{
 			$arr_settings['setting_smtp_test'] = __("Test", 'lang_email')." SMTP";
-
-			/*delete_option('setting_smtp_server');
-			delete_option('setting_smtp_port');
-			delete_option('setting_smtp_ssl');
-			delete_option('setting_smtp_username');
-			delete_option('setting_smtp_password');*/
 		}
 
 		show_settings_fields(array('area' => $options_area, 'object' => $this, 'settings' => $arr_settings));
@@ -774,9 +751,7 @@ class mf_email
 	function setting_smtp_test_callback()
 	{
 		echo show_textfield(array('name' => 'smtp_to', 'value' => '', 'placeholder' => __("E-mail to send test message to", 'lang_email'), 'description' => sprintf(__("Try with your e-mail address or create a temporary at %sMail Tester%s to check your spammyness", 'lang_email'), "<a href='//mail-tester.com'>", "</a>")))
-		//."<div>"
-			.show_button(array('type' => 'button', 'name' => 'btnSmtpTest', 'text' => __("Send", 'lang_email'), 'class' => 'button-secondary'))
-		//."</div>"
+		.show_button(array('type' => 'button', 'name' => 'btnSmtpTest', 'text' => __("Send", 'lang_email'), 'class' => 'button-secondary'))
 		."<div id='smtp_debug'></div>";
 	}
 
@@ -957,14 +932,8 @@ class mf_email
 
 			foreach($result as $r)
 			{
-				//do_log("The file ".$r->fileID." (".get_post_title($r->fileID).") was trashed because the message that it was attached to was removed");
-
-				//wp_trash_post($r->fileID);
 				$this->remove_attachment(array('file_id' => $r->fileID));
 			}
-
-			//Because it is trashed above, remove_attachment will be run with file_id set
-			//$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->base_prefix."email_message_attachment WHERE messageID = '%d'", $data['message_id']));
 		}
 	}
 
@@ -1163,8 +1132,6 @@ class mf_email
 
 		if($type != '' && isset($this->emails_left_to_send[$type][$email]))
 		{
-			//do_log("Email - ".$email." - Got from this: ".$this->emails_left_to_send[$type][$email]);
-
 			$amount_temp = $this->emails_left_to_send[$type][$email];
 		}
 
@@ -1205,8 +1172,6 @@ class mf_email
 			if($type != '')
 			{
 				$this->emails_left_to_send[$type][$email] = $amount_temp;
-
-				//do_log("Email - ".$email." - Got from DB: ".$this->emails_left_to_send[$type][$email]." (".(isset($emails_per_hour) ? $emails_per_hour : '').", ".$wpdb->last_query." -> ".$wpdb->num_rows.")");
 			}
 		}
 
@@ -2044,7 +2009,6 @@ class mf_email
 
 		if(count($arr_data) <= 1 && $allow_fallback == true)
 		{
-			//$current_user = wp_get_current_user();
 			$user_data = get_userdata(get_current_user_id());
 
 			$user_name = $user_data->display_name;
@@ -2212,7 +2176,7 @@ class mf_email
 				do_log("The encrypted password was longer than the max length in DB (".strlen($this->smtp_password_encrypted).")");
 			}
 
-			$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailSmtpPassword = %s WHERE emailID = '%d'", $this->smtp_password_encrypted, $this->id)); // AND userID = '%d', get_current_user_id()
+			$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailSmtpPassword = %s WHERE emailID = '%d'", $this->smtp_password_encrypted, $this->id));
 
 			$rows_affected += $wpdb->rows_affected;
 		}
@@ -2417,25 +2381,6 @@ if(class_exists('mf_list_table'))
 					$out .= "<a href='".$email_url."'>"
 						.$strEmailAddress
 					."</a>";
-
-					/*$out .= "<div class='row-actions'>";
-
-						if($intEmailDeleted == 0)
-						{
-							$out .= "<a href='".$email_url."'>".__("Edit", 'lang_email')."</a>";
-
-							if($intUserID == get_current_user_id())
-							{
-								$out .= " | <a href='".wp_nonce_url(admin_url("admin.php?page=mf_email/accounts/index.php&btnEmailDelete&intEmailID=".$intEmailID), 'email_delete_'.$intEmailID, '_wpnonce_email_delete')."' rel='confirm'>".__("Delete", 'lang_email')."</a>";
-							}
-						}
-
-						else
-						{
-							$out .= "<a href='".$email_url."'>".__("Recover", 'lang_email')."</a>";
-						}
-
-					$out .= "</div>";*/
 
 					$actions = array();
 
