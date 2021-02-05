@@ -645,12 +645,17 @@ class mf_email
 			$arr_settings['setting_email_log'] = __("Log Outgoing Messages", 'lang_email');
 		}
 
-		$arr_settings['setting_email_info'] = __("E-mail", 'lang_email');
+		$arr_settings['setting_email_preferred_content_types'] = __("Preferred Content Types", 'lang_email');
+		//$arr_settings['setting_email_info'] = __("E-mail", 'lang_email');
 		$arr_settings['setting_smtp_server'] = "SMTP ".__("Server", 'lang_email');
-		$arr_settings['setting_smtp_port'] = "SMTP ".__("Port", 'lang_email');
-		$arr_settings['setting_smtp_ssl'] = "SMTP SSL";
-		$arr_settings['setting_smtp_username'] = "SMTP ".__("Username", 'lang_email');
-		$arr_settings['setting_smtp_password'] = "SMTP ".__("Password", 'lang_email');
+
+		if(get_option('setting_smtp_server') != '')
+		{
+			$arr_settings['setting_smtp_port'] = "SMTP ".__("Port", 'lang_email');
+			$arr_settings['setting_smtp_ssl'] = "SMTP SSL";
+			$arr_settings['setting_smtp_username'] = "SMTP ".__("Username", 'lang_email');
+			$arr_settings['setting_smtp_password'] = "SMTP ".__("Password", 'lang_email');
+		}
 
 		$admin_email = get_bloginfo('admin_email');
 		$wpdb->get_results($wpdb->prepare("SELECT emailID FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s AND emailSmtpServer != ''", $admin_email));
@@ -692,6 +697,19 @@ class mf_email
 		setting_time_limit(array('key' => $setting_key, 'value' => $option, 'time_limit' => 24));
 	}
 
+	function setting_email_preferred_content_types_callback()
+	{
+		$setting_key = get_setting_key(__FUNCTION__);
+		$option = get_option($setting_key);
+
+		$arr_data = array(
+			'plain' => __("Plain Text", 'lang_email'),
+			'html' => __("HTML", 'lang_email'),
+		);
+
+		echo show_select(array('data' => $arr_data, 'name' => $setting_key."[]", 'value' => $option));
+	}
+
 	function setting_email_info_callback()
 	{
 		global $wpdb;
@@ -714,6 +732,8 @@ class mf_email
 		$option = get_option($setting_key);
 
 		echo show_textfield(array('name' => $setting_key, 'value' => $option));
+
+		$this->setting_email_info_callback();
 	}
 
 	function setting_smtp_port_callback()

@@ -19,12 +19,12 @@ $arr_input = explode("/", trim($strAjaxInput, "/"));
 switch($arr_input[0])
 {
 	case 'email':
-		$strFolderName = (isset($arr_input[2]) ? $arr_input[2] : "");
+		//$strFolderName = (isset($arr_input[2]) ? $arr_input[2] : "");
 
-		if(!isset($arr_input[2]))
+		/*if(!isset($arr_input[2]))
 		{
 			do_log("API - email: No folder name (".$strAjaxInput.")");
-		}
+		}*/
 
 		$query_where = " AND emailID IN ('".implode("','", $obj_email->get_email_accounts_permission())."')";
 
@@ -36,7 +36,8 @@ switch($arr_input[0])
 			switch($strFolderAction)
 			{
 				case 'delete':
-					$intFolderID = $strFolderName;
+					//$intFolderID = $strFolderName;
+					$intFolderID = (isset($arr_input[2]) ? $arr_input[2] : "");
 
 					$intTotal = $wpdb->get_var($wpdb->prepare("SELECT COUNT(messageID) FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) WHERE folderID = '%d'".$query_where, $intFolderID));
 
@@ -46,8 +47,6 @@ switch($arr_input[0])
 
 						if($wpdb->rows_affected > 0)
 						{
-							//$intFolderID = $wpdb->get_var($wpdb->prepare("SELECT folderID FROM ".$wpdb->base_prefix."email_folder WHERE folderName = %s".$query_where, $strFolderName));
-
 							$json_output['success'] = true;
 							$json_output['remove_id'] = "folder".$intFolderID;
 						}
@@ -69,6 +68,8 @@ switch($arr_input[0])
 				break;
 
 				default:
+					$strFolderName = (isset($arr_input[2]) ? $arr_input[2] : "");
+
 					$json_output['folders'] = array();
 
 					$result = $wpdb->get_results("SELECT folderID, folderType, folderName FROM ".$wpdb->base_prefix."email_folder WHERE (folderID2 = '0' OR folderID2 IS null) AND folderDeleted = '0'".$query_where." GROUP BY folderName ORDER BY folderType DESC, folderName ASC");
@@ -131,7 +132,7 @@ switch($arr_input[0])
 
 				$json_output['emails'] = array();
 
-				$strFolderName = $arr_input[2];
+				$strFolderName = (isset($arr_input[2]) ? $arr_input[2] : "");
 
 				$json_output['folderName'] = $strFolderName;
 				$json_output['limit_start'] = $intFolderLimitStart = isset($arr_input[3]) && $arr_input[3] > 0 ? $arr_input[3] : 0;

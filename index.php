@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: 
-Version: 6.3.5
+Version: 6.3.6
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://frostkom.se
@@ -71,7 +71,7 @@ function activate_email()
 
 	$default_charset = DB_CHARSET != '' ? DB_CHARSET : "utf8";
 
-	$arr_add_column = $arr_update_column = $arr_add_index = array();
+	//$arr_add_column = $arr_update_column = $arr_add_index = array();
 
 	$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email (
 		emailID INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -108,7 +108,7 @@ function activate_email()
 		KEY emailAddress (emailAddress)
 	) DEFAULT CHARSET=".$default_charset);
 
-	$arr_add_column[$wpdb->base_prefix."email"] = array(
+	/*$arr_add_column[$wpdb->base_prefix."email"] = array(
 		//'' => "ALTER TABLE [table] ADD [column]  AFTER ",
 	);
 
@@ -118,7 +118,7 @@ function activate_email()
 
 	$arr_add_index[$wpdb->base_prefix."email"] = array(
 		//'' => "ALTER TABLE [table] ADD INDEX [column] ([column])",
-	);
+	);*/
 
 	$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email_users (
 		emailID INT UNSIGNED,
@@ -189,19 +189,19 @@ function activate_email()
 		KEY messageFrom (messageFrom)
 	) DEFAULT CHARSET=".$default_charset);
 
-	update_columns($arr_update_column);
+	/*update_columns($arr_update_column);
 	add_columns($arr_add_column);
-	add_index($arr_add_index);
+	add_index($arr_add_index);*/
 
 	mf_uninstall_plugin(array(
-		'options' => array('setting_email', 'setting_email_info'),
+		'options' => array('setting_email_info'),
 	));
 }
 
 function uninstall_email()
 {
 	mf_uninstall_plugin(array(
-		'options' => array('setting_email', 'setting_email_info', 'setting_smtp_test', 'setting_smtp_server', 'setting_smtp_port', 'setting_smtp_ssl', 'setting_smtp_username', 'setting_smtp_password'),
+		'options' => array('setting_email_log', 'setting_email_preferred_content_types', 'setting_email_info', 'setting_smtp_test', 'setting_smtp_server', 'setting_smtp_port', 'setting_smtp_ssl', 'setting_smtp_username', 'setting_smtp_password'),
 		'tables' => array('email', 'email_users', 'email_folders', 'email_message', 'email_message_attachment', 'email_spam'),
 	));
 }
