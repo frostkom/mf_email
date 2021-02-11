@@ -16,6 +16,90 @@ jQuery(function($)
 	});
 
 	/* Create Account */
+	var dom_show_and_hide_fields = $("#strEmailAddress, #strEmailName, #strEmailServer, #strEmailOutgoingType, #strEmailSmtpServer");
+
+	function show_and_hide_fields(dom_obj)
+	{
+		dom_show_and_hide_fields.each(function()
+		{
+			var dom_obj = $(this),
+				dom_obj_id = dom_obj.attr('id'),
+				dom_obj_val = dom_obj.val();
+
+			switch(dom_obj_id)
+			{
+				case 'strEmailAddress':
+					if(dom_obj_val != '')
+					{
+						$(".display_email_name").removeClass('hide');
+					}
+
+					else
+					{
+						$(".display_email_name").addClass('hide');
+					}
+				break;
+
+				case 'strEmailName':
+					if(dom_obj_val != '')
+					{
+						$(".display_email_signature").removeClass('hide');
+					}
+
+					else
+					{
+						$(".display_email_signature").addClass('hide');
+					}
+				break;
+				
+				case 'strEmailServer':
+					if(dom_obj_val != '')
+					{
+						$(".display_email_settings, .display_email_credentials").removeClass('hide');
+					}
+
+					else
+					{
+						$(".display_email_settings, .display_email_credentials").addClass('hide');
+					}
+				break;
+
+				case 'strEmailOutgoingType':
+					if(dom_obj_val == 'smtp')
+					{
+						$(".display_outgoing_smtp").removeClass('hide');
+						$(".display_smtp_credentials").addClass('hide');
+					}
+
+					else
+					{
+						$(".display_outgoing_smtp").addClass('hide');
+						$(".display_smtp_credentials").removeClass('hide');
+					}
+				break;
+
+				case 'strEmailSmtpServer':
+					if(dom_obj_val != '')
+					{
+						$(".display_smtp_settings, .display_smtp_credentials").removeClass('hide');
+					}
+
+					else
+					{
+						$(".display_smtp_settings, .display_smtp_credentials").addClass('hide');
+					}
+				break;
+			}
+		});
+	}
+
+	show_and_hide_fields();
+
+	dom_show_and_hide_fields.on('keyup change', function()
+	{
+		show_and_hide_fields();
+	});
+
 	function clone_value_if_empty(self_obj, to_obj)
 	{
 		var dom_from_val = self_obj.val(),
