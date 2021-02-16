@@ -384,9 +384,15 @@ class mf_email
 
 									if(is_plugin_active("mf_address/index.php"))
 									{
-										foreach($arr_emails as $email)
+										global $obj_address;
+
+										if(!isset($obj_address))
 										{
 											$obj_address = new mf_address();
+										}
+
+										foreach($arr_emails as $email)
+										{
 											$obj_address->get_address_id(array('email' => $email));
 
 											if($obj_address->id > 0)
