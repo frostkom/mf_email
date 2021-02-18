@@ -1048,7 +1048,7 @@ class mf_email
 
 			$obj_base->filter_phpmailer_data();
 
-			do_log(__("Message Sent", 'lang_email')." (core): ".var_export($obj_base->phpmailer_temp, true), 'notification');
+			do_log(__("Message Sent", 'lang_email')." (core): ".var_export($obj_base->phpmailer_temp, true)." (".$_SERVER['REQUEST_URI'].")", 'notification');
 		}
 		########################################
 
