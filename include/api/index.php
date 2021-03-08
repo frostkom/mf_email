@@ -13,7 +13,7 @@ $json_output = array();
 
 $obj_email = new mf_email();
 
-$strAjaxInput = check_var('type', 'char', true, 'email/folders/'.__("Inbox", 'lang_email'));
+$strAjaxInput = check_var('type', 'char', true, 'email/folders/'.__("Inbox", $obj_email->lang_key));
 $arr_input = explode("/", trim($strAjaxInput, "/"));
 
 switch($arr_input[0])
@@ -149,7 +149,7 @@ switch($arr_input[0])
 					$strMessageFrom = $r->messageFrom;
 					$strMessageFromName = $r->messageFromName != '' ? $r->messageFromName : $strMessageFrom;
 					$strMessageTo = $r->messageTo;
-					$strMessageName = $r->messageName != '' ? $r->messageName : "(".__("No subject", 'lang_email').")";
+					$strMessageName = $r->messageName != '' ? $r->messageName : "(".__("No subject", $obj_email->lang_key).")";
 					$strMessageCreated = format_date($r->messageCreated);
 					$strMessageReceived = format_date($r->messageReceived);
 					$intMessageDeleted = $r->messageDeleted;
@@ -206,7 +206,7 @@ switch($arr_input[0])
 					$strMessageFrom = $r->messageFrom;
 					$strMessageFromName = $r->messageFromName != '' ? $r->messageFromName : $strMessageFrom;
 					$strMessageTo = $r->messageTo;
-					$strMessageName = $r->messageName != '' ? $r->messageName : "(".__("No subject", 'lang_email').")";
+					$strMessageName = $r->messageName != '' ? $r->messageName : "(".__("No subject", $obj_email->lang_key).")";
 					$strMessageText_orig = $r->messageText;
 					$strMessageCreated = format_date($r->messageCreated);
 					$strMessageReceived = format_date($r->messageReceived);
@@ -265,7 +265,7 @@ switch($arr_input[0])
 					$strMessageTo = $r->messageTo;
 					$strMessageCc = $r->messageCc;
 					$strEmailAddress = $r->emailAddress;
-					$strMessageName = $r->messageName != '' ? $r->messageName : "(".__("No subject", 'lang_email').")";
+					$strMessageName = $r->messageName != '' ? $r->messageName : "(".__("No subject", $obj_email->lang_key).")";
 					$strMessageText = $r->messageText;
 					$strMessageText2 = $r->messageText2;
 					$strMailCreated = $r->messageCreated;

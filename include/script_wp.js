@@ -51,7 +51,7 @@ jQuery(function($)
 						$(".display_email_signature").addClass('hide');
 					}
 				break;
-				
+
 				case 'strEmailServer':
 					if(dom_obj_val != '')
 					{

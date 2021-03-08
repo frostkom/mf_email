@@ -1,5 +1,7 @@
 <?php
 
+$obj_email = new mf_email();
+
 $intFolderID = check_var('intFolderID');
 $intEmailID = check_var('intEmailID');
 $strFolderName = check_var('strFolderName');
@@ -17,7 +19,7 @@ if(isset($_POST['btnFolderCreate']) && wp_verify_nonce($_POST['_wpnonce_folder_c
 
 		else
 		{
-			$error_text = __("The folder could not be updated", 'lang_email');
+			$error_text = __("The folder could not be updated", $obj_email->lang_key);
 		}
 	}
 
@@ -34,16 +36,16 @@ if(isset($_POST['btnFolderCreate']) && wp_verify_nonce($_POST['_wpnonce_folder_c
 
 		else
 		{
-			$error_text = __("The folder could not be created", 'lang_email');
+			$error_text = __("The folder could not be created", $obj_email->lang_key);
 		}
 	}
 }
 
 echo "<div class='wrap'>
-	<h2>".__("Folder", 'lang_email')."</h2>"
+	<h2>".__("Folder", $obj_email->lang_key)."</h2>"
 	.get_notification()
 	."<div id='poststuff' class='postbox'>
-		<h3 class='hndle'>".__("Add", 'lang_email')."</h3>
+		<h3 class='hndle'>".__("Add", $obj_email->lang_key)."</h3>
 		<div class='inside'>
 			<form action='#' method='post' class='mf_form mf_settings'>";
 
@@ -79,9 +81,9 @@ echo "<div class='wrap'>
 					$arr_data[$intEmailID2] = $strEmailName;
 				}
 
-				echo show_select(array('data' => $arr_data, 'name' => 'intEmailID', 'value' => $intEmailID, 'text' => __("Account", 'lang_email')))
-				.show_textfield(array('name' => 'strFolderName', 'text' => __("Name", 'lang_email'), 'value' => $strFolderName))
-				.show_button(array('name' => 'btnFolderCreate', 'text' => __("Save", 'lang_email')))
+				echo show_select(array('data' => $arr_data, 'name' => 'intEmailID', 'value' => $intEmailID, 'text' => __("Account", $obj_email->lang_key)))
+				.show_textfield(array('name' => 'strFolderName', 'text' => __("Name", $obj_email->lang_key), 'value' => $strFolderName))
+				.show_button(array('name' => 'btnFolderCreate', 'text' => __("Save", $obj_email->lang_key)))
 				.input_hidden(array('name' => 'intFolderID', 'value' => $intFolderID))
 				.wp_nonce_field('folder_create_'.$intFolderID, '_wpnonce_folder_create', true, false)
 			."</form>

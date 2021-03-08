@@ -7,29 +7,31 @@ if(!isset($obj_base))
 	$obj_base = new mf_base();
 }
 
+$obj_email = new mf_email();
+
 $intFolderID = check_var('intFolderID');
-$strFolderName = check_var('strFolderName', '', true, __("Inbox", 'lang_email'));
+$strFolderName = check_var('strFolderName', '', true, __("Inbox", $obj_email->lang_key));
 
 if(isset($_GET['sent']))
 {
-	$done_text = __("The e-mail was successfully sent", 'lang_email');
+	$done_text = __("The e-mail was successfully sent", $obj_email->lang_key);
 }
 
 else if(isset($_GET['created']))
 {
-	$done_text = __("The folder was created", 'lang_email');
+	$done_text = __("The folder was created", $obj_email->lang_key);
 }
 
 else if(isset($_GET['updated']))
 {
-	$done_text = __("The folder was updated", 'lang_email');
+	$done_text = __("The folder was updated", $obj_email->lang_key);
 }
 
 echo "<div class='wrap'>
 	<h2>"
-		.__("E-mail", 'lang_email')
-		."<a href='".admin_url("admin.php?page=mf_email/folder/index.php")."' class='add-new-h2'>".__("Add New Folder", 'lang_email')."</a>"
-		."<a href='".admin_url("admin.php?page=mf_email/send/index.php")."' class='add-new-h2'>".__("Send new", 'lang_email')."</a>"
+		.__("E-mail", $obj_email->lang_key)
+		."<a href='".admin_url("admin.php?page=mf_email/folder/index.php")."' class='add-new-h2'>".__("Add New Folder", $obj_email->lang_key)."</a>"
+		."<a href='".admin_url("admin.php?page=mf_email/send/index.php")."' class='add-new-h2'>".__("Send new", $obj_email->lang_key)."</a>"
 	."</h2>"
 	.get_notification()
 	."<div class='flex_flow'>
@@ -62,12 +64,12 @@ echo "<div class='wrap'>
 				<%= folderTotal %>
 				<% if(!(folderType > 0))
 				{ %>
-					| <a href='".admin_url("admin.php?page=mf_email/folder/index.php&intFolderID=<%= folderID %>")."'>".__("Edit", 'lang_email')."</a>
+					| <a href='".admin_url("admin.php?page=mf_email/folder/index.php&intFolderID=<%= folderID %>")."'>".__("Edit", $obj_email->lang_key)."</a>
 				<% }
 
 				if(folderTotal == 0)
 				{ %>
-					 | <a href='#email/folders/<%= folderID %>/delete' rel='confirm'>".__("Delete", 'lang_email')."</a>
+					 | <a href='#email/folders/<%= folderID %>/delete' rel='confirm'>".__("Delete", $obj_email->lang_key)."</a>
 				<% } %>
 			</div>
 		</td>
@@ -75,11 +77,11 @@ echo "<div class='wrap'>
 </script>
 
 <script type='text/template' id='template_folder_message'>
-	<tr><td colspan='2'>".__("There is nothing to show", 'lang_email')."</td></tr>
+	<tr><td colspan='2'>".__("There is nothing to show", $obj_email->lang_key)."</td></tr>
 </script>
 
 <script type='text/template' id='template_email_more'>
-	<tr class='show_more'><td colspan='5'><a href='#email/emails/<%= folderName %>/<%= limit_start %>'>".__("Show more", 'lang_email')."&hellip;</a></td></tr>
+	<tr class='show_more'><td colspan='5'><a href='#email/emails/<%= folderName %>/<%= limit_start %>'>".__("Show more", $obj_email->lang_key)."&hellip;</a></td></tr>
 </script>
 
 <script type='text/template' id='template_email_item'>
@@ -117,13 +119,13 @@ echo "<div class='wrap'>
 			."<div class='row-actions'>
 				<% if(messageDeleted == 0)
 				{ %>
-					<a href='#email/delete/<%= messageID %>' rel='confirm'>".__("Delete", 'lang_email')."</a>
-					 | <a href='#email/spam/<%= messageID %>' rel='confirm'>".__("Mark as Spam", 'lang_email')."</a>
+					<a href='#email/delete/<%= messageID %>' rel='confirm'>".__("Delete", $obj_email->lang_key)."</a>
+					 | <a href='#email/spam/<%= messageID %>' rel='confirm'>".__("Mark as Spam", $obj_email->lang_key)."</a>
 				<% }
 
 				else
 				{ %>
-					<a href='#email/restore/<%= messageID %>' rel='confirm' title='".sprintf(__("Removed %s", 'lang_email'), "<%= messageDeletedDate %>")."'>".__("Restore", 'lang_email')."</a>
+					<a href='#email/restore/<%= messageID %>' rel='confirm' title='".sprintf(__("Removed %s", $obj_email->lang_key), "<%= messageDeletedDate %>")."'>".__("Restore", $obj_email->lang_key)."</a>
 				<% } %>
 			</div>
 		</td>
@@ -172,18 +174,18 @@ echo "<div class='wrap'>
 </script>
 
 <script type='text/template' id='template_email_message'>
-	<tr><td colspan=''>".__("There is nothing to show", 'lang_email')."</td></tr>
+	<tr><td colspan=''>".__("There is nothing to show", $obj_email->lang_key)."</td></tr>
 </script>
 
 <script type='text/template' id='template_email_show'>
 	<ul class='alternate'>
-		<li><strong>".__("Subject", 'lang_email').":</strong> <%= messageName %></li>
-		<li><strong>".__("From", 'lang_email').":</strong> <%= messageFrom %> -> <%= messageTo %></li>
+		<li><strong>".__("Subject", $obj_email->lang_key).":</strong> <%= messageName %></li>
+		<li><strong>".__("From", $obj_email->lang_key).":</strong> <%= messageFrom %> -> <%= messageTo %></li>
 		<% if(messageCc != '')
 		{ %>
-			<li><strong>".__("Cc", 'lang_email').":</strong> <%= messageCc %></li>
+			<li><strong>".__("Cc", $obj_email->lang_key).":</strong> <%= messageCc %></li>
 		<% } %>
-		<li><a href='".admin_url("admin.php?page=mf_email/send/index.php&intMessageID=<%= messageID %>&answer")."' class='button'><i class='fa fa-chevron-left'></i> ".__("Answer", 'lang_email')."</a> <a href='?page=mf_email/send/index.php&intMessageID=<%= messageID %>&forward' class='button'>".__("Forward", 'lang_email')." <i class='fa fa-chevron-right'></i></a></li>
+		<li><a href='".admin_url("admin.php?page=mf_email/send/index.php&intMessageID=<%= messageID %>&answer")."' class='button'><i class='fa fa-chevron-left'></i> ".__("Answer", $obj_email->lang_key)."</a> <a href='?page=mf_email/send/index.php&intMessageID=<%= messageID %>&forward' class='button'>".__("Forward", $obj_email->lang_key)." <i class='fa fa-chevron-right'></i></a></li>
 		<% if(messageAttachment.length > 0)
 		{ %>
 			<li>&nbsp;</li>
@@ -203,7 +205,7 @@ echo "<div class='wrap'>
 			<% if(messageText != '')
 			{ %>
 				<h3 class='nav-tab-wrapper'>
-					<a class='nav-tab'>".__("Plain", 'lang_email')."</a>
+					<a class='nav-tab'>".__("Plain", $obj_email->lang_key)."</a>
 					<a class='nav-tab nav-tab-active'>HTML</a>
 				</h3>
 				<div class='hide'>
