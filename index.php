@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: 
-Version: 6.4.0
+Version: 6.4.1
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://frostkom.se
@@ -49,6 +49,8 @@ add_action('sent_email_error', array($obj_email, 'sent_email_error'));
 add_filter('get_emails_left_to_send', array($obj_email, 'get_emails_left_to_send'), 10, 4);
 add_filter('get_hourly_release_time', array($obj_email, 'get_hourly_release_time'), 10, 3);
 
+add_filter('get_preferred_content_types', array($obj_email, 'get_preferred_content_types'), 10, 3);
+
 add_action('wp_ajax_send_smtp_test', array($obj_email, 'send_smtp_test'));
 add_action('wp_ajax_nopriv_send_smtp_test', array($obj_email, 'send_smtp_test'));
 
@@ -71,13 +73,13 @@ function activate_email()
 
 	$default_charset = DB_CHARSET != '' ? DB_CHARSET : "utf8";
 
-	//$arr_add_column = $arr_update_column = $arr_add_index = array();
+	$arr_add_column = $arr_update_column = $arr_add_index = array();
 
 	$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email (
 		emailID INT UNSIGNED NOT NULL AUTO_INCREMENT,
 		blogID TINYINT UNSIGNED NOT NULL DEFAULT '0',
 		emailPublic ENUM('0', '1') NOT NULL DEFAULT '0',
-		emailRoles VARCHAR(100),
+		emailRoles VARCHAR(100) DEFAULT NULL,
 		emailVerified ENUM('-1', '0', '1') NOT NULL DEFAULT '0',
 		emailServer VARCHAR(30),
 		emailPort SMALLINT,
@@ -89,6 +91,7 @@ function activate_email()
 		emailCreated DATETIME,
 		emailChecked DATETIME,
 		emailOutgoingType VARCHAR(20) NOT NULL DEFAULT 'smtp',
+		emailLimitPerHour SMALLINT UNSIGNED DEFAULT '0',
 		emailSmtpVerified ENUM('-1', '0', '1') NOT NULL DEFAULT '0',
 		emailSmtpSSL ENUM('', 'ssl', 'tls') NOT NULL DEFAULT '',
 		emailSmtpServer VARCHAR(100) DEFAULT NULL,
@@ -96,8 +99,8 @@ function activate_email()
 		emailSmtpHostname VARCHAR(100) DEFAULT NULL,
 		emailSmtpUsername VARCHAR(100) DEFAULT NULL,
 		emailSmtpPassword VARCHAR(150) DEFAULT NULL,
+		emailPreferredContentTypes VARCHAR(100) DEFAULT NULL,
 		emailSmtpChecked DATETIME,
-		emailLimitPerHour SMALLINT UNSIGNED DEFAULT '0',
 		userID INT UNSIGNED DEFAULT NULL,
 		emailDeleted ENUM('0','1') NOT NULL DEFAULT '0',
 		emailDeletedDate DATETIME DEFAULT NULL,
@@ -108,11 +111,11 @@ function activate_email()
 		KEY emailAddress (emailAddress)
 	) DEFAULT CHARSET=".$default_charset);
 
-	/*$arr_add_column[$wpdb->base_prefix."email"] = array(
-		//'' => "ALTER TABLE [table] ADD [column]  AFTER ",
+	$arr_add_column[$wpdb->base_prefix."email"] = array(
+		'emailPreferredContentTypes' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpPassword",
 	);
 
-	$arr_update_column[$wpdb->base_prefix."email"] = array(
+	/*$arr_update_column[$wpdb->base_prefix."email"] = array(
 		//'' => "ALTER TABLE [table] CHANGE [column] [column] ",
 	);
 
@@ -189,9 +192,9 @@ function activate_email()
 		KEY messageFrom (messageFrom)
 	) DEFAULT CHARSET=".$default_charset);
 
-	/*update_columns($arr_update_column);
+	update_columns($arr_update_column);
 	add_columns($arr_add_column);
-	add_index($arr_add_index);*/
+	add_index($arr_add_index);
 
 	mf_uninstall_plugin(array(
 		'options' => array('setting_email_info'),

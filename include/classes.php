@@ -30,6 +30,14 @@ class mf_email
 		);
 	}
 
+	function get_preferred_content_types_for_select()
+	{
+		return array(
+			'plain' => __("Plain Text", $this->lang_key),
+			'html' => __("HTML", $this->lang_key),
+		);
+	}
+
 	function get_email_accounts_permission()
 	{
 		global $wpdb;
@@ -44,6 +52,25 @@ class mf_email
 		}
 
 		return $out;
+	}
+
+	function get_preferred_content_types($arr_out, $email)
+	{
+		global $wpdb;
+
+		$arr_out = get_option('setting_email_preferred_content_types');
+
+		if($email != '')
+		{
+			$strEmailPreferredContentTypes = $wpdb->get_var($wpdb->prepare("SELECT emailPreferredContentTypes FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s LIMIT 0, 1", $email));
+
+			if($strEmailPreferredContentTypes != '')
+			{
+				$arr_out = explode(",", $strEmailPreferredContentTypes);
+			}
+		}
+
+		return $arr_out;
 	}
 
 	function get_update_email($data = array())
@@ -711,12 +738,7 @@ class mf_email
 		$setting_key = get_setting_key(__FUNCTION__);
 		$option = get_option($setting_key);
 
-		$arr_data = array(
-			'plain' => __("Plain Text", $this->lang_key),
-			'html' => __("HTML", $this->lang_key),
-		);
-
-		echo show_select(array('data' => $arr_data, 'name' => $setting_key."[]", 'value' => $option));
+		echo show_select(array('data' => $this->get_preferred_content_types_for_select(), 'name' => $setting_key."[]", 'value' => $option));
 	}
 
 	function setting_email_info_callback()
@@ -1305,9 +1327,6 @@ class mf_email
 		switch($this->type)
 		{
 			case 'account_create':
-				$this->public = check_var('intEmailPublic');
-				$this->roles = check_var('arrEmailRoles');
-				$this->users = check_var('arrEmailUsers');
 				$this->server = check_var('strEmailServer');
 				$this->port = check_var('intEmailPort');
 				$this->username = check_var('strEmailUsername');
@@ -1317,13 +1336,18 @@ class mf_email
 				$this->signature = check_var('strEmailSignature');
 
 				$this->outgoing_type = check_var('strEmailOutgoingType');
+				$this->limit_per_hour = check_var('intEmailLimitPerHour');
 				$this->smtp_server = check_var('strEmailSmtpServer');
 				$this->smtp_port = check_var('intEmailSmtpPort');
 				$this->smtp_ssl = check_var('strEmailSmtpSSL');
 				$this->smtp_hostname = check_var('strEmailSmtpHostname');
 				$this->smtp_username = check_var('strEmailSmtpUsername');
 				$this->smtp_password = check_var('strEmailSmtpPassword');
-				$this->limit_per_hour = check_var('intEmailLimitPerHour');
+				$this->preferred_content_types = check_var('arrEmailPreferredContentTypes');
+
+				$this->public = check_var('intEmailPublic');
+				$this->roles = check_var('arrEmailRoles');
+				$this->users = check_var('arrEmailUsers');
 
 				$this->password_encrypted = $this->smtp_password_encrypted = "";
 			break;
@@ -1533,7 +1557,14 @@ class mf_email
 								$mail_subject = sprintf(__("Please confirm your e-mail %s for use on %s", $this->lang_key), $strEmailAddress, $site_name);
 								$mail_content = sprintf(__("We have gotten a request to confirm the address %s from a user at %s (%s). If this is a valid request please click %shere%s to confirm the use of your e-mail address to send messages", $this->lang_key), $strEmailAddress, $site_name, "<a href='".$site_url."'>".$site_url."</a>", "<a href='".$confirm_url."'>", "</a>");
 
-								$sent = send_email(array('to' => $mail_to, 'subject' => $mail_subject, 'content' => $mail_content, 'headers' => $mail_headers));
+								$sent = send_email(array(
+									'from' => $user_data->user_email,
+									'from_name' => $user_data->display_name,
+									'to' => $mail_to,
+									'subject' => $mail_subject,
+									'content' => $mail_content,
+									'headers' => $mail_headers,
+								));
 
 								if($sent)
 								{
@@ -1579,7 +1610,15 @@ class mf_email
 
 							list($mail_attachment, $rest) = get_attachment_to_send($this->message_attachment);
 
-							$sent = send_email(array('to' => $this->message_to, 'subject' => $this->message_subject, 'content' => $this->message_text, 'headers' => $mail_headers, 'attachment' => $mail_attachment));
+							$sent = send_email(array(
+								'from' => $strEmailAddress,
+								'from_name' => $strEmailName,
+								'to' => $this->message_to,
+								'subject' => $this->message_subject,
+								'content' => $this->message_text,
+								'headers' => $mail_headers,
+								'attachment' => $mail_attachment,
+							));
 
 							if($sent)
 							{
@@ -1821,7 +1860,7 @@ class mf_email
 			case 'account_create':
 				if($this->id > 0)
 				{
-					$result = $wpdb->get_results($wpdb->prepare("SELECT emailPublic, emailRoles, emailServer, emailPort, emailUsername, emailAddress, emailName, emailSignature, emailOutgoingType, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailLimitPerHour, emailDeleted FROM ".$wpdb->base_prefix."email WHERE emailID = '%d'", $this->id));
+					$result = $wpdb->get_results($wpdb->prepare("SELECT emailPublic, emailRoles, emailServer, emailPort, emailUsername, emailAddress, emailName, emailSignature, emailOutgoingType, emailLimitPerHour, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailPreferredContentTypes, emailDeleted FROM ".$wpdb->base_prefix."email WHERE emailID = '%d'", $this->id));
 
 					foreach($result as $r)
 					{
@@ -1834,13 +1873,24 @@ class mf_email
 						$this->name = $r->emailName;
 						$this->signature = $r->emailSignature;
 						$this->outgoing_type = $r->emailOutgoingType;
+						$this->limit_per_hour = $r->emailLimitPerHour;
 						$this->smtp_ssl = $r->emailSmtpSSL;
 						$this->smtp_server = $r->emailSmtpServer;
 						$this->smtp_port = $r->emailSmtpPort;
 						$this->smtp_hostname = $r->emailSmtpHostname;
 						$this->smtp_username = $r->emailSmtpUsername;
-						$this->limit_per_hour = $r->emailLimitPerHour;
+						$this->preferred_content_types = $r->emailPreferredContentTypes;
 						$this->deleted = $r->emailDeleted;
+
+						if($this->preferred_content_types != '')
+						{
+							$this->preferred_content_types = explode(",", $this->preferred_content_types);
+						}
+
+						else
+						{
+							$this->preferred_content_types = get_option('setting_email_preferred_content_types');
+						}
 
 						$this->users = array();
 
@@ -2219,7 +2269,7 @@ class mf_email
 
 		$this->encrypt_password();
 
-		$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailSignature = %s, emailOutgoingType = %s, emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailLimitPerHour = '%d', emailCreated = NOW(), userID = '%d'", $wpdb->blogid, $this->public, @implode(",", $this->roles), $this->server, $this->port, $this->username, $this->address, $this->name, $this->signature, $this->outgoing_type, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, $this->limit_per_hour, get_current_user_id()));
+		$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailSignature = %s, emailOutgoingType = %s, emailLimitPerHour = '%d', emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailPreferredContentTypes = %s, emailCreated = NOW(), userID = '%d'", $wpdb->blogid, $this->public, @implode(",", $this->roles), $this->server, $this->port, $this->username, $this->address, $this->name, $this->signature, $this->outgoing_type, $this->limit_per_hour, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, @implode(",", $this->preferred_content_types), get_current_user_id()));
 
 		$this->id = $wpdb->insert_id;
 
@@ -2235,7 +2285,7 @@ class mf_email
 
 		$this->encrypt_password();
 
-		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailVerified = '0', emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailSignature = %s, emailOutgoingType = %s, emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailLimitPerHour = '%d', emailDeleted = '0' WHERE emailID = '%d'", $wpdb->blogid, $this->public, @implode(",", $this->roles), $this->server, $this->port, $this->username, $this->address, $this->name, $this->signature, $this->outgoing_type, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, $this->limit_per_hour, $this->id));
+		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailVerified = '0', emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailSignature = %s, emailOutgoingType = %s, emailLimitPerHour = '%d', emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailPreferredContentTypes = %s, emailDeleted = '0' WHERE emailID = '%d'", $wpdb->blogid, $this->public, @implode(",", $this->roles), $this->server, $this->port, $this->username, $this->address, $this->name, $this->signature, $this->outgoing_type, $this->limit_per_hour, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, @implode(",", $this->preferred_content_types), $this->id));
 
 		$rows_affected = $wpdb->rows_affected;
 
