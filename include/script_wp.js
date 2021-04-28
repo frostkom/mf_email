@@ -18,7 +18,7 @@ jQuery(function($)
 	/* Create Account */
 	var dom_show_and_hide_fields = $("#strEmailAddress, #strEmailName, #strEmailServer, #strEmailOutgoingType, #strEmailSmtpServer");
 
-	function show_and_hide_fields(dom_obj)
+	function show_and_hide_fields()
 	{
 		dom_show_and_hide_fields.each(function()
 		{

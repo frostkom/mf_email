@@ -2462,7 +2462,7 @@ if(class_exists('mf_list_table'))
 					{
 						$actions['edit'] = "<a href='".$email_url."'>".__("Edit", $obj_email->lang_key)."</a>";
 
-						if($intUserID == get_current_user_id())
+						if(IS_ADMIN || $intUserID == get_current_user_id())
 						{
 							$actions['delete'] = "<a href='".wp_nonce_url(admin_url("admin.php?page=mf_email/accounts/index.php&btnEmailDelete&intEmailID=".$intEmailID), 'email_delete_'.$intEmailID, '_wpnonce_email_delete')."' rel='confirm'>".__("Delete", $obj_email->lang_key)."</a>";
 						}
