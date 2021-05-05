@@ -14,9 +14,7 @@ class mf_email
 			$this->id = check_var('intEmailID');
 		}
 
-		$this->lang_key = 'lang_email';
-
-		$this->type = isset($data['type']) ? $data['type'] : '';
+		$this->type = (isset($data['type']) ? $data['type'] : '');
 
 		$this->message_id = 0;
 	}
@@ -24,7 +22,7 @@ class mf_email
 	function get_ssl_for_select()
 	{
 		return array(
-			'' => __("No", $this->lang_key),
+			'' => __("No", 'lang_email'),
 			'ssl' => "SSL",
 			'tls' => "TLS",
 		);
@@ -33,8 +31,8 @@ class mf_email
 	function get_preferred_content_types_for_select()
 	{
 		return array(
-			'plain' => __("Plain Text", $this->lang_key),
-			'html' => __("HTML", $this->lang_key),
+			'plain' => __("Plain Text", 'lang_email'),
+			'html' => __("HTML", 'lang_email'),
 		);
 	}
 
@@ -88,7 +86,7 @@ class mf_email
 			if($intUnread > 0)
 			{
 				return array(
-					'title' => $intUnread > 1 ? sprintf(__("There are %d new emails in your inbox", $this->lang_key), $intUnread) : __("There is one new email in your inbox", $this->lang_key),
+					'title' => $intUnread > 1 ? sprintf(__("There are %d new emails in your inbox", 'lang_email'), $intUnread) : __("There is one new email in your inbox", 'lang_email'),
 					'tag' => 'email',
 					//'text' => "",
 					//'icon' => "",
@@ -284,14 +282,14 @@ class mf_email
 			{
 				$query_xtra .= ", messageDeletedDate = NOW(), messageDeletedID = '".get_current_user_id()."', messageRead = '1'";
 
-				$intFolderID = $this->get_folder_ids(__("Trash", $this->lang_key), 2, $intEmailID);
+				$intFolderID = $this->get_folder_ids(__("Trash", 'lang_email'), 2, $intEmailID);
 			}
 
 			else
 			{
 				$query_xtra .= ", messageDeletedDate = '', messageDeletedID = ''";
 
-				$intFolderID = $this->get_folder_ids(__("Inbox", $this->lang_key), 6, $intEmailID);
+				$intFolderID = $this->get_folder_ids(__("Inbox", 'lang_email'), 6, $intEmailID);
 			}
 
 			$query_xtra .= ($query_xtra == '' ? "" : ", ")."folderID = '".esc_sql($intFolderID)."'";
@@ -307,14 +305,14 @@ class mf_email
 			{
 				$query_xtra .= ", messageDeletedDate = NOW(), messageDeletedID = '".get_current_user_id()."', messageRead = '1'";
 
-				$intFolderID = $this->get_folder_ids(__("Spam", $this->lang_key), 3, $intEmailID);
+				$intFolderID = $this->get_folder_ids(__("Spam", 'lang_email'), 3, $intEmailID);
 			}
 
 			else
 			{
 				$query_xtra .= ", messageDeletedDate = '', messageDeletedID = ''";
 
-				$intFolderID = $this->get_folder_ids(__("Inbox", $this->lang_key), 6, $intEmailID);
+				$intFolderID = $this->get_folder_ids(__("Inbox", 'lang_email'), 6, $intEmailID);
 			}
 
 			$query_xtra .= ($query_xtra == '' ? "" : ", ")."folderID = '".esc_sql($intFolderID)."'";
@@ -467,12 +465,12 @@ class mf_email
 
 									if($intSpamID > 0)
 									{
-										$intFolderID = $this->get_folder_ids(__("Spam", $this->lang_key), 3, $intEmailID);
+										$intFolderID = $this->get_folder_ids(__("Spam", 'lang_email'), 3, $intEmailID);
 									}
 
 									else
 									{
-										$intFolderID = $this->get_folder_ids(__("Inbox", $this->lang_key), 6, $intEmailID);
+										$intFolderID = $this->get_folder_ids(__("Inbox", 'lang_email'), 6, $intEmailID);
 									}
 
 									list($intMessageID, $affected_rows) = $this->save_email(array('folder_id' => $intFolderID, 'text_id' => $strMessageTextID, 'md5' => $strMessageMd5, 'from' => $strMessageFrom, 'from_name' => $strMessageFromName, 'to' => $strMessageTo, 'cc' => $strMessageCc, 'subject' => $strMessageSubject, 'content' => $strMessageTextPlain, 'content_html' => $strMessageTextHTML, 'created' => $strMessageCreated));
@@ -487,7 +485,7 @@ class mf_email
 											$this->mark_spam(array('message_id' => $intMessageID, 'spam' => true));
 										}
 
-										$done_text = __("Inserted", $this->lang_key).": ".$strMessageSubject."<br>";
+										$done_text = __("Inserted", 'lang_email').": ".$strMessageSubject."<br>";
 
 										$arr_file_id = array();
 
@@ -526,25 +524,25 @@ class mf_email
 
 												$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email_message_attachment SET messageID = '%d', fileID = '%d'", $intMessageID, $intFileID));
 
-												$term_attachment = $this->create_term_if_not_exists(array('taxonomy' => $taxonomy, 'term_slug' => 'email_attachment', 'term_name' => __("E-mail attachments", $this->lang_key)));
+												$term_attachment = $this->create_term_if_not_exists(array('taxonomy' => $taxonomy, 'term_slug' => 'email_attachment', 'term_name' => __("E-mail attachments", 'lang_email')));
 
 												wp_set_object_terms($post_id, array((int)$term_attachment['term_id']), $taxonomy, false);
 
-												$done_text = __("The attachment was saved", $this->lang_key).": ".$intFileID." -> ".$intMessageID;
+												$done_text = __("The attachment was saved", 'lang_email').": ".$intFileID." -> ".$intMessageID;
 											}
 										}
 									}
 
 									else
 									{
-										$error_text = __("The email was not able to be saved", $this->lang_key).": ".$strMessageSubject."<br>";
+										$error_text = __("The email was not able to be saved", 'lang_email').": ".$strMessageSubject."<br>";
 									}
 									########################
 								}
 
 								else
 								{
-									$error_text = __("The e-mail already exists", $this->lang_key).": ".$strMessageSubject."<br>";
+									$error_text = __("The e-mail already exists", 'lang_email').": ".$strMessageSubject."<br>";
 
 									/*$r = $resultExists_md5[0];
 									$intMessageStatus = $r->mailStatus;
@@ -585,7 +583,7 @@ class mf_email
 
 					else
 					{
-						$error_text = __("Connection failed", $this->lang_key);
+						$error_text = __("Connection failed", 'lang_email');
 					}
 
 					restore_current_blog();
@@ -677,19 +675,19 @@ class mf_email
 
 		if(function_exists('is_plugin_active') && is_plugin_active("mf_log/index.php") && get_option('setting_log_activate') == 'yes')
 		{
-			$arr_settings['setting_email_log'] = __("Log Outgoing Messages", $this->lang_key);
+			$arr_settings['setting_email_log'] = __("Log Outgoing Messages", 'lang_email');
 		}
 
-		$arr_settings['setting_email_preferred_content_types'] = __("Preferred Content Types", $this->lang_key);
-		//$arr_settings['setting_email_info'] = __("E-mail", $this->lang_key);
-		$arr_settings['setting_smtp_server'] = "SMTP ".__("Server", $this->lang_key);
+		$arr_settings['setting_email_preferred_content_types'] = __("Preferred Content Types", 'lang_email');
+		//$arr_settings['setting_email_info'] = __("E-mail", 'lang_email');
+		$arr_settings['setting_smtp_server'] = "SMTP ".__("Server", 'lang_email');
 
 		if(get_option('setting_smtp_server') != '')
 		{
-			$arr_settings['setting_smtp_port'] = "SMTP ".__("Port", $this->lang_key);
+			$arr_settings['setting_smtp_port'] = "SMTP ".__("Port", 'lang_email');
 			$arr_settings['setting_smtp_ssl'] = "SMTP SSL";
-			$arr_settings['setting_smtp_username'] = "SMTP ".__("Username", $this->lang_key);
-			$arr_settings['setting_smtp_password'] = "SMTP ".__("Password", $this->lang_key);
+			$arr_settings['setting_smtp_username'] = "SMTP ".__("Username", 'lang_email');
+			$arr_settings['setting_smtp_password'] = "SMTP ".__("Password", 'lang_email');
 		}
 
 		$admin_email = get_bloginfo('admin_email');
@@ -697,7 +695,7 @@ class mf_email
 
 		if($wpdb->num_rows > 0 || get_option('setting_smtp_server') != '')
 		{
-			$arr_settings['setting_smtp_test'] = __("Test", $this->lang_key)." SMTP";
+			$arr_settings['setting_smtp_test'] = __("Test", 'lang_email')." SMTP";
 		}
 
 		show_settings_fields(array('area' => $options_area, 'object' => $this, 'settings' => $arr_settings));
@@ -707,7 +705,7 @@ class mf_email
 	{
 		$setting_key = get_setting_key(__FUNCTION__);
 
-		echo settings_header($setting_key, __("E-mail", $this->lang_key));
+		echo settings_header($setting_key, __("E-mail", 'lang_email'));
 	}
 
 	function setting_email_log_callback()
@@ -716,16 +714,16 @@ class mf_email
 		$option = get_option($setting_key);
 
 		$arr_data = array(
-			'core' => __("Core", $this->lang_key),
-			'plugin' => __("Plugin", $this->lang_key),
+			'core' => __("Core", 'lang_email'),
+			'plugin' => __("Plugin", 'lang_email'),
 		);
 
 		if(function_exists('is_plugin_active') && is_plugin_active("mf_group/index.php"))
 		{
-			$arr_data['group'] = __("Group", $this->lang_key);
+			$arr_data['group'] = __("Group", 'lang_email');
 		}
 
-		$description = sprintf(__("The log can be viewed by going to %sTools -> Log -> Notice%s", $this->lang_key), "<a href='".admin_url("admin.php?page=mf_log/list/index.php&post_status=notification")."'>", "</a>");
+		$description = sprintf(__("The log can be viewed by going to %sTools -> Log -> Notice%s", 'lang_email'), "<a href='".admin_url("admin.php?page=mf_log/list/index.php&post_status=notification")."'>", "</a>");
 		// if get_site_url() is a subfolder, add to descr that some messages (ie. lost password) might be logged on the main site
 
 		echo show_select(array('data' => $arr_data, 'name' => $setting_key."[]", 'value' => $option, 'description' => $description));
@@ -747,13 +745,13 @@ class mf_email
 
 		$admin_email = get_bloginfo('admin_email');
 
-		echo "<p>".sprintf(__("The e-mail %s is used as sender address so this must be white listed in the SMTP, otherwise it can be caught in the servers spam filter", $this->lang_key), "<a href='".(is_multisite() ? admin_url("network/site-settings.php?id=".$wpdb->blogid."#admin_email") : admin_url("options-general.php"))."' class='bold'>".$admin_email."</a>")."</p>";
+		echo "<p>".sprintf(__("The e-mail %s is used as sender address so this must be white listed in the SMTP, otherwise it can be caught in the servers spam filter", 'lang_email'), "<a href='".(is_multisite() ? admin_url("network/site-settings.php?id=".$wpdb->blogid."#admin_email") : admin_url("options-general.php"))."' class='bold'>".$admin_email."</a>")."</p>";
 
 		$intEmailID = $wpdb->get_var($wpdb->prepare("SELECT emailID FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s AND emailSmtpServer != ''", $admin_email));
 
 		if($intEmailID > 0)
 		{
-			echo "<p>".sprintf(__("The e-mail %s already has an account where you have set an SMTP", $this->lang_key), "<a href='".admin_url("admin.php?page=mf_email/create/index.php&intEmailID=".$intEmailID)."' class='bold'>".$admin_email."</a>")."</p>";
+			echo "<p>".sprintf(__("The e-mail %s already has an account where you have set an SMTP", 'lang_email'), "<a href='".admin_url("admin.php?page=mf_email/create/index.php&intEmailID=".$intEmailID)."' class='bold'>".$admin_email."</a>")."</p>";
 		}
 	}
 
@@ -801,8 +799,8 @@ class mf_email
 
 	function setting_smtp_test_callback()
 	{
-		echo show_textfield(array('name' => 'smtp_to', 'value' => '', 'placeholder' => __("E-mail to send test message to", $this->lang_key), 'description' => sprintf(__("Try with your e-mail address or create a temporary at %sMail Tester%s to check your spammyness", $this->lang_key), "<a href='//mail-tester.com'>", "</a>")))
-		.show_button(array('type' => 'button', 'name' => 'btnSmtpTest', 'text' => __("Send", $this->lang_key), 'class' => 'button-secondary'))
+		echo show_textfield(array('name' => 'smtp_to', 'value' => '', 'placeholder' => __("E-mail to send test message to", 'lang_email'), 'description' => sprintf(__("Try with your e-mail address or create a temporary at %sMail Tester%s to check your spammyness", 'lang_email'), "<a href='//mail-tester.com'>", "</a>")))
+		.show_button(array('type' => 'button', 'name' => 'btnSmtpTest', 'text' => __("Send", 'lang_email'), 'class' => 'button-secondary'))
 		."<div id='smtp_debug'></div>";
 	}
 
@@ -852,7 +850,7 @@ class mf_email
 
 		if($intUnread > 0)
 		{
-			$count_message = "&nbsp;<span class='update-plugins' title='".__("Unread", $this->lang_key)."'>
+			$count_message = "&nbsp;<span class='update-plugins' title='".__("Unread", 'lang_email')."'>
 				<span>".$intUnread."</span>
 			</span>";
 		}
@@ -870,22 +868,22 @@ class mf_email
 		{
 			$count_message = $this->count_unread_email();
 
-			$menu_title = __("E-mail", $this->lang_key);
+			$menu_title = __("E-mail", 'lang_email');
 			add_menu_page("", $menu_title.$count_message, $menu_capability, $menu_start, '', 'dashicons-email-alt', 99);
 
-			$menu_title = __("Inbox", $this->lang_key);
+			$menu_title = __("Inbox", 'lang_email');
 			add_submenu_page($menu_start, $menu_title, $menu_title, $menu_capability, $menu_start);
 
-			$menu_title = __("Send New", $this->lang_key);
+			$menu_title = __("Send New", 'lang_email');
 			add_submenu_page($menu_start, $menu_title, " - ".$menu_title, $menu_capability, $menu_root."send/index.php");
 
-			$menu_title = __("Accounts", $this->lang_key);
+			$menu_title = __("Accounts", 'lang_email');
 			add_submenu_page($menu_start, $menu_title, $menu_title, $menu_capability, $menu_root."accounts/index.php");
 
-			$menu_title = __("Add New", $this->lang_key);
+			$menu_title = __("Add New", 'lang_email');
 			add_submenu_page($menu_root, $menu_title, $menu_title, $menu_capability, $menu_root."create/index.php");
 
-			$menu_title = __("Add New Folder", $this->lang_key);
+			$menu_title = __("Add New Folder", 'lang_email');
 			add_submenu_page($menu_root, $menu_title, $menu_title, $menu_capability, $menu_root."folder/index.php");
 		}
 
@@ -893,13 +891,13 @@ class mf_email
 		{
 			$menu_start = $menu_root."accounts/index.php";
 
-			$menu_title = __("E-mail", $this->lang_key);
+			$menu_title = __("E-mail", 'lang_email');
 			add_menu_page("", $menu_title, $menu_capability, $menu_start, '', 'dashicons-email-alt', 99);
 
-			$menu_title = __("Accounts", $this->lang_key);
+			$menu_title = __("Accounts", 'lang_email');
 			add_submenu_page($menu_start, $menu_title, $menu_title, $menu_capability, $menu_start);
 
-			$menu_title = __("Add New", $this->lang_key);
+			$menu_title = __("Add New", 'lang_email');
 			add_submenu_page($menu_start, $menu_title, " - ".$menu_title, $menu_capability, $menu_root."create/index.php");
 		}
 	}
@@ -1068,7 +1066,7 @@ class mf_email
 
 			$obj_base->filter_phpmailer_data();
 
-			do_log(__("Message Sent", $this->lang_key)." (core): ".var_export($obj_base->phpmailer_temp, true)." (".$_SERVER['REQUEST_URI'].")", 'notification');
+			do_log(__("Message Sent", 'lang_email')." (core): ".var_export($obj_base->phpmailer_temp, true)." (".$_SERVER['REQUEST_URI'].")", 'notification');
 		}
 		########################################
 
@@ -1263,8 +1261,8 @@ class mf_email
 
 		if($mail_to != '')
 		{
-			$mail_subject = sprintf(__("Test mail to %s", $this->lang_key), $mail_to);
-			$mail_content = sprintf(__("This is a test email generated from %s on %s", $this->lang_key), "Wordpress", remove_protocol(array('url' => get_site_url(), 'clean' => true)));
+			$mail_subject = sprintf(__("Test mail to %s", 'lang_email'), $mail_to);
+			$mail_content = sprintf(__("This is a test email generated from %s on %s", 'lang_email'), "Wordpress", remove_protocol(array('url' => get_site_url(), 'clean' => true)));
 
 			DEFINE('SMTPDebug', 3);
 
@@ -1276,17 +1274,17 @@ class mf_email
 
 			if($sent == true)
 			{
-				$done_text = "<p><strong>".__("The test message was sent successfully", $this->lang_key)."</strong></p>";
+				$done_text = "<p><strong>".__("The test message was sent successfully", 'lang_email')."</strong></p>";
 			}
 
 			else
 			{
-				$error_text = "<p><strong>".__("I am sorry, but I could not send the message for you", $this->lang_key)."</strong></p>"
-				."<p>".__("More information regarding this is saved in the log", $this->lang_key)."</p>";
+				$error_text = "<p><strong>".__("I am sorry, but I could not send the message for you", 'lang_email')."</strong></p>"
+				."<p>".__("More information regarding this is saved in the log", 'lang_email')."</p>";
 
 				if($smtp_debug != '')
 				{
-					$error_text .= "<p>".sprintf(__("Debug %s", $this->lang_key), "SMTP").":</p>
+					$error_text .= "<p>".sprintf(__("Debug %s", 'lang_email'), "SMTP").":</p>
 					<pre>".$smtp_debug."</pre>";
 				}
 			}
@@ -1301,13 +1299,13 @@ class mf_email
 
 			else
 			{
-				$result['error'] = __("I could not send the test email. Please make sure that the credentials are correct", $this->lang_key);
+				$result['error'] = __("I could not send the test email. Please make sure that the credentials are correct", 'lang_email');
 			}
 		}
 
 		else
 		{
-			$result['error'] = __("You did not enter a valid email address. Please do and try again", $this->lang_key);
+			$result['error'] = __("You did not enter a valid email address. Please do and try again", 'lang_email');
 		}
 
 		header('Content-Type: application/json');
@@ -1367,7 +1365,7 @@ class mf_email
 
 				if($this->all_left_to_send == 0)
 				{
-					$error_text = __("The e-mail limit for the last hour has been reached so you can not send anymore e-mails at them moment. Save as a draft and check back in a moment", $this->lang_key);
+					$error_text = __("The e-mail limit for the last hour has been reached so you can not send anymore e-mails at them moment. Save as a draft and check back in a moment", 'lang_email');
 				}
 			break;
 		}
@@ -1429,7 +1427,7 @@ class mf_email
 
 						else
 						{
-							$error_text = __("The email account was not updated", $this->lang_key);
+							$error_text = __("The email account was not updated", 'lang_email');
 						}
 					}
 
@@ -1437,7 +1435,7 @@ class mf_email
 					{
 						if($this->check_if_account_exists() > 0)
 						{
-							$error_text = __("The email account already exists", $this->lang_key);
+							$error_text = __("The email account already exists", 'lang_email');
 						}
 
 						else
@@ -1451,7 +1449,7 @@ class mf_email
 
 							else
 							{
-								$error_text = __("The email account could not be created", $this->lang_key);
+								$error_text = __("The email account could not be created", 'lang_email');
 							}
 						}
 					}
@@ -1483,12 +1481,12 @@ class mf_email
 
 					if($wpdb->rows_affected > 0)
 					{
-						$done_text = __("The e-mail account was deleted", $this->lang_key);
+						$done_text = __("The e-mail account was deleted", 'lang_email');
 					}
 
 					else
 					{
-						$error_text = __("The e-mail account could not be deleted", $this->lang_key);
+						$error_text = __("The e-mail account could not be deleted", 'lang_email');
 					}
 				}
 
@@ -1496,7 +1494,7 @@ class mf_email
 				{
 					$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET blogID = '%d', emailVerified = '1' WHERE emailID = '%d'", $wpdb->blogid, $this->id));
 
-					$done_text = __("The e-mail account was confirmed", $this->lang_key);
+					$done_text = __("The e-mail account was confirmed", 'lang_email');
 				}
 
 				else if(isset($_REQUEST['btnEmailVerify']) && $this->id > 0 && wp_verify_nonce($_REQUEST['_wpnonce_email_verify'], 'email_verify_'.$this->id))
@@ -1528,14 +1526,14 @@ class mf_email
 								{
 									$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailVerified = '1' WHERE emailID = '%d'", $this->id));
 
-									$done_text = __("The e-mail account passed verification", $this->lang_key);
+									$done_text = __("The e-mail account passed verification", 'lang_email');
 								}
 
 								else
 								{
 									$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailVerified = '-1' WHERE emailID = '%d'", $this->id));
 
-									$error_text = __("The e-mail account did not pass the verification", $this->lang_key);
+									$error_text = __("The e-mail account did not pass the verification", 'lang_email');
 								}
 							}
 
@@ -1549,8 +1547,8 @@ class mf_email
 
 								$mail_to = $strEmailAddress;
 								$mail_headers = "From: ".$user_data->display_name." <".$user_data->user_email.">\r\n";
-								$mail_subject = sprintf(__("Please confirm your e-mail %s for use on %s", $this->lang_key), $strEmailAddress, $site_name);
-								$mail_content = sprintf(__("We have gotten a request to confirm the address %s from a user at %s (%s). If this is a valid request please click %shere%s to confirm the use of your e-mail address to send messages", $this->lang_key), $strEmailAddress, $site_name, "<a href='".$site_url."'>".$site_url."</a>", "<a href='".$confirm_url."'>", "</a>");
+								$mail_subject = sprintf(__("Please confirm your e-mail %s for use on %s", 'lang_email'), $strEmailAddress, $site_name);
+								$mail_content = sprintf(__("We have gotten a request to confirm the address %s from a user at %s (%s). If this is a valid request please click %shere%s to confirm the use of your e-mail address to send messages", 'lang_email'), $strEmailAddress, $site_name, "<a href='".$site_url."'>".$site_url."</a>", "<a href='".$confirm_url."'>", "</a>");
 
 								$sent = send_email(array(
 									'from' => $user_data->user_email,
@@ -1563,7 +1561,7 @@ class mf_email
 
 								if($sent)
 								{
-									$done_text = sprintf(__("An e-mail with a confirmation link has been sent to %s", $this->lang_key), $strEmailAddress);
+									$done_text = sprintf(__("An e-mail with a confirmation link has been sent to %s", 'lang_email'), $strEmailAddress);
 								}
 							}
 						}
@@ -1572,12 +1570,12 @@ class mf_email
 
 				else if(isset($_GET['created']))
 				{
-					$done_text = __("The account was created", $this->lang_key);
+					$done_text = __("The account was created", 'lang_email');
 				}
 
 				else if(isset($_GET['updated']))
 				{
-					$done_text = __("The account was updated", $this->lang_key);
+					$done_text = __("The account was updated", 'lang_email');
 				}
 			break;
 
@@ -1617,7 +1615,7 @@ class mf_email
 
 							if($sent)
 							{
-								$intFolderID = $this->get_folder_ids(__("Sent", $this->lang_key), 4, $this->id);
+								$intFolderID = $this->get_folder_ids(__("Sent", 'lang_email'), 4, $this->id);
 
 								list($this->message_id, $affected_rows) = $this->save_email(array('read' => 1, 'folder_id' => $intFolderID, 'to' => $this->message_to, 'cc' => $this->message_cc, 'subject' => $this->message_subject, 'content_html' => $this->message_text));
 
@@ -1646,7 +1644,7 @@ class mf_email
 
 												else
 												{
-													$error_text = __("The file does not seem to exist", $this->lang_key)." (".$file_url_check.")";
+													$error_text = __("The file does not seem to exist", 'lang_email')." (".$file_url_check.")";
 												}
 											}
 
@@ -1657,7 +1655,7 @@ class mf_email
 
 											else
 											{
-												$error_text = __("Could not save the attached file to DB, but it was successfully sent", $this->lang_key);
+												$error_text = __("Could not save the attached file to DB, but it was successfully sent", 'lang_email');
 											}
 										}
 									}
@@ -1671,14 +1669,14 @@ class mf_email
 
 							else
 							{
-								$error_text = __("Unfortunately, I could not send the email for you. Please try again. If the problem persists, please contact my admin", $this->lang_key);
+								$error_text = __("Unfortunately, I could not send the email for you. Please try again. If the problem persists, please contact my admin", 'lang_email');
 							}
 						}
 					}
 
 					else
 					{
-						$error_text = __("You have to enter all required fields", $this->lang_key);
+						$error_text = __("You have to enter all required fields", 'lang_email');
 					}
 				}
 
@@ -1690,7 +1688,7 @@ class mf_email
 
 					if($affected_rows > 0)
 					{
-						$done_text = __("The draft has been saved", $this->lang_key);
+						$done_text = __("The draft has been saved", 'lang_email');
 					}
 				}
 
@@ -1816,14 +1814,14 @@ class mf_email
 
 								$this->message_subject = (substr($this->message_subject_old, 0, strlen($subject_prefix)) != $subject_prefix ? $subject_prefix : "").$this->message_subject_old;
 
-								$this->message_text = "<p></p><p>-------------------- ".__("Original message", $this->lang_key)." --------------------</p>"
-								."<p>".__("From", $this->lang_key).": ".$strFrom."</p>"
-								."<p>".__("To", $this->lang_key).": ".$strTo."</p>"
-								."<p>".__("Subject", $this->lang_key).": ".$this->message_subject."</p>"
-								."<p>".__("Date", $this->lang_key).": ".$dteMessageCreated."</p>"
+								$this->message_text = "<p></p><p>-------------------- ".__("Original message", 'lang_email')." --------------------</p>"
+								."<p>".__("From", 'lang_email').": ".$strFrom."</p>"
+								."<p>".__("To", 'lang_email').": ".$strTo."</p>"
+								."<p>".__("Subject", 'lang_email').": ".$this->message_subject."</p>"
+								."<p>".__("Date", 'lang_email').": ".$dteMessageCreated."</p>"
 								."<p>"."-------------------</p>"
 								."<p>".preg_replace('#^(.*?)$#m', '<br>&gt; \1', strip_tags($this->message_text, '<br>'))."</p>"
-								."<p>------------------ ".__("End original message", $this->lang_key)." ------------------</p>";
+								."<p>------------------ ".__("End original message", 'lang_email')." ------------------</p>";
 
 								if($this->message_forward == 1)
 								{
@@ -1956,7 +1954,7 @@ class mf_email
 	{
 		global $wpdb;
 
-		$intFolderID = $this->get_folder_ids(__("Sent", $this->lang_key), 4, $id);
+		$intFolderID = $this->get_folder_ids(__("Sent", 'lang_email'), 4, $id);
 
 		$sent = $wpdb->get_var($wpdb->prepare("SELECT COUNT(messageID) FROM ".$wpdb->base_prefix."email_message WHERE folderID = '%d' AND messageDeleted = '0'", $intFolderID));
 		$received = $wpdb->get_var($wpdb->prepare("SELECT COUNT(messageID) FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) WHERE emailID = '%d' AND messageDeleted = '0'", $id));
@@ -2019,7 +2017,7 @@ class mf_email
 		if(!isset($data['type'])){	$data['type'] = 'all';} //incoming, outgoing
 
 		$arr_data = array(
-			'' => "-- ".__("Choose Here", $this->lang_key)." --"
+			'' => "-- ".__("Choose Here", 'lang_email')." --"
 		);
 
 		switch($data['type'])
@@ -2066,7 +2064,7 @@ class mf_email
 				$hourly_release_time = apply_filters('get_hourly_release_time', '', $strEmailAddress);
 				$mins = time_between_dates(array('start' => $hourly_release_time, 'end' => date("Y-m-d H:i:s"), 'type' => 'round', 'return' => 'minutes'));
 
-				$strEmailName .= " (".sprintf(__("Hourly Limit Reached. Wait %s min", $this->lang_key), (60 - $mins)).")";
+				$strEmailName .= " (".sprintf(__("Hourly Limit Reached. Wait %s min", 'lang_email'), (60 - $mins)).")";
 			}
 
 			switch($data['index'])
@@ -2409,20 +2407,20 @@ if(class_exists('mf_list_table'))
 			$this->set_views(array(
 				'db_field' => 'emailDeleted',
 				'types' => array(
-					'0' => __("All", $obj_email->lang_key),
-					'1' => __("Trash", $obj_email->lang_key)
+					'0' => __("All", 'lang_email'),
+					'1' => __("Trash", 'lang_email')
 				),
 			));
 
 			$arr_columns = array(
 				//'cb' => '<input type="checkbox">',
-				'emailAddress' => __("Address", $obj_email->lang_key),
-				'emailName' => __("Name", $obj_email->lang_key),
-				'rights' => shorten_text(array('string' => __("Rights", $obj_email->lang_key), 'limit' => 3)),
-				//'received' => __("Received", $obj_email->lang_key),
-				//'sent' => __("Sent", $obj_email->lang_key),
-				'emailServer' => __("Incoming", $obj_email->lang_key),
-				'emailSmtpServer' => __("Outgoing", $obj_email->lang_key),
+				'emailAddress' => __("Address", 'lang_email'),
+				'emailName' => __("Name", 'lang_email'),
+				'rights' => shorten_text(array('string' => __("Rights", 'lang_email'), 'limit' => 3)),
+				//'received' => __("Received", 'lang_email'),
+				//'sent' => __("Sent", 'lang_email'),
+				'emailServer' => __("Incoming", 'lang_email'),
+				'emailSmtpServer' => __("Outgoing", 'lang_email'),
 			);
 
 			$this->set_columns($arr_columns);
@@ -2460,11 +2458,11 @@ if(class_exists('mf_list_table'))
 
 					if($intEmailDeleted == 0)
 					{
-						$actions['edit'] = "<a href='".$email_url."'>".__("Edit", $obj_email->lang_key)."</a>";
+						$actions['edit'] = "<a href='".$email_url."'>".__("Edit", 'lang_email')."</a>";
 
 						if(IS_ADMIN || $intUserID == get_current_user_id())
 						{
-							$actions['delete'] = "<a href='".wp_nonce_url(admin_url("admin.php?page=mf_email/accounts/index.php&btnEmailDelete&intEmailID=".$intEmailID), 'email_delete_'.$intEmailID, '_wpnonce_email_delete')."' rel='confirm'>".__("Delete", $obj_email->lang_key)."</a>";
+							$actions['delete'] = "<a href='".wp_nonce_url(admin_url("admin.php?page=mf_email/accounts/index.php&btnEmailDelete&intEmailID=".$intEmailID), 'email_delete_'.$intEmailID, '_wpnonce_email_delete')."' rel='confirm'>".__("Delete", 'lang_email')."</a>";
 						}
 
 						$actions['send'] = "<a href='".admin_url("admin.php?page=mf_email/send/index.php&intEmailID=".$intEmailID)."'><i class='fa fa-paper-plane fa-lg'></i></a>";
@@ -2472,7 +2470,7 @@ if(class_exists('mf_list_table'))
 
 					else
 					{
-						$out .= "<a href='".$email_url."'>".__("Recover", $obj_email->lang_key)."</a>";
+						$out .= "<a href='".$email_url."'>".__("Recover", 'lang_email')."</a>";
 					}
 
 					$out .= $this->row_actions($actions);
@@ -2487,12 +2485,12 @@ if(class_exists('mf_list_table'))
 
 					if($arr_message_amount['received'] > 0)
 					{
-						$actions['received'] = __("Received", $obj_email->lang_key).": ".$arr_message_amount['received'];
+						$actions['received'] = __("Received", 'lang_email').": ".$arr_message_amount['received'];
 					}
 
 					if($arr_message_amount['sent'] > 0)
 					{
-						$actions['sent'] = __("Sent", $obj_email->lang_key).": ".$arr_message_amount['sent'];
+						$actions['sent'] = __("Sent", 'lang_email').": ".$arr_message_amount['sent'];
 					}
 
 					$out .= $this->row_actions($actions);
@@ -2507,7 +2505,7 @@ if(class_exists('mf_list_table'))
 					if($intEmailPublic == 1)
 					{
 						$rights_icon = "fa fa-check green";
-						$rights_title = __("Public", $obj_email->lang_key);
+						$rights_title = __("Public", 'lang_email');
 					}
 
 					else if($strEmailRoles != '')
@@ -2581,9 +2579,9 @@ if(class_exists('mf_list_table'))
 						{
 							default:
 							case 0:
-								$row_info .= "<i class='fa fa-question fa-lg' title='".__("Needs to be Verified", $obj_email->lang_key)."'></i>";
+								$row_info .= "<i class='fa fa-question fa-lg' title='".__("Needs to be Verified", 'lang_email')."'></i>";
 
-								$row_actions .= ($row_actions != '' ? " | " : "")."<a href='".wp_nonce_url(admin_url("admin.php?page=mf_email/accounts/index.php&btnEmailVerify&intEmailID=".$intEmailID), 'email_verify_'.$intEmailID, '_wpnonce_email_verify')."'>".__("Verify", $obj_email->lang_key)."</a>";
+								$row_actions .= ($row_actions != '' ? " | " : "")."<a href='".wp_nonce_url(admin_url("admin.php?page=mf_email/accounts/index.php&btnEmailVerify&intEmailID=".$intEmailID), 'email_verify_'.$intEmailID, '_wpnonce_email_verify')."'>".__("Verify", 'lang_email')."</a>";
 							break;
 
 							case 1:
@@ -2591,7 +2589,7 @@ if(class_exists('mf_list_table'))
 								{
 									if($dteEmailChecked < date("Y-m-d H:i:s", strtotime("-1 day")))
 									{
-										$row_info .= "<i class='fa fa-ban fa-lg red' title='".sprintf(__("Last Checked %s", $obj_email->lang_key), format_date($dteEmailChecked))."'></i>";
+										$row_info .= "<i class='fa fa-ban fa-lg red' title='".sprintf(__("Last Checked %s", 'lang_email'), format_date($dteEmailChecked))."'></i>";
 									}
 
 									else
@@ -2602,18 +2600,18 @@ if(class_exists('mf_list_table'))
 										{
 											if($dteEmailReceived < date("Y-m-d H:i:s", strtotime("-3 day")))
 											{
-												$row_info .= "<i class='fa fa-exclamation-triangle fa-lg yellow' title='".sprintf(__("Last E-mail %s", $obj_email->lang_key), format_date($dteEmailReceived))."'></i>";
+												$row_info .= "<i class='fa fa-exclamation-triangle fa-lg yellow' title='".sprintf(__("Last E-mail %s", 'lang_email'), format_date($dteEmailReceived))."'></i>";
 											}
 
 											else
 											{
-												$row_info .= "<i class='fa fa-check fa-lg green' title='".sprintf(__("Checked %s, Received %s", $obj_email->lang_key), format_date($dteEmailChecked), format_date($dteEmailReceived))."'></i>";
+												$row_info .= "<i class='fa fa-check fa-lg green' title='".sprintf(__("Checked %s, Received %s", 'lang_email'), format_date($dteEmailChecked), format_date($dteEmailReceived))."'></i>";
 											}
 										}
 
 										else
 										{
-											$row_info .= "<i class='fa fa-question-circle fa-lg' title='".__("No e-mails received so far", $obj_email->lang_key)."'></i>";
+											$row_info .= "<i class='fa fa-question-circle fa-lg' title='".__("No e-mails received so far", 'lang_email')."'></i>";
 										}
 									}
 								}
@@ -2622,12 +2620,12 @@ if(class_exists('mf_list_table'))
 								{
 									$row_info .= "<i class='fa fa-spinner fa-spin fa-lg'></i>";
 
-									$row_actions .= ($row_actions != '' ? " | " : "").__("Incoming has not been checked yet", $obj_email->lang_key);
+									$row_actions .= ($row_actions != '' ? " | " : "").__("Incoming has not been checked yet", 'lang_email');
 								}
 							break;
 
 							case -1:
-								$row_info .= "<i class='fa fa-times fa-lg red' title='".__("Verification Failed", $obj_email->lang_key)."'></i>";
+								$row_info .= "<i class='fa fa-times fa-lg red' title='".__("Verification Failed", 'lang_email')."'></i>";
 							break;
 						}
 
@@ -2667,23 +2665,23 @@ if(class_exists('mf_list_table'))
 								{
 									if($dteEmailSmtpChecked < date("Y-m-d H:i:s", strtotime("-7 day")))
 									{
-										$row_info .= "<i class='fa fa-exclamation-triangle fa-lg yellow' title='".sprintf(__("Last Checked %s", $obj_email->lang_key), format_date($dteEmailSmtpChecked))."'></i>";
+										$row_info .= "<i class='fa fa-exclamation-triangle fa-lg yellow' title='".sprintf(__("Last Checked %s", 'lang_email'), format_date($dteEmailSmtpChecked))."'></i>";
 									}
 
 									else
 									{
-										$row_info .= "<i class='fa fa-check fa-lg green' title='".sprintf(__("Checked %s", $obj_email->lang_key), format_date($dteEmailSmtpChecked))."'></i>";
+										$row_info .= "<i class='fa fa-check fa-lg green' title='".sprintf(__("Checked %s", 'lang_email'), format_date($dteEmailSmtpChecked))."'></i>";
 									}
 								}
 
 								else
 								{
-									$row_info .= "<i class='fa fa-question-circle fa-lg' title='".__("Outgoing has not been checked yet", $obj_email->lang_key)."'></i>";
+									$row_info .= "<i class='fa fa-question-circle fa-lg' title='".__("Outgoing has not been checked yet", 'lang_email')."'></i>";
 								}
 							break;
 
 							case -1:
-								$row_info .= "<i class='fa fa-times fa-lg red' title='".__("Connection Failed", $obj_email->lang_key)."'></i>";
+								$row_info .= "<i class='fa fa-times fa-lg red' title='".__("Connection Failed", 'lang_email')."'></i>";
 							break;
 						}
 

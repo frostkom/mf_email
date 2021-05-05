@@ -7,8 +7,8 @@ $obj_email->get_from_db();
 
 echo "<div class='wrap'>
 	<h2>"
-		.__("Accounts", $obj_email->lang_key)
-		."<a href='".admin_url("admin.php?page=mf_email/create/index.php")."' class='add-new-h2'>".__("Add New", $obj_email->lang_key)."</a>"
+		.__("Accounts", 'lang_email')
+		."<a href='".admin_url("admin.php?page=mf_email/create/index.php")."' class='add-new-h2'>".__("Add New", 'lang_email')."</a>"
 	."</h2>"
 	.get_notification();
 

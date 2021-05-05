@@ -142,7 +142,7 @@ class rcube_imap
     {
 		global $obj_email;
 
-		$log_message = __("OpenSSL Not Available", $obj_email->lang_key);
+		$log_message = __("OpenSSL Not Available", 'lang_email');
 
         // check for OpenSSL support in PHP build
         if($use_ssl && extension_loaded('openssl'))
@@ -199,7 +199,7 @@ class rcube_imap
         $this->port = $port;
         $this->ssl  = $use_ssl;
 
-		$log_message = sprintf(__("Login failed for %s from %s.", $obj_email->lang_key), $user, (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : "(".__("Unknown IP", $obj_email->lang_key).")")); //rcmail_remote_ip() //." (".substr($pass, 0, 5)."...)"
+		$log_message = sprintf(__("Login failed for %s from %s.", 'lang_email'), $user, (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : "(".__("Unknown IP", 'lang_email').")")); //rcmail_remote_ip() //." (".substr($pass, 0, 5)."...)"
 
         if($this->conn->connected())
 		{
