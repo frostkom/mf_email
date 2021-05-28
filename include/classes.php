@@ -1541,14 +1541,14 @@ class mf_email
 							{
 								$user_data = get_userdata(get_current_user_id());
 
-								$site_name = get_bloginfo('name');
+								$site_title = get_bloginfo('name');
 								$site_url = get_site_url();
 								$confirm_url = wp_nonce_url(admin_url("admin.php?page=mf_email/accounts/index.php&btnEmailConfirm&intEmailID=".$this->id), 'email_confirm_'.$this->id, '_wpnonce_email_confirm');
 
 								$mail_to = $strEmailAddress;
 								$mail_headers = "From: ".$user_data->display_name." <".$user_data->user_email.">\r\n";
-								$mail_subject = sprintf(__("Please confirm your e-mail %s for use on %s", 'lang_email'), $strEmailAddress, $site_name);
-								$mail_content = sprintf(__("We have gotten a request to confirm the address %s from a user at %s (%s). If this is a valid request please click %shere%s to confirm the use of your e-mail address to send messages", 'lang_email'), $strEmailAddress, $site_name, "<a href='".$site_url."'>".$site_url."</a>", "<a href='".$confirm_url."'>", "</a>");
+								$mail_subject = sprintf(__("Please confirm your e-mail %s for use on %s", 'lang_email'), $strEmailAddress, $site_title);
+								$mail_content = sprintf(__("We have gotten a request to confirm the address %s from a user at %s (%s). If this is a valid request please click %shere%s to confirm the use of your e-mail address to send messages", 'lang_email'), $strEmailAddress, $site_title, "<a href='".$site_url."'>".$site_url."</a>", "<a href='".$confirm_url."'>", "</a>");
 
 								$sent = send_email(array(
 									'from' => $user_data->user_email,
@@ -2085,7 +2085,7 @@ class mf_email
 
 			$user_name = $user_data->display_name;
 			$user_email = $user_data->user_email;
-			$admin_name = get_bloginfo('name');
+			$site_title = get_bloginfo('name');
 			$admin_email = get_bloginfo('admin_email');
 
 			$this->fetch_request();
@@ -2121,7 +2121,7 @@ class mf_email
 			if($admin_email != '' && $admin_email != $user_email)
 			{
 				$this->public = 1;
-				$this->name = $admin_name;
+				$this->name = $site_title;
 				$this->address = $admin_email;
 
 				$this->id = $this->check_if_account_exists();
@@ -2136,11 +2136,11 @@ class mf_email
 					switch($data['index'])
 					{
 						case 'id':
-							$arr_data[$this->id] = $admin_name." &lt;".$admin_email."&gt;";
+							$arr_data[$this->id] = $site_title." &lt;".$admin_email."&gt;";
 						break;
 
 						case 'address':
-							$arr_data[$admin_name."|".$admin_email] = $admin_name." &lt;".$admin_email."&gt;";
+							$arr_data[$site_title."|".$admin_email] = $site_title." &lt;".$admin_email."&gt;";
 						break;
 					}
 				}
