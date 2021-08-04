@@ -9,12 +9,15 @@ if(!defined('ABSPATH'))
 	require_once($folder."wp-load.php");
 }
 
-$json_output = array();
-
-$obj_email = new mf_email();
+if(!isset($obj_email))
+{
+	$obj_email = new mf_email();
+}
 
 $strAjaxInput = check_var('type', 'char', true, 'email/folders/'.__("Inbox", 'lang_email'));
 $arr_input = explode("/", trim($strAjaxInput, "/"));
+
+$json_output = array();
 
 switch($arr_input[0])
 {
