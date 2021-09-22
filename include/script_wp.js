@@ -26,69 +26,105 @@ jQuery(function($)
 				dom_obj_id = dom_obj.attr('id'),
 				dom_obj_val = dom_obj.val();
 
+			var display_email_name = false,
+				display_email_signature = false,
+				display_email_settings = false,
+				display_email_credentials = false,
+				display_outgoing_smtp = false;
+
 			switch(dom_obj_id)
 			{
 				case 'strEmailAddress':
 					if(dom_obj_val != '')
 					{
-						$(".display_email_name").removeClass('hide');
-					}
-
-					else
-					{
-						$(".display_email_name").addClass('hide');
+						display_email_name = true;
 					}
 				break;
 
 				case 'strEmailName':
 					if(dom_obj_val != '')
 					{
-						$(".display_email_signature").removeClass('hide');
-					}
-
-					else
-					{
-						$(".display_email_signature").addClass('hide');
+						display_email_signature = true;
 					}
 				break;
 
 				case 'strEmailServer':
 					if(dom_obj_val != '')
 					{
-						$(".display_email_settings, .display_email_credentials").removeClass('hide');
-					}
-
-					else
-					{
-						$(".display_email_settings, .display_email_credentials").addClass('hide');
+						display_email_settings = true;
+						display_email_credentials = true;
 					}
 				break;
 
 				case 'strEmailOutgoingType':
 					if(dom_obj_val == 'smtp')
 					{
-						$(".display_outgoing_smtp").removeClass('hide');
-						$(".display_smtp_credentials").addClass('hide');
+						display_outgoing_smtp = true;
 					}
 
 					else
 					{
-						$(".display_outgoing_smtp").addClass('hide');
-						$(".display_smtp_credentials").removeClass('hide');
+						display_smtp_credentials = true;
 					}
 				break;
 
 				case 'strEmailSmtpServer':
 					if(dom_obj_val != '')
 					{
-						$(".display_smtp_settings, .display_smtp_credentials").removeClass('hide');
-					}
-
-					else
-					{
-						$(".display_smtp_settings, .display_smtp_credentials").addClass('hide');
+						display_email_settings = true;
+						display_email_credentials = true;
 					}
 				break;
+			}
+
+			if(display_email_name == true)
+			{
+				$(".display_email_name").removeClass('hide');
+			}
+
+			else
+			{
+				$(".display_email_name").addClass('hide');
+			}
+
+			if(display_email_signature == true)
+			{
+				$(".display_email_signature").removeClass('hide');
+			}
+
+			else
+			{
+				$(".display_email_signature").addClass('hide');
+			}
+
+			if(display_email_settings == true)
+			{
+				$(".display_email_settings").removeClass('hide');
+			}
+
+			else
+			{
+				$(".display_email_settings").addClass('hide');
+			}
+
+			if(display_email_credentials == true)
+			{
+				$(".display_email_credentials").removeClass('hide');
+			}
+
+			else
+			{
+				$(".display_email_credentials").addClass('hide');
+			}
+
+			if(display_outgoing_smtp == true)
+			{
+				$(".display_outgoing_smtp").removeClass('hide');
+			}
+
+			else
+			{
+				$(".display_outgoing_smtp").addClass('hide');
 			}
 		});
 	}
