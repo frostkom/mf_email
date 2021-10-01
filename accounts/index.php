@@ -16,7 +16,6 @@ echo "<div class='wrap'>
 
 	$tbl_group->select_data(array(
 		//'select' => "*",
-		'debug' => ($_SERVER['REMOTE_ADDR'] == ""),
 	));
 
 	$tbl_group->do_display();

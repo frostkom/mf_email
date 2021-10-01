@@ -726,9 +726,9 @@ class mf_email
 		$description = sprintf(__("The log can be viewed by going to %sTools -> Log -> Notice%s", 'lang_email'), "<a href='".admin_url("admin.php?page=mf_log/list/index.php&post_status=notification")."'>", "</a>");
 		// if get_site_url() is a subfolder, add to descr that some messages (ie. lost password) might be logged on the main site
 
-		echo show_select(array('data' => $arr_data, 'name' => $setting_key."[]", 'value' => $option, 'description' => $description));
+		$description .= setting_time_limit(array('key' => $setting_key, 'value' => $option, 'time_limit' => 24));
 
-		setting_time_limit(array('key' => $setting_key, 'value' => $option, 'time_limit' => 24));
+		echo show_select(array('data' => $arr_data, 'name' => $setting_key."[]", 'value' => $option, 'description' => $description));
 	}
 
 	function setting_email_preferred_content_types_callback()
