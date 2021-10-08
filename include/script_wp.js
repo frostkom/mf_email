@@ -20,17 +20,17 @@ jQuery(function($)
 
 	function show_and_hide_fields()
 	{
+		var display_email_name = false,
+			display_email_signature = false,
+			display_email_settings = false,
+			display_email_credentials = false,
+			display_outgoing_smtp = false;
+
 		dom_show_and_hide_fields.each(function()
 		{
 			var dom_obj = $(this),
 				dom_obj_id = dom_obj.attr('id'),
 				dom_obj_val = dom_obj.val();
-
-			var display_email_name = false,
-				display_email_signature = false,
-				display_email_settings = false,
-				display_email_credentials = false,
-				display_outgoing_smtp = false;
 
 			switch(dom_obj_id)
 			{
@@ -76,57 +76,57 @@ jQuery(function($)
 					}
 				break;
 			}
-
-			if(display_email_name == true)
-			{
-				$(".display_email_name").removeClass('hide');
-			}
-
-			else
-			{
-				$(".display_email_name").addClass('hide');
-			}
-
-			if(display_email_signature == true)
-			{
-				$(".display_email_signature").removeClass('hide');
-			}
-
-			else
-			{
-				$(".display_email_signature").addClass('hide');
-			}
-
-			if(display_email_settings == true)
-			{
-				$(".display_email_settings").removeClass('hide');
-			}
-
-			else
-			{
-				$(".display_email_settings").addClass('hide');
-			}
-
-			if(display_email_credentials == true)
-			{
-				$(".display_email_credentials").removeClass('hide');
-			}
-
-			else
-			{
-				$(".display_email_credentials").addClass('hide');
-			}
-
-			if(display_outgoing_smtp == true)
-			{
-				$(".display_outgoing_smtp").removeClass('hide');
-			}
-
-			else
-			{
-				$(".display_outgoing_smtp").addClass('hide');
-			}
 		});
+
+		if(display_email_name == true)
+		{
+			$(".display_email_name").removeClass('hide');
+		}
+
+		else
+		{
+			$(".display_email_name").addClass('hide');
+		}
+
+		if(display_email_signature == true)
+		{
+			$(".display_email_signature").removeClass('hide');
+		}
+
+		else
+		{
+			$(".display_email_signature").addClass('hide');
+		}
+
+		if(display_email_settings == true)
+		{
+			$(".display_email_settings").removeClass('hide');
+		}
+
+		else
+		{
+			$(".display_email_settings").addClass('hide');
+		}
+
+		if(display_email_credentials == true)
+		{
+			$(".display_email_credentials").removeClass('hide');
+		}
+
+		else
+		{
+			$(".display_email_credentials").addClass('hide');
+		}
+
+		if(display_outgoing_smtp == true)
+		{
+			$(".display_outgoing_smtp").removeClass('hide');
+		}
+
+		else
+		{
+			$(".display_outgoing_smtp").addClass('hide');
+		}
 	}
 
 	show_and_hide_fields();

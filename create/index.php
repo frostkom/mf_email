@@ -49,7 +49,7 @@ echo "<div class='wrap'>
 								.show_textfield(array('type' => 'number', 'name' => 'intEmailPort', 'text' => __("Port", 'lang_email'), 'value' => $obj_email->port, 'placeholder' => 143, 'xtra_class' => "display_email_settings"))
 							."</div>
 							<div class='flex_flow display_email_credentials'>"
-								.show_textfield(array('name' => 'strEmailUsername', 'text' => __("Username", 'lang_email'), 'value' => $obj_email->username, 'xtra' => " autocomplete='off'"))
+								.show_textfield(array('name' => 'strEmailUsername', 'text' => __("Username", 'lang_email'), 'value' => $obj_email->username, 'xtra' => " autocomplete='off' maxlength='100'"))
 								.show_password_field(array('name' => 'strEmailPassword', 'text' => __("Password"), 'value' => $obj_email->password, 'xtra' => " autocomplete='new-password'"))
 							."</div>
 						</div>
@@ -68,7 +68,7 @@ echo "<div class='wrap'>
 							."</div>"
 							.show_textfield(array('name' => 'strEmailSmtpHostname', 'text' => __("Hostname", 'lang_email'), 'value' => $obj_email->smtp_hostname, 'xtra_class' => "display_smtp_settings"))
 							."<div class='flex_flow display_smtp_credentials'>"
-								.show_textfield(array('name' => 'strEmailSmtpUsername', 'text' => __("User", 'lang_email'), 'value' => $obj_email->smtp_username, 'xtra' => " autocomplete='off'"))
+								.show_textfield(array('name' => 'strEmailSmtpUsername', 'text' => __("User", 'lang_email'), 'value' => $obj_email->smtp_username, 'xtra' => " autocomplete='off' maxlength='100'"))
 								.show_password_field(array('name' => 'strEmailSmtpPassword', 'text' => __("Password"), 'value' => $obj_email->smtp_password, 'xtra' => " autocomplete='new-password'"))
 							."</div>"
 							.show_select(array('data' => $obj_email->get_preferred_content_types_for_select(), 'name' => 'arrEmailPreferredContentTypes[]', 'text' => __("Preferred Content Types", 'lang_email'), 'value' => $obj_email->preferred_content_types))

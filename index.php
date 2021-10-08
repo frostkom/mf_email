@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: 
-Version: 6.4.10
+Version: 6.4.12
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://frostkom.se
@@ -85,7 +85,7 @@ if(function_exists('is_plugin_active') && is_plugin_active("mf_base/index.php"))
 			emailVerified ENUM('-1', '0', '1') NOT NULL DEFAULT '0',
 			emailServer VARCHAR(30),
 			emailPort SMALLINT,
-			emailUsername VARCHAR(30),
+			emailUsername VARCHAR(100),
 			emailPassword VARCHAR(150),
 			emailAddress VARCHAR(50),
 			emailName VARCHAR(60),
@@ -117,11 +117,11 @@ if(function_exists('is_plugin_active') && is_plugin_active("mf_base/index.php"))
 			'emailPreferredContentTypes' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpPassword",
 		);
 
-		/*$arr_update_column[$wpdb->base_prefix."email"] = array(
-			//'' => "ALTER TABLE [table] CHANGE [column] [column] ",
+		$arr_update_column[$wpdb->base_prefix."email"] = array(
+			'emailUsername' => "ALTER TABLE [table] CHANGE [column] [column] VARCHAR(100)",
 		);
 
-		$arr_add_index[$wpdb->base_prefix."email"] = array(
+		/*$arr_add_index[$wpdb->base_prefix."email"] = array(
 			//'' => "ALTER TABLE [table] ADD INDEX [column] ([column])",
 		);*/
 
