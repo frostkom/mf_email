@@ -1705,7 +1705,7 @@ class mf_email
 
 				else if($this->message_text_source > 0)
 				{
-					$this->message_text = $wpdb->get_var($wpdb->prepare("SELECT post_content FROM ".$wpdb->posts." WHERE post_type = 'page' AND post_status = 'publish' AND ID = '%d'", $this->message_text_source));
+					$this->message_text = $wpdb->get_var($wpdb->prepare("SELECT post_content FROM ".$wpdb->posts." WHERE post_type = %s AND post_status = %s AND ID = '%d'", 'page', 'publish', $this->message_text_source));
 
 					$this->message_text = str_replace("[name]", get_user_info(), $this->message_text);
 
