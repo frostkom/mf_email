@@ -2501,18 +2501,26 @@ if(class_exists('mf_list_table'))
 					$strEmailRoles = $item['emailRoles'];
 
 					$rights_icon = $rights_title = "";
+					$arr_rights = array();
 
 					if($intEmailPublic == 1)
 					{
 						$rights_icon = "fa fa-check green";
 						$rights_title = __("Public", 'lang_email');
+						
+						$arr_rights[] = array(
+							'icon' => $rights_icon,
+							'title' => $rights_title,
+						);
 					}
 
-					else if($strEmailRoles != '')
+					if($strEmailRoles != '')
 					{
 						$arr_roles = get_roles_for_select(array('use_capability' => false));
 
 						$arrEmailRoles = explode(",", $strEmailRoles);
+
+						$rights_title = "";
 
 						foreach($arrEmailRoles as $role)
 						{
@@ -2525,31 +2533,44 @@ if(class_exists('mf_list_table'))
 						{
 							$rights_icon .= " grey";
 						}
+
+						$arr_rights[] = array(
+							'icon' => $rights_icon,
+							'title' => $rights_title,
+						);
 					}
 
-					else
-					{
-						$resultUsers = $wpdb->get_results($wpdb->prepare("SELECT userID FROM ".$wpdb->base_prefix."email_users WHERE emailID = '%d'", $intEmailID));
+					$resultUsers = $wpdb->get_results($wpdb->prepare("SELECT userID FROM ".$wpdb->base_prefix."email_users WHERE emailID = '%d'", $intEmailID));
 
-						if($wpdb->num_rows > 0)
+					if($wpdb->num_rows > 0)
+					{
+						$rights_title = "";
+
+						foreach($resultUsers as $r)
 						{
-							foreach($resultUsers as $r)
-							{
-								$rights_title .= ($rights_title != '' ? ", " : "").get_user_info(array('id' => $r->userID));
-							}
-
-							$rights_icon = "fa fa-user";
-
-							if(count($resultUsers) == 1)
-							{
-								$rights_icon .= " grey";
-							}
+							$rights_title .= ($rights_title != '' ? ", " : "").get_user_info(array('id' => $r->userID));
 						}
+
+						$rights_icon = "fa fa-user";
+
+						if(count($resultUsers) == 1)
+						{
+							$rights_icon .= " grey";
+						}
+
+						$arr_rights[] = array(
+							'icon' => $rights_icon,
+							'title' => $rights_title,
+						);
 					}
 
-					if($rights_icon != '')
+					$i = 0;
+
+					foreach($arr_rights as $row)
 					{
-						$out .= "<i class='".$rights_icon." fa-lg' title='".$rights_title."'></i>";
+						$out .= ($i > 0 ? "&nbsp;" : "")."<i class='".$row['icon']." fa-lg' title='".$row['title']."'></i>";
+
+						$i++;
 					}
 				break;
 
