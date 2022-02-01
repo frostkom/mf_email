@@ -673,7 +673,7 @@ class mf_email
 
 		$arr_settings = array();
 
-		if(function_exists('is_plugin_active') && is_plugin_active("mf_log/index.php") && get_option('setting_log_activate') == 'yes')
+		if(!function_exists('is_plugin_active') || function_exists('is_plugin_active') && is_plugin_active("mf_log/index.php") && get_option('setting_log_activate') == 'yes')
 		{
 			$arr_settings['setting_email_log'] = __("Log Outgoing Messages", 'lang_email');
 		}
@@ -718,7 +718,7 @@ class mf_email
 			'plugin' => __("Plugin", 'lang_email'),
 		);
 
-		if(function_exists('is_plugin_active') && is_plugin_active("mf_group/index.php"))
+		if(!function_exists('is_plugin_active') || function_exists('is_plugin_active') && is_plugin_active("mf_group/index.php"))
 		{
 			$arr_data['group'] = __("Group", 'lang_email');
 		}
@@ -2507,7 +2507,7 @@ if(class_exists('mf_list_table'))
 					{
 						$rights_icon = "fa fa-check green";
 						$rights_title = __("Public", 'lang_email');
-						
+
 						$arr_rights[] = array(
 							'icon' => $rights_icon,
 							'title' => $rights_title,
