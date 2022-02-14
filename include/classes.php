@@ -150,6 +150,43 @@ class mf_email
 		return $out;
 	}
 
+	function check_if_spam($data)
+	{
+		global $wpdb;
+
+		if(!isset($data['from'])){		$data['from'] = '';}
+		if(!isset($data['subject'])){	$data['subject'] = '';}
+
+		$is_spam = false;
+
+		if($is_spam == false && $data['subject'] != '')
+		{
+			$arr_spam = array('*****SPAM*****');
+
+			foreach($arr_spam as $str_spam)
+			{
+				if(strpos($data['subject'], $str_spam))
+				{
+					$is_spam = true;
+
+					break;
+				}
+			}
+		}
+
+		if($is_spam == false && $data['from'] != '')
+		{
+			$wpdb->get_results($wpdb->prepare("SELECT spamID FROM ".$wpdb->base_prefix."email_spam WHERE emailID = '%d' AND messageFrom = %s LIMIT 0, 1", $this->id, $data['from']));
+
+			if($wpdb->num_rows > 0)
+			{
+				$is_spam = true;
+			}
+		}
+
+		return $is_spam;
+	}
+
 	function mark_spam($data)
 	{
 		global $wpdb;
@@ -348,6 +385,7 @@ class mf_email
 		{
 			if(is_main_site())
 			{
+				// Get new messages
 				####################################
 				$arr_bounce_subject = array(
 					'Returned mail: see transcript for details',
@@ -624,7 +662,9 @@ class mf_email
 					),
 				));
 
-				$empty_trash_days = defined('EMPTY_TRASH_DAYS') ? EMPTY_TRASH_DAYS : 30;
+				// Empty trash
+				####################################
+				$empty_trash_days = (defined('EMPTY_TRASH_DAYS') ? EMPTY_TRASH_DAYS : 30);
 
 				$result = $wpdb->get_results("SELECT messageID FROM ".$wpdb->base_prefix."email_message WHERE messageDeleted = '1' AND messageDeletedDate < DATE_SUB(NOW(), INTERVAL ".$empty_trash_days." DAY)");
 
@@ -635,6 +675,56 @@ class mf_email
 					$this->remove_attachment(array('message_id' => $intMessageID));
 					$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->base_prefix."email_message WHERE messageID = '%d'", $intMessageID));
 				}
+				####################################
+
+				// Remove old "Original messages" information from large messages
+				####################################
+				$original_message_divider = "-------------------- ";
+
+				$result = $wpdb->get_results($wpdb->prepare("SELECT messageID, messageName, messageText, messageText2, messageSize FROM ".$wpdb->base_prefix."email_message WHERE messageText LIKE %s OR messageText2 LIKE %s ORDER BY RAND() LIMIT 0, 100", "%".$original_message_divider."%", "%".$original_message_divider."%"));
+
+				foreach($result as $r)
+				{
+					$intMessageID = $r->messageID;
+					$strMessageSubject = $r->messageName;
+					$strMessageText = $r->messageText;
+					$strMessageText2 = $r->messageText2;
+					$intMessageSize = $r->messageSize;
+
+					$mail_strpos = strpos($strMessageText, $original_message_divider);
+					$mail_strpos2 = strpos($strMessageText2, $original_message_divider);
+
+					if($mail_strpos > 0)
+					{
+						$length_before = strlen($strMessageText);
+
+						$strMessageText = substr($strMessageText, 0, $mail_strpos);
+
+						$length_after = strlen($strMessageText);
+
+						//do_log("I shortened the plain message for '".$strMessageSubject."' (#".$intMessageID.") from ".$length_before." -> ".$length_after);
+
+						$intMessageSize -= ($length_before - $length_after);
+
+						$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email_message SET messageText = %s, messageSize = '%d' WHERE messageID = '%d'", $strMessageText, $intMessageSize, $intMessageID));
+					}
+
+					if($mail_strpos2 > 0)
+					{
+						$length_before = strlen($strMessageText2);
+
+						$strMessageText2 = substr($strMessageText2, 0, $mail_strpos2);
+
+						$length_after = strlen($strMessageText2);
+
+						//do_log("I shortened the HTML message for '".$strMessageSubject."' from ".$length_before." -> ".$length_after);
+
+						$intMessageSize -= ($length_before - $length_after);
+
+						$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email_message SET messageText2 = %s, messageSize = '%d' WHERE messageID = '%d'", $strMessageText2, $intMessageSize, $intMessageID));
+					}
+				}
+				####################################
 
 				delete_base(array(
 					'table_prefix' => $wpdb->base_prefix,
@@ -2148,43 +2238,6 @@ class mf_email
 		}
 
 		return $arr_data;
-	}
-
-	function check_if_spam($data)
-	{
-		global $wpdb;
-
-		if(!isset($data['from'])){		$data['from'] = '';}
-		if(!isset($data['subject'])){	$data['subject'] = '';}
-
-		$is_spam = false;
-
-		if($is_spam == false && $data['subject'] != '')
-		{
-			$arr_spam = array('*****SPAM*****');
-
-			foreach($arr_spam as $str_spam)
-			{
-				if(strpos($data['subject'], $str_spam))
-				{
-					$is_spam = true;
-
-					break;
-				}
-			}
-		}
-
-		if($is_spam == false && $data['from'] != '')
-		{
-			$wpdb->get_results($wpdb->prepare("SELECT spamID FROM ".$wpdb->base_prefix."email_spam WHERE emailID = '%d' AND messageFrom = %s LIMIT 0, 1", $this->id, $data['from']));
-
-			if($wpdb->num_rows > 0)
-			{
-				$is_spam = true;
-			}
-		}
-
-		return $is_spam;
 	}
 
 	function encrypt_password()
