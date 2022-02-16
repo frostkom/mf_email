@@ -681,7 +681,7 @@ class mf_email
 				####################################
 				$original_message_divider = "-------------------- ";
 
-				$result = $wpdb->get_results($wpdb->prepare("SELECT messageID, messageName, messageText, messageText2, messageSize FROM ".$wpdb->base_prefix."email_message WHERE messageText LIKE %s OR messageText2 LIKE %s ORDER BY RAND() LIMIT 0, 100", "%".$original_message_divider."%", "%".$original_message_divider."%"));
+				$result = $wpdb->get_results($wpdb->prepare("SELECT messageID, messageName, messageText, messageText2, messageSize FROM ".$wpdb->base_prefix."email_message WHERE messageText LIKE %s OR messageText2 LIKE %s AND messageCreated < DATE_SUB(NOW(), INTERVAL 1 YEAR) ORDER BY RAND() LIMIT 0, 100", "%".$original_message_divider."%", "%".$original_message_divider."%"));
 
 				foreach($result as $r)
 				{
