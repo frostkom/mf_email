@@ -139,13 +139,18 @@ class mf_email
 
 		else
 		{
-			$out = iconv_mime_decode($data['subject']); //, 0, "ISO-8859-1"
-		}
+			if($out = iconv_mime_decode($data['subject'])) //, 0, "ISO-8859-1"
+			{
+				// Do nothing more here
+			}
 
-		/*else
-		{
-			$out = $data['subject'];
-		}*/
+			else
+			{
+				do_log("convert_email_subject() Error: Threw error on iconv_mime_decode() for ".htmlspecialchars($data['subject']));
+
+				$out = $data['subject'];
+			}
+		}
 
 		return $out;
 	}
@@ -1202,7 +1207,7 @@ class mf_email
 
 				if($smtp_host != '')
 				{
-					$phpmailer->SMTPDebug = defined('SMTPDebug') ? SMTPDebug : false;
+					$phpmailer->SMTPDebug = (defined('SMTPDebug') ? SMTPDebug : false);
 
 					$phpmailer->Mailer = 'smtp';
 
@@ -1234,6 +1239,17 @@ class mf_email
 						$phpmailer->Username = $smtp_user;
 						$phpmailer->Password = $smtp_pass;
 					}
+
+					/*$mail->SMTPOptions = array(
+						'ssl' => [
+							'verify_peer' => true,
+							'verify_depth' => 3,
+							'allow_self_signed' => true,
+							'peer_name' => 'smtp.example.com',
+							'cafile' => '/etc/ssl/ca_cert.pem',
+							'crypto_method' => STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT,
+						],
+					);*/
 
 					//$phpmailer = apply_filters('wp_mail_smtp_custom_options', $phpmailer);
 				}
