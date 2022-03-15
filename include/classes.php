@@ -139,16 +139,33 @@ class mf_email
 
 		else
 		{
-			if($out = iconv_mime_decode($data['subject'])) //, 0, "ISO-8859-1"
+			$out_temp = $data['subject'];
+
+			$has_been_spam_tagged = false;
+			$spam_tag = "*****SPAM***** ";
+
+			if(substr($out_temp, 0, strlen($spam_tag)) == $spam_tag)
 			{
-				// Do nothing more here
+				$out_temp = substr($out_temp, strlen($spam_tag));
+				$has_been_spam_tagged = true;
 			}
 
-			else
-			{
-				do_log("convert_email_subject() Error: Threw error on iconv_mime_decode() for ".htmlspecialchars($data['subject']));
+				if($out = @iconv_mime_decode($out_temp)) //, 0, "ISO-8859-1"
+				{
+					// Do nothing more here
+				}
 
-				$out = $data['subject'];
+				else
+				{
+					do_log("convert_email_subject() Error: Threw error on iconv_mime_decode() for '".htmlspecialchars($data['subject'])."'");
+
+					$out = $data['subject'];
+				}
+
+			// Has to be returned, otherwise it won't be detected as spam in check_if_spam()
+			if($has_been_spam_tagged)
+			{
+				$out = $spam_tag.$out;
 			}
 		}
 
@@ -170,7 +187,7 @@ class mf_email
 
 			foreach($arr_spam as $str_spam)
 			{
-				if(strpos($data['subject'], $str_spam))
+				if(strpos($data['subject'], $str_spam) !== false)
 				{
 					$is_spam = true;
 
