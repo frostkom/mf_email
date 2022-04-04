@@ -587,8 +587,6 @@ class mf_email
 
 												$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email_message_attachment SET messageID = '%d', fileID = '%d'", $intMessageID, $intFileID));
 
-												do_log("Attachement Saved: ".$wpdb->last_query);
-
 												$term_attachment = $this->create_term_if_not_exists(array('taxonomy' => $taxonomy, 'term_slug' => 'email_attachment', 'term_name' => __("E-mail attachments", 'lang_email')));
 
 												wp_set_object_terms($post_id, array((int)$term_attachment['term_id']), $taxonomy, false);
