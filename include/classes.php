@@ -1712,7 +1712,7 @@ class mf_email
 			case 'send_email':
 				if(isset($_POST['btnMessageSend']) && wp_verify_nonce($_POST['_wpnonce_message_send'], 'message_send') && $error_text == '')
 				{
-					if($this->id > 0 && $this->message_to != '')
+					if($this->id > 0 && $this->message_to != '' && $this->message_subject != '' && $this->message_text != '')
 					{
 						$result = $wpdb->get_results($wpdb->prepare("SELECT emailName, emailAddress, emailSignature FROM ".$wpdb->base_prefix."email WHERE emailID = '%d'", $this->id));
 
@@ -1806,7 +1806,7 @@ class mf_email
 
 					else
 					{
-						$error_text = __("You have to enter all required fields", 'lang_email');
+						$error_text = __("You have to choose who to send from and to, a subject and text", 'lang_email');
 					}
 				}
 

@@ -18,7 +18,7 @@ echo "<div class='wrap'>
 							.show_select(array('data' => $obj_email->get_from_for_select(), 'name' => 'intEmailID', 'value' => $obj_email->id, 'text' => __("From", 'lang_email'), 'required' => true))
 							."<div class='flex_flow'>
 								<div class='search_container'>"
-									.show_textarea(array('name' => 'strMessageTo', 'text' => __("To", 'lang_email'), 'value' => $obj_email->message_to, 'autogrow' => 1, 'xtra' => "autofocus"))
+									.show_textarea(array('name' => 'strMessageTo', 'text' => __("To", 'lang_email'), 'value' => $obj_email->message_to, 'autogrow' => 1, 'xtra' => "autofocus", 'required' => true))
 									."<span id='txtMessageTo'></span>
 								</div>
 								<div class='search_container'>"
