@@ -1584,19 +1584,6 @@ class mf_email
 						}
 					}
 
-					if($this->id > 0)
-					{
-						$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->base_prefix."email_users WHERE emailID = '%d'", $this->id));
-
-						if(is_array($this->users))
-						{
-							foreach($this->users as $intUserID)
-							{
-								$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email_users SET emailID = '%d', userID = '%d'", $this->id, $intUserID));
-							}
-						}
-					}
-
 					if(!isset($error_text) || $error_text == '')
 					{
 						mf_redirect(admin_url("admin.php?page=mf_email/accounts/index.php&".$type));
@@ -2173,7 +2160,9 @@ class mf_email
 			break;
 		}
 
-		$result = $wpdb->get_results("SELECT ".$wpdb->base_prefix."email.emailID, emailName, emailAddress FROM ".$wpdb->base_prefix."email_users RIGHT JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE (emailPublic = '1' OR emailRoles LIKE '%".get_current_user_role()."%' OR ".$wpdb->base_prefix."email.userID = '".get_current_user_id()."' OR ".$wpdb->base_prefix."email_users.userID = '".get_current_user_id()."') AND (blogID = '".$wpdb->blogid."' OR blogID = '0') AND emailDeleted = '0' AND emailAddress != ''".$query_where." ORDER BY emailName ASC, emailAddress ASC");
+		$result = $wpdb->get_results("SELECT ".$wpdb->base_prefix."email.emailID, emailName, emailAddress FROM ".$wpdb->base_prefix."email_users RIGHT JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE (emailPublic = '1' OR emailRoles LIKE '%".get_current_user_role()."%' OR ".$wpdb->base_prefix."email.userID = '".get_current_user_id()."' OR ".$wpdb->base_prefix."email_users.userID = '".get_current_user_id()."') AND (blogID = '".$wpdb->blogid."' OR blogID = '0') AND emailDeleted = '0' AND emailAddress != ''".$query_where." GROUP BY ".$wpdb->base_prefix."email.emailID ORDER BY emailName ASC, emailAddress ASC");
+
+		//do_log("Test: ".$wpdb->last_query);
 
 		foreach($result as $r)
 		{
@@ -2181,7 +2170,7 @@ class mf_email
 			$strEmailName = $strEmailName_orig = $r->emailName;
 			$strEmailAddress = $r->emailAddress;
 
-			$strEmailName = $strEmailName != '' ? $strEmailName." &lt;".$strEmailAddress."&gt;" : $strEmailAddress;
+			$strEmailName = ($strEmailName != '' ? $strEmailName." &lt;".$strEmailAddress."&gt;" : $strEmailAddress);
 
 			$key_prefix = "";
 
@@ -2346,7 +2335,36 @@ class mf_email
 			$rows_affected += $wpdb->rows_affected;
 		}
 
-		return $rows_affected > 0;
+		return ($rows_affected > 0);
+	}
+
+	function update_rights()
+	{
+		global $wpdb;
+
+		$was_updated = false;
+
+		$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->base_prefix."email_users WHERE emailID = '%d'", $this->id));
+
+		if($wpdb->rows_affected > 0)
+		{
+			$was_updated = true;
+		}
+
+		if(is_array($this->users))
+		{
+			foreach($this->users as $intUserID)
+			{
+				$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email_users SET emailID = '%d', userID = '%d'", $this->id, $intUserID));
+
+				if($wpdb->rows_affected > 0)
+				{
+					$was_updated = true;
+				}
+			}
+		}
+
+		return $was_updated;
 	}
 
 	function create_account()
@@ -2359,10 +2377,7 @@ class mf_email
 
 		$this->id = $wpdb->insert_id;
 
-		if($this->id > 0)
-		{
-			$updated = $this->update_passwords();
-		}
+		return ($this->id > 0 && ($wpdb->rows_affected > 0 || $this->update_passwords() || $this->update_rights()));
 	}
 
 	function update_account()
@@ -2373,19 +2388,7 @@ class mf_email
 
 		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailVerified = '0', emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailSignature = %s, emailOutgoingType = %s, emailLimitPerHour = '%d', emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailPreferredContentTypes = %s, emailDeleted = '0' WHERE emailID = '%d'", $wpdb->blogid, $this->public, @implode(",", $this->roles), $this->server, $this->port, $this->username, $this->address, $this->name, $this->signature, $this->outgoing_type, $this->limit_per_hour, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, @implode(",", $this->preferred_content_types), $this->id));
 
-		$rows_affected = $wpdb->rows_affected;
-
-		$updated = $this->update_passwords();
-
-		if($rows_affected > 0 || $updated == true)
-		{
-			return true;
-		}
-
-		else
-		{
-			return false;
-		}
+		return ($wpdb->rows_affected > 0 || $this->update_passwords() || $this->update_rights());
 	}
 }
 
@@ -2514,6 +2517,7 @@ if(class_exists('mf_list_table'))
 				//'sent' => __("Sent", 'lang_email'),
 				'emailServer' => __("Incoming", 'lang_email'),
 				'emailSmtpServer' => __("Outgoing", 'lang_email'),
+				'userID' => shorten_text(array('string' => __("User", 'lang_email'), 'limit' => 4)),
 			);
 
 			$this->set_columns($arr_columns);
@@ -2523,6 +2527,7 @@ if(class_exists('mf_list_table'))
 				'emailName',
 				'emailServer',
 				'emailSmtpServer',
+				'userID',
 			));
 		}
 
@@ -2827,6 +2832,10 @@ if(class_exists('mf_list_table'))
 							.$row_actions
 						."</div>";
 					}
+				break;
+
+				case 'userID':
+					$out .= get_user_info(array('id' => $item['userID'], 'type' => 'short_name'));
 				break;
 
 				default:
