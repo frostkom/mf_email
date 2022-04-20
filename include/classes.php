@@ -792,7 +792,7 @@ class mf_email
 
 		$arr_settings = array();
 
-		if(!function_exists('is_plugin_active') || function_exists('is_plugin_active') && is_plugin_active("mf_log/index.php") && get_option('setting_log_activate') == 'yes')
+		if(IS_SUPER_ADMIN && (!function_exists('is_plugin_active') || function_exists('is_plugin_active') && is_plugin_active("mf_log/index.php") && get_option('setting_log_activate') == 'yes'))
 		{
 			$arr_settings['setting_email_log'] = __("Log Outgoing Messages", 'lang_email');
 		}
@@ -830,7 +830,8 @@ class mf_email
 	function setting_email_log_callback()
 	{
 		$setting_key = get_setting_key(__FUNCTION__);
-		$option = get_option($setting_key);
+		settings_save_site_wide($setting_key);
+		$option = get_site_option($setting_key, get_option($setting_key));
 
 		$arr_data = array(
 			'core' => __("Core", 'lang_email'),
@@ -842,10 +843,10 @@ class mf_email
 			$arr_data['group'] = __("Group", 'lang_email');
 		}
 
-		$description = sprintf(__("The log can be viewed by going to %sTools -> Log -> Notice%s", 'lang_email'), "<a href='".admin_url("admin.php?page=mf_log/list/index.php&post_status=notification")."'>", "</a>");
+		$description = sprintf(__("The log can be viewed by going to %sTools -> Log -> Notice%s.", 'lang_email'), "<a href='".admin_url("admin.php?page=mf_log/list/index.php&post_status=notification")."'>", "</a>");
 		// if get_site_url() is a subfolder, add to descr that some messages (ie. lost password) might be logged on the main site
 
-		$description .= setting_time_limit(array('key' => $setting_key, 'value' => $option, 'time_limit' => 24));
+		$description .= " ".setting_time_limit(array('key' => $setting_key, 'value' => $option, 'time_limit' => 24));
 
 		echo show_select(array('data' => $arr_data, 'name' => $setting_key."[]", 'value' => $option, 'description' => $description));
 	}
@@ -1174,7 +1175,7 @@ class mf_email
 
 		/* Log Messages */
 		########################################
-		$setting_email_log = get_option('setting_email_log');
+		$setting_email_log = get_site_option('setting_email_log');
 
 		if(is_array($setting_email_log) && in_array('core', $setting_email_log))
 		{
