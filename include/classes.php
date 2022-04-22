@@ -1479,8 +1479,8 @@ class mf_email
 			case 'send_email':
 				$this->message_id = check_var('intMessageID');
 				$this->message_draft_id = check_var('intMessageDraftID');
-				$this->message_answer = isset($_GET['answer']) ? 1 : 0;
-				$this->message_forward = isset($_GET['forward']) ? 1 : 0;
+				$this->message_answer = isset($_GET['answer']);
+				$this->message_forward = isset($_GET['forward']);
 
 				$this->id = check_var('intEmailID', 'int', true, $this->get_from_last());
 				$this->message_to = check_var('strMessageTo');
@@ -1716,6 +1716,7 @@ class mf_email
 							$mail_headers = "From: ".$strEmailName." <".$strEmailAddress.">\r\n";
 							$mail_headers .= "Cc: ".$this->message_cc."\r\n";
 
+							$this->message_subject = stripslashes(stripslashes($this->message_subject));
 							$this->message_text = str_replace("[signature]", $strEmailSignature, $this->message_text);
 							$this->message_text = apply_filters('the_content', stripslashes($this->message_text));
 
