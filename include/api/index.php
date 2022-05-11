@@ -86,7 +86,7 @@ switch($arr_input[0])
 						$intTotal = $wpdb->get_var($wpdb->prepare("SELECT COUNT(messageID) FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) WHERE folderName = %s".$query_where, $strFolderName2));
 						$intUnread = $wpdb->get_var($wpdb->prepare("SELECT COUNT(messageID) FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) WHERE folderName = %s AND messageRead = '0'".$query_where, $strFolderName2));
 
-						$is_active = $strFolderName == $intFolderID2 || $strFolderName == $strFolderName2 ? 1 : 0;
+						$is_active = ($strFolderName == $intFolderID2 || $strFolderName == $strFolderName2);
 
 						$class = "";
 

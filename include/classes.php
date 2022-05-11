@@ -446,7 +446,7 @@ class mf_email
 					{
 						$logical = new rcube_message($connection, $header->uid);
 
-						$intMessageStatus = isset($header->flags['SEEN']) && $header->flags['SEEN'] == true ? 1 : 0;
+						$intMessageStatus = (isset($header->flags['SEEN']) && $header->flags['SEEN'] == true);
 						$strMessageTextID = $header->messageID;
 						$strMessageFrom = $logical->sender['mailto'];
 						$strMessageFromName = $logical->sender['name'];
@@ -2163,8 +2163,6 @@ class mf_email
 		}
 
 		$result = $wpdb->get_results("SELECT ".$wpdb->base_prefix."email.emailID, emailName, emailAddress FROM ".$wpdb->base_prefix."email_users RIGHT JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE (emailPublic = '1' OR emailRoles LIKE '%".get_current_user_role()."%' OR ".$wpdb->base_prefix."email.userID = '".get_current_user_id()."' OR ".$wpdb->base_prefix."email_users.userID = '".get_current_user_id()."') AND (blogID = '".$wpdb->blogid."' OR blogID = '0') AND emailDeleted = '0' AND emailAddress != ''".$query_where." GROUP BY ".$wpdb->base_prefix."email.emailID ORDER BY emailName ASC, emailAddress ASC");
-
-		//do_log("Test: ".$wpdb->last_query);
 
 		foreach($result as $r)
 		{
