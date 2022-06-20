@@ -408,17 +408,22 @@ class mf_email
 
 		if($obj_cron->is_running == false)
 		{
-			// Get new messages
-			####################################
 			$arr_bounce_subject = array(
-				'Returned mail: see transcript for details',
-				'Undelivered Mail Returned to Sender'
+				"Returned mail: see transcript for details",
+				"Undelivered Mail Returned to Sender",
+				"NDN:",
+				"Delivery Status Notification",
+				"Undeliverable:",
+				"Mail delivery failed",
+				"DELIVERY FAILURE:",
 			);
 
 			$arr_bounce_from_name = array(
-				'Mail Delivery Subsystem'
+				"Mail Delivery Subsystem",
 			);
 
+			// Get new messages
+			####################################
 			$result = $wpdb->get_results($wpdb->prepare("SELECT emailID, emailServer, emailPort, emailUsername, emailPassword, emailAddress FROM ".$wpdb->base_prefix."email WHERE blogID = '%d' AND emailDeleted = '0' AND emailVerified = '1' GROUP BY emailUsername", $wpdb->blogid)); //, blogID
 
 			foreach($result as $r)
@@ -703,6 +708,23 @@ class mf_email
 
 					$this->remove_attachment(array('message_id' => $intMessageID));
 					$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->base_prefix."email_message WHERE messageID = '%d'", $intMessageID));
+				}
+				####################################
+
+				// Trash bounce messages
+				####################################
+				foreach($arr_bounce_subject as $str_bounce_subject)
+				{
+					$result = $wpdb->get_results($wpdb->prepare("SELECT messageID FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) WHERE folderType = '%d' AND messageName LIKE %s AND messageReceived < DATE_SUB(NOW(), INTERVAL 1 MONTH) AND messageDeleted = '0' ORDER BY messageReceived ASC LIMIT 0, 5", 6, $str_bounce_subject."%")); //, messageName, messageReceived
+
+					foreach($result as $r)
+					{
+						$intMessageID = $r->messageID;
+
+						//do_log("Trash ".$r->messageName." (#".$intMessageID.", ".$r->messageReceived.")");
+						$json_output = array();
+						$this->set_mail_info(array('message_id' => $intMessageID, 'mail_deleted' => 1), $json_output);
+					}
 				}
 				####################################
 
