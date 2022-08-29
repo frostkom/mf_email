@@ -1145,7 +1145,7 @@ class mf_email
 	{
 		global $wpdb;
 
-		$result = $wpdb->get_results($wpdb->prepare("SELECT messageID FROM ".$wpdb->base_prefix."email_message WHERE messageDeleted = '0' AND (messageText LIKE %s OR messageText2 LIKE %s)", "%".$arr_used['file_url']."%", "%".$arr_used['file_url']."%"));
+		$result = $wpdb->get_results($wpdb->prepare("SELECT messageID FROM ".$wpdb->base_prefix."email_message WHERE messageDeleted = '0' AND (messageText LIKE %s OR messageText LIKE %s OR messageText2 LIKE %s OR messageText2 LIKE %s)", "%".$arr_used['file_url']."%", "%".$arr_used['file_thumb_url']."%", "%".$arr_used['file_url']."%", "%".$arr_used['file_thumb_url']."%"));
 		$rows = $wpdb->num_rows;
 
 		if($rows > 0)
