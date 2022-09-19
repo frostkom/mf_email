@@ -455,13 +455,35 @@ class mf_email
 						$strMessageTextID = $header->messageID;
 						$strMessageFrom = $logical->sender['mailto'];
 						$strMessageFromName = $logical->sender['name'];
-						$strMessageTo = $logical->receiver['mailto'];
+
+						if(isset($logical->receiver['mailto']))
+						{
+							$strMessageTo = $logical->receiver['mailto'];
+						}
+
+						else if(isset($logical->headers->to) && $logical->headers->to != '')
+						{
+							$strMessageTo = $logical->headers->to;
+						}
+
+						/*else if(isset($logical->imap->icache['message']->to) && $logical->imap->icache['message']->to != '')
+						{
+							$strMessageTo = $logical->imap->icache['message']->to;
+						}*/
+
+						else // imap->user || imap->conn->user
+						{
+							$strMessageTo = $strEmailAddress;
+						}
+
 						$strMessageCc = $header->cc;
 						$strMessageReplyTo = $header->replyto;
 						$strMessageSubject = $this->convert_email_subject(array('subject' => $header->subject));
 						$strMessageTextPlain = $logical->first_text_part();
 						$strMessageTextHTML = $logical->first_html_part();
 						$strMessageCreated = date("Y-m-d H:i:s", $header->timestamp);
+
+						//do_log("cron_base E-mail Error: ".str_replace("\n", "", var_export($logical->receiver, true)));
 
 						$bounce_from_name = preg_match('/('. implode('|', $arr_bounce_from_name) .')/i', $strMessageFromName);
 						$bounce_subject = preg_match('/('. implode('|', $arr_bounce_subject) .')/i', $strMessageSubject);
@@ -831,13 +853,13 @@ class mf_email
 			$arr_settings['setting_smtp_password'] = "SMTP ".__("Password", 'lang_email');
 		}
 
-		$admin_email = get_bloginfo('admin_email');
+		/*$admin_email = get_bloginfo('admin_email');
 		$wpdb->get_results($wpdb->prepare("SELECT emailID FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s AND emailSmtpServer != ''", $admin_email));
 
 		if($wpdb->num_rows > 0 || get_option('setting_smtp_server') != '')
-		{
+		{*/
 			$arr_settings['setting_smtp_test'] = __("Test", 'lang_email')." SMTP";
-		}
+		//}
 
 		show_settings_fields(array('area' => $options_area, 'object' => $this, 'settings' => $arr_settings));
 	}
