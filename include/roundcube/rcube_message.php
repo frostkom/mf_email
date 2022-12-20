@@ -80,10 +80,18 @@ class rcube_message
 		);
 
 		$from_temp = $this->imap->decode_address_list($this->headers->from);
-		list($rest, $this->sender) = each($from_temp);
+		//list($rest, $this->sender) = each($from_temp);
+		foreach($from_temp as $rest => $this->sender)
+		{
+			// Do nothing
+		}
 
 		$to_temp = $this->imap->decode_address_list($this->headers->to);
-		list($rest, $this->receiver) = each($to_temp);
+		//list($rest, $this->receiver) = each($to_temp);
+		foreach($to_temp as $rest => $this->receiver)
+		{
+			// Do nothing
+		}
 
 		$this->set_safe((isset($_GET['_safe']) && intval($_GET['_safe']) || isset($_SESSION['safe_messages'][$uid]) && $_SESSION['safe_messages'][$uid]));
 		$this->opt = array(
