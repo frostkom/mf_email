@@ -2544,7 +2544,7 @@ if(class_exists('mf_list_table'))
 
 			if($this->search != '')
 			{
-				$this->query_where .= ($this->query_where != '' ? " AND " : "")."(emailAddress LIKE '%".$this->search."%' OR emailName LIKE '%".$this->search."%' OR emailUsername LIKE '%".$this->search."%' OR emailServer LIKE '%".$this->search."%')";
+				$this->query_where .= ($this->query_where != '' ? " AND " : "")."(emailAddress LIKE '".$this->filter_search_before_like($this->search)."' OR emailName LIKE '".$this->filter_search_before_like($this->search)."' OR emailUsername LIKE '".$this->filter_search_before_like($this->search)."' OR emailServer LIKE '".$this->filter_search_before_like($this->search)."')";
 			}
 
 			$this->set_views(array(
