@@ -58,7 +58,7 @@ echo "<div class='wrap'>
 						<h3 class='hndle'><span>".__("Outgoing", 'lang_email')."</span></h3>
 						<div class='inside'>
 							<div class='flex_flow'>"
-								.show_select(array('data' => apply_filters('email_outgoing_alternatives', array('smtp' => "SMTP")), 'name' => 'strEmailOutgoingType', 'text' => __("Type", 'lang_email'), 'value' => $obj_email->outgoing_type))
+								.show_select(array('data' => apply_filters('email_outgoing_alternatives', array('smtp' => "SMTP")), 'name' => 'strEmailOutgoingType', 'text' => __("Type", 'lang_email'), 'value' => $obj_email->outgoing_type, 'allow_hidden_field' => false))
 								.show_textfield(array('type' => 'number', 'name' => 'intEmailLimitPerHour', 'text' => __("Outgoing e-mails per hour", 'lang_email'), 'value' => $obj_email->limit_per_hour))
 							."</div>
 							<div class='flex_flow display_outgoing_smtp'>"

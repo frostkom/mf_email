@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description:
-Version: 6.5.26
+Version: 6.5.30
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -45,6 +45,7 @@ if(!function_exists('is_plugin_active') || function_exists('is_plugin_active') &
 	add_filter('wp_mail_from', array($obj_email, 'wp_mail_from'));
 	add_filter('wp_mail_from_name', array($obj_email, 'wp_mail_from_name'));
 	add_action('phpmailer_init', array($obj_email, 'phpmailer_init'));
+	//add_action('use_smtp_settings', array($obj_email, 'use_smtp_settings'), 10);
 	add_action('sent_email', array($obj_email, 'sent_email'));
 	add_action('sent_email_error', array($obj_email, 'sent_email_error'));
 
@@ -114,7 +115,7 @@ if(!function_exists('is_plugin_active') || function_exists('is_plugin_active') &
 		) DEFAULT CHARSET=".$default_charset);
 
 		$arr_add_column[$wpdb->base_prefix."email"] = array(
-			//'emailPreferredContentTypes' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpPassword",
+			'emailSmtpVerified' => "ALTER TABLE [table] ADD [column] ENUM('-1', '0', '1') NOT NULL DEFAULT '0' AFTER emailLimitPerHour",
 		);
 
 		$arr_update_column[$wpdb->base_prefix."email"] = array(

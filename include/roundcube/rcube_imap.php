@@ -118,7 +118,6 @@ class rcube_imap
     const NONEXISTENT   = 7;
     const CONTACTADMIN  = 8;
 
-
     /**
      * Object constructor.
      */
@@ -138,7 +137,7 @@ class rcube_imap
      * @return boolean  TRUE on success, FALSE on failure
      * @access public
      */
-    function connect($host, $user, $pass, $port=143, $use_ssl=null)
+    function connect($host, $user, $pass, $port = 143, $use_ssl = null)
     {
 		global $obj_email;
 

@@ -98,10 +98,14 @@ class mf_email
 
 	function email_connect($data)
 	{
+		if(!isset($data['debug'])){		$data['debug'] = false;}
+
 		$is_connected = false;
 
+		define('RCMAIL_VERSION', $plugin_version = get_plugin_version(__FILE__));
+
 		$connection = new rcube_imap();
-		$connection->set_debug(false);
+		$connection->set_debug($data['debug']);
 		$is_connected = $connection->connect($data['server'], $data['username'], $data['password'], $data['port']);
 
 		return array($is_connected, $connection);
@@ -1216,29 +1220,10 @@ class mf_email
 		return ($old == "WordPress" ? get_option('blogname') : $old);
 	}
 
-	function phpmailer_init($phpmailer)
+	function use_smtp_settings($phpmailer)
 	{
-		global $wpdb, $obj_base;
+		global $wpdb;
 
-		/* Log Messages */
-		########################################
-		$setting_email_log = get_site_option('setting_email_log');
-
-		if(is_array($setting_email_log) && in_array('core', $setting_email_log))
-		{
-			if(!isset($obj_base))
-			{
-				$obj_base = new mf_base();
-			}
-
-			$obj_base->filter_phpmailer_data();
-
-			do_log(__("Message Sent", 'lang_email')." (core): ".var_export($obj_base->phpmailer_temp, true)." (".$_SERVER['REQUEST_URI'].")", 'notification');
-		}
-		########################################
-
-		/* SMTP Settings */
-		########################################
 		$outgoing_type = 'smtp';
 		$smtp_ssl = $smtp_host = $smtp_port = $smtp_hostname = $smtp_user = $smtp_pass = "";
 
@@ -1281,7 +1266,8 @@ class mf_email
 				{
 					$phpmailer->SMTPDebug = (defined('SMTPDebug') ? SMTPDebug : false);
 
-					$phpmailer->Mailer = 'smtp';
+					$phpmailer->IsSMTP();
+					//$phpmailer->Mailer = 'smtp';
 
 					if($smtp_ssl == '')
 					{
@@ -1331,7 +1317,32 @@ class mf_email
 				do_action('email_outgoing_process', $outgoing_type, $smtp_user, $smtp_pass);
 			break;
 		}
+	}
+
+	function phpmailer_init($phpmailer)
+	{
+		global $wpdb, $obj_base;
+
+		/* Log Messages */
 		########################################
+		$setting_email_log = get_site_option('setting_email_log');
+
+		if(is_array($setting_email_log) && in_array('core', $setting_email_log))
+		{
+			if(!isset($obj_base))
+			{
+				$obj_base = new mf_base();
+			}
+
+			$obj_base->filter_phpmailer_data();
+
+			$obj_microtime = new mf_microtime();
+
+			do_log(__("Message Sent", 'lang_email')." (core): ".$obj_microtime->now.", ".var_export($obj_base->phpmailer_temp, true)." (".$_SERVER['REQUEST_URI'].")", 'notification');
+		}
+		########################################
+
+		$phpmailer = $this->use_smtp_settings($phpmailer);
 	}
 
 	function sent_email($from)
@@ -1685,7 +1696,7 @@ class mf_email
 									$strEmailPassword = $obj_encryption->decrypt($strEmailPassword, md5($strEmailAddress));
 								}
 
-								list($is_connected, $connection) = $this->email_connect(array('server' => $strEmailServer, 'port' => $intEmailPort, 'username' => $strEmailUsername, 'password' => $strEmailPassword));
+								list($is_connected, $connection) = $this->email_connect(array('server' => $strEmailServer, 'port' => $intEmailPort, 'username' => $strEmailUsername, 'password' => $strEmailPassword, 'debug' => true));
 
 								if($is_connected == true)
 								{
@@ -1761,7 +1772,11 @@ class mf_email
 							$this->message_cc = $this->validate_email_string($this->message_cc);
 
 							$mail_headers = "From: ".$strEmailName." <".$strEmailAddress.">\r\n";
-							$mail_headers .= "Cc: ".$this->message_cc."\r\n";
+
+							if($this->message_cc != '')
+							{
+								$mail_headers .= "Cc: ".$this->message_cc."\r\n";
+							}
 
 							$this->message_subject = stripslashes(stripslashes($this->message_subject));
 							$this->message_text = str_replace("[signature]", $strEmailSignature, $this->message_text);
