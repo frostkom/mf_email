@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description:
-Version: 6.5.30
+Version: 6.6.1
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -45,7 +45,6 @@ if(!function_exists('is_plugin_active') || function_exists('is_plugin_active') &
 	add_filter('wp_mail_from', array($obj_email, 'wp_mail_from'));
 	add_filter('wp_mail_from_name', array($obj_email, 'wp_mail_from_name'));
 	add_action('phpmailer_init', array($obj_email, 'phpmailer_init'));
-	//add_action('use_smtp_settings', array($obj_email, 'use_smtp_settings'), 10);
 	add_action('sent_email', array($obj_email, 'sent_email'));
 	add_action('sent_email_error', array($obj_email, 'sent_email_error'));
 

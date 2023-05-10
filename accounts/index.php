@@ -15,7 +15,7 @@ echo "<div class='wrap'>
 	$tbl_group = new mf_email_account_table();
 
 	$tbl_group->select_data(array(
-		'select' => "emailID, emailAddress, emailName, emailPublic, emailRoles, emailServer, emailPort, emailUsername, emailVerified, emailChecked, emailSmtpServer, emailSmtpPort, emailSmtpUsername, emailOutgoingType, emailSmtpVerified, emailSmtpChecked, ".$wpdb->base_prefix."email.userID, emailDeleted",
+		'select' => "emailID, emailAddress, emailName, emailPublic, emailRoles, emailServer, emailPort, emailUsername, emailPassword, emailVerified, emailChecked, emailSmtpServer, emailSmtpPort, emailSmtpUsername, emailSmtpPassword, emailOutgoingType, emailSmtpVerified, emailSmtpChecked, ".$wpdb->base_prefix."email.userID, emailDeleted",
 	));
 
 	$tbl_group->do_display();

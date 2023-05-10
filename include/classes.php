@@ -102,7 +102,12 @@ class mf_email
 
 		$is_connected = false;
 
-		define('RCMAIL_VERSION', $plugin_version = get_plugin_version(__FILE__));
+		if(!defined('RCMAIL_VERSION'))
+		{
+			$plugin_version = get_plugin_version(__FILE__);
+
+			define('RCMAIL_VERSION', $plugin_version);
+		}
 
 		$connection = new rcube_imap();
 		$connection->set_debug($data['debug']);
@@ -2756,65 +2761,73 @@ if(class_exists('mf_list_table'))
 
 						$row_info = $row_actions = "";
 
-						switch($intEmailVerified)
+						if($item['emailPassword'] == '')
 						{
-							default:
-							case 0:
-								$row_info .= "<i class='fa fa-question fa-lg' title='".__("Needs to be Verified", 'lang_email')."'></i>";
+							$row_info .= "<i class='fa fa-times red display_warning'></i> ".__("No Password", 'lang_email');
+						}
 
-								$row_actions .= ($row_actions != '' ? " | " : "")."<a href='".wp_nonce_url(admin_url("admin.php?page=mf_email/accounts/index.php&btnEmailVerify&intEmailID=".$intEmailID), 'email_verify_'.$intEmailID, '_wpnonce_email_verify')."'>".__("Verify", 'lang_email')."</a>";
-							break;
+						else
+						{
+							switch($intEmailVerified)
+							{
+								default:
+								case 0:
+									$row_info .= "<i class='fa fa-question fa-lg' title='".__("Needs to be Verified", 'lang_email')."'></i>";
 
-							case 1:
-								if($dteEmailChecked > DEFAULT_DATE)
-								{
-									if($dteEmailChecked < date("Y-m-d H:i:s", strtotime("-1 day")))
+									$row_actions .= ($row_actions != '' ? " | " : "")."<a href='".wp_nonce_url(admin_url("admin.php?page=mf_email/accounts/index.php&btnEmailVerify&intEmailID=".$intEmailID), 'email_verify_'.$intEmailID, '_wpnonce_email_verify')."'>".__("Verify", 'lang_email')."</a>";
+								break;
+
+								case 1:
+									if($dteEmailChecked > DEFAULT_DATE)
 									{
-										$row_info .= "<i class='fa fa-ban fa-lg red' title='".sprintf(__("Last Checked %s", 'lang_email'), format_date($dteEmailChecked))."'></i>";
-									}
-
-									else
-									{
-										$dteEmailReceived = $wpdb->get_var($wpdb->prepare("SELECT messageReceived FROM ".$wpdb->base_prefix."email_folder INNER JOIN ".$wpdb->base_prefix."email_message USING (folderID) WHERE emailID = '%d' ORDER BY messageReceived DESC LIMIT 0, 1", $intEmailID));
-
-										if($dteEmailReceived > DEFAULT_DATE)
+										if($dteEmailChecked < date("Y-m-d H:i:s", strtotime("-1 day")))
 										{
-											if($dteEmailReceived < date("Y-m-d H:i:s", strtotime("-3 day")))
-											{
-												$row_info .= "<i class='fa fa-exclamation-triangle fa-lg yellow' title='".sprintf(__("Last E-mail %s", 'lang_email'), format_date($dteEmailReceived))."'></i>";
-											}
-
-											else
-											{
-												$row_info .= "<i class='fa fa-check fa-lg green' title='".sprintf(__("Checked %s, Received %s", 'lang_email'), format_date($dteEmailChecked), format_date($dteEmailReceived))."'></i>";
-											}
+											$row_info .= "<i class='fa fa-ban fa-lg red' title='".sprintf(__("Last Checked %s", 'lang_email'), format_date($dteEmailChecked))."'></i>";
 										}
 
 										else
 										{
-											$row_info .= "<i class='fa fa-question-circle fa-lg' title='".__("No e-mails received so far", 'lang_email')."'></i>";
+											$dteEmailReceived = $wpdb->get_var($wpdb->prepare("SELECT messageReceived FROM ".$wpdb->base_prefix."email_folder INNER JOIN ".$wpdb->base_prefix."email_message USING (folderID) WHERE emailID = '%d' ORDER BY messageReceived DESC LIMIT 0, 1", $intEmailID));
+
+											if($dteEmailReceived > DEFAULT_DATE)
+											{
+												if($dteEmailReceived < date("Y-m-d H:i:s", strtotime("-3 day")))
+												{
+													$row_info .= "<i class='fa fa-exclamation-triangle fa-lg yellow' title='".sprintf(__("Last E-mail %s", 'lang_email'), format_date($dteEmailReceived))."'></i>";
+												}
+
+												else
+												{
+													$row_info .= "<i class='fa fa-check fa-lg green' title='".sprintf(__("Checked %s, Received %s", 'lang_email'), format_date($dteEmailChecked), format_date($dteEmailReceived))."'></i>";
+												}
+											}
+
+											else
+											{
+												$row_info .= "<i class='fa fa-question-circle fa-lg' title='".__("No e-mails received so far", 'lang_email')."'></i>";
+											}
 										}
 									}
-								}
 
-								else
-								{
-									$row_info .= "<i class='fa fa-spinner fa-spin fa-lg'></i>";
+									else
+									{
+										$row_info .= "<i class='fa fa-spinner fa-spin fa-lg'></i>";
 
-									$row_actions .= ($row_actions != '' ? " | " : "").__("Incoming has not been checked yet", 'lang_email');
-								}
-							break;
+										$row_actions .= ($row_actions != '' ? " | " : "").__("Incoming has not been checked yet", 'lang_email');
+									}
+								break;
 
-							case -1:
-								$row_info .= "<i class='fa fa-times fa-lg red' title='".__("Verification Failed", 'lang_email')."'></i>";
-							break;
-						}
+								case -1:
+									$row_info .= "<i class='fa fa-times fa-lg red' title='".__("Verification Failed", 'lang_email')."'></i>";
+								break;
+							}
 
-						$row_info .= "&nbsp;".$strEmailServer.":".$item['emailPort'];
+							$row_info .= "&nbsp;".$strEmailServer.":".$item['emailPort'];
 
-						if($item['emailUsername'] != '')
-						{
-							$row_actions .= ($row_actions != '' ? " | " : "").$item['emailUsername'];
+							if($item['emailUsername'] != '')
+							{
+								$row_actions .= ($row_actions != '' ? " | " : "").$item['emailUsername'];
+							}
 						}
 
 						$out .= "<span class='nowrap'>"
@@ -2837,54 +2850,62 @@ if(class_exists('mf_list_table'))
 
 						$row_info = $row_actions = "";
 
-						switch($intEmailSmtpVerified)
+						if($item['emailSmtpPassword'] == '')
 						{
-							default:
-							case 0:
-							case 1:
-								if($dteEmailSmtpChecked > DEFAULT_DATE)
-								{
-									if($dteEmailSmtpChecked < date("Y-m-d H:i:s", strtotime("-7 day")))
+							$row_info .= "<i class='fa fa-times red display_warning'></i> ".__("No Password", 'lang_email');
+						}
+
+						else
+						{
+							switch($intEmailSmtpVerified)
+							{
+								default:
+								case 0:
+								case 1:
+									if($dteEmailSmtpChecked > DEFAULT_DATE)
 									{
-										$row_info .= "<i class='fa fa-exclamation-triangle fa-lg yellow' title='".sprintf(__("Last Checked %s", 'lang_email'), format_date($dteEmailSmtpChecked))."'></i>";
+										if($dteEmailSmtpChecked < date("Y-m-d H:i:s", strtotime("-7 day")))
+										{
+											$row_info .= "<i class='fa fa-exclamation-triangle fa-lg yellow' title='".sprintf(__("Last Checked %s", 'lang_email'), format_date($dteEmailSmtpChecked))."'></i>";
+										}
+
+										else
+										{
+											$row_info .= "<i class='fa fa-check fa-lg green' title='".sprintf(__("Checked %s", 'lang_email'), format_date($dteEmailSmtpChecked))."'></i>";
+										}
 									}
 
 									else
 									{
-										$row_info .= "<i class='fa fa-check fa-lg green' title='".sprintf(__("Checked %s", 'lang_email'), format_date($dteEmailSmtpChecked))."'></i>";
+										$row_info .= "<i class='fa fa-question-circle fa-lg' title='".__("Outgoing has not been checked yet", 'lang_email')."'></i>";
 									}
-								}
+								break;
 
-								else
-								{
-									$row_info .= "<i class='fa fa-question-circle fa-lg' title='".__("Outgoing has not been checked yet", 'lang_email')."'></i>";
-								}
-							break;
+								case -1:
+									$row_info .= "<i class='fa fa-times fa-lg red' title='".__("Connection Failed", 'lang_email')."'></i>";
+								break;
+							}
 
-							case -1:
-								$row_info .= "<i class='fa fa-times fa-lg red' title='".__("Connection Failed", 'lang_email')."'></i>";
-							break;
-						}
+							switch($strEmailOutgoingType)
+							{
+								case 'smtp':
+									$row_info .= "&nbsp;".$strEmailSmtpServer.":".$item['emailSmtpPort'];
+								break;
 
-						switch($strEmailOutgoingType)
-						{
-							case 'smtp':
-								$row_info .= "&nbsp;".$strEmailSmtpServer.":".$item['emailSmtpPort'];
-							break;
+								default:
+									$row_info_temp = apply_filters('get_email_outgoing_alternative', $strEmailOutgoingType);
 
-							default:
-								$row_info_temp = apply_filters('get_email_outgoing_alternative', $strEmailOutgoingType);
+									if($row_info_temp != '')
+									{
+										$row_info .= "&nbsp;".$row_info_temp;
+									}
+								break;
+							}
 
-								if($row_info_temp != '')
-								{
-									$row_info .= "&nbsp;".$row_info_temp;
-								}
-							break;
-						}
-
-						if($item['emailSmtpUsername'] != '')
-						{
-							$row_actions .= ($row_actions != '' ? " | " : "").$item['emailSmtpUsername'];
+							if($item['emailSmtpUsername'] != '')
+							{
+								$row_actions .= ($row_actions != '' ? " | " : "").$item['emailSmtpUsername'];
+							}
 						}
 
 						$out .= "<span class='nowrap'>"
