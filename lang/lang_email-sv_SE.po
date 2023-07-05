@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-27 06:37+0100\n"
+"POT-Creation-Date: 2023-07-04 14:38+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -17,14 +17,14 @@ msgstr ""
 
 #: ../accounts/index.php:10
 #: ../create/index.php:28
-#: ../include/classes.php:1048
-#: ../include/classes.php:1065
+#: ../include/classes.php:1053
+#: ../include/classes.php:1070
 msgid "Accounts"
 msgstr "Konton"
 
 #: ../accounts/index.php:11
-#: ../include/classes.php:1051
-#: ../include/classes.php:1068
+#: ../include/classes.php:1056
+#: ../include/classes.php:1073
 msgid "Add New"
 msgstr "Lägg till ny"
 
@@ -33,13 +33,13 @@ msgid "Information"
 msgstr ""
 
 #: ../create/index.php:38
-#: ../include/classes.php:2693
+#: ../include/classes.php:2585
 msgid "Address"
 msgstr "Adress"
 
 #: ../create/index.php:39
 #: ../folder/index.php:85
-#: ../include/classes.php:2694
+#: ../include/classes.php:2586
 msgid "Name"
 msgstr "Namn"
 
@@ -48,35 +48,35 @@ msgid "Signature"
 msgstr "Signatur"
 
 #: ../create/index.php:45
-#: ../include/classes.php:2698
+#: ../include/classes.php:2590
 msgid "Incoming"
 msgstr "Inkommande"
 
 #: ../create/index.php:48
 #: ../create/index.php:65
-#: ../include/classes.php:850
+#: ../include/classes.php:855
 msgid "Server"
 msgstr ""
 
 #: ../create/index.php:49
 #: ../create/index.php:66
-#: ../include/classes.php:854
+#: ../include/classes.php:859
 msgid "Port"
 msgstr ""
 
 #: ../create/index.php:52
-#: ../include/classes.php:856
+#: ../include/classes.php:861
 msgid "Username"
 msgstr "Användarnamn"
 
 #: ../create/index.php:53
 #: ../create/index.php:72
-#: ../include/classes.php:857
+#: ../include/classes.php:862
 msgid "Password"
 msgstr "Lösenord"
 
 #: ../create/index.php:58
-#: ../include/classes.php:2699
+#: ../include/classes.php:2591
 msgid "Outgoing"
 msgstr "Utgående"
 
@@ -93,12 +93,12 @@ msgid "Hostname"
 msgstr "Domännamn"
 
 #: ../create/index.php:71
-#: ../include/classes.php:2700
+#: ../include/classes.php:2592
 msgid "User"
 msgstr "Användare"
 
 #: ../create/index.php:74
-#: ../include/classes.php:848
+#: ../include/classes.php:853
 msgid "Preferred Content Types"
 msgstr "Föredragna innehållstyper"
 
@@ -108,12 +108,12 @@ msgid "Save"
 msgstr "Spara"
 
 #: ../create/index.php:87
-#: ../include/classes.php:2695
+#: ../include/classes.php:2587
 msgid "Rights"
 msgstr "Behörighet"
 
 #: ../create/index.php:89
-#: ../include/classes.php:2787
+#: ../include/classes.php:2679
 msgid "Public"
 msgstr "Publik"
 
@@ -171,370 +171,377 @@ msgstr "Det finns %d nya e-post i din inkorg"
 msgid "There is one new email in your inbox"
 msgstr "Det finns ett nytt meddelande i din inkorg"
 
-#: ../include/classes.php:351
-#: ../include/classes.php:2687
+#: ../include/classes.php:356
+#: ../include/classes.php:2579
 msgid "Trash"
 msgstr "Papperskorg"
 
-#: ../include/classes.php:358
-#: ../include/classes.php:381
-#: ../include/classes.php:565
-#: ../include/classes.php:1042
+#: ../include/classes.php:363
+#: ../include/classes.php:386
+#: ../include/classes.php:570
+#: ../include/classes.php:1047
 #: ../include/api/index.php:17
 #: ../list/index.php:13
 msgid "Inbox"
 msgstr "Inkorg"
 
-#: ../include/classes.php:374
-#: ../include/classes.php:560
+#: ../include/classes.php:379
+#: ../include/classes.php:565
 msgid "Spam"
 msgstr "Skräp"
 
-#: ../include/classes.php:580
+#: ../include/classes.php:585
 msgid "Inserted"
 msgstr "Inlagd"
 
-#: ../include/classes.php:621
+#: ../include/classes.php:626
 msgid "E-mail attachments"
 msgstr "Bifogade filer"
 
-#: ../include/classes.php:625
+#: ../include/classes.php:630
 msgid "The attachment was saved"
 msgstr "Bifogade filer sparades"
 
-#: ../include/classes.php:633
+#: ../include/classes.php:638
 msgid "The email was not able to be saved"
 msgstr "E-postkontot kunde inte sparas"
 
-#: ../include/classes.php:640
+#: ../include/classes.php:645
 msgid "The e-mail already exists"
 msgstr "Meddelandet finns redan"
 
-#: ../include/classes.php:681
+#: ../include/classes.php:686
 msgid "Connection failed"
 msgstr "Hämtningen misslyckades"
 
-#: ../include/classes.php:845
+#: ../include/classes.php:850
 msgid "Log Outgoing Messages"
 msgstr "Logga utgående meddelanden"
 
-#: ../include/classes.php:865
+#: ../include/classes.php:870
 msgid "Test"
 msgstr "Testa"
 
-#: ../include/classes.php:875
-#: ../include/classes.php:1039
-#: ../include/classes.php:1062
+#: ../include/classes.php:880
+#: ../include/classes.php:1044
+#: ../include/classes.php:1067
 #: ../list/index.php:32
 #: ../send/index.php:9
 msgid "E-mail"
 msgstr "E-post"
 
-#: ../include/classes.php:885
+#: ../include/classes.php:890
 msgid "Core"
 msgstr "Kärna"
 
-#: ../include/classes.php:886
+#: ../include/classes.php:891
 msgid "Plugin"
 msgstr "Tillägg"
 
-#: ../include/classes.php:891
+#: ../include/classes.php:896
 msgid "Group"
 msgstr "Grupp"
 
-#: ../include/classes.php:894
+#: ../include/classes.php:899
 #, php-format
 msgid "The log can be viewed by going to %sTools -> Log -> Notice%s."
 msgstr "Loggen kan ses genom att gå till %sVerktyg -> Logg -> Notifiering%s."
 
-#: ../include/classes.php:916
+#: ../include/classes.php:921
 #, php-format
 msgid "The e-mail %s is used as sender address so this must be white listed in the SMTP, otherwise it can be caught in the servers spam filter"
 msgstr "E-postadressen %s används som avsändaradress så den måste vara vitlistad i SMTP-servern, annars kan meddelandet fastna i serverns spamfilter"
 
-#: ../include/classes.php:922
+#: ../include/classes.php:927
 #, php-format
 msgid "The e-mail %s already has an account where you have set an SMTP"
 msgstr "E-posten %s har redan ett konto där du har angett SMTP"
 
-#: ../include/classes.php:970
+#: ../include/classes.php:975
 msgid "E-mail to send test message to"
 msgstr "E-post att skicka testmeddelande till"
 
-#: ../include/classes.php:970
+#: ../include/classes.php:975
 #, php-format
 msgid "Try with your e-mail address or create a temporary at %sMail Tester%s to check your spammyness"
 msgstr "Testa med din e-postadress eller skapa en temporär på %sMail Tester%s för att kolla hur spammigt det är"
 
-#: ../include/classes.php:971
+#: ../include/classes.php:976
 #: ../send/index.php:36
 #: ../send/index.php:41
 msgid "Send"
 msgstr "Skicka"
 
-#: ../include/classes.php:1021
+#: ../include/classes.php:1026
 msgid "Unread"
 msgstr "Olästa"
 
-#: ../include/classes.php:1045
+#: ../include/classes.php:1050
 msgid "Send New"
 msgstr "Skicka nytt"
 
-#: ../include/classes.php:1054
+#: ../include/classes.php:1059
 #: ../list/index.php:33
 msgid "Add New Folder"
 msgstr "Skapa ny mapp"
 
-#: ../include/classes.php:1072
+#: ../include/classes.php:1077
 msgid "Settings"
 msgstr "Inställningar"
 
-#: ../include/classes.php:1341
-#: ../include/classes.php:1379
+#: ../include/classes.php:1346
 msgid "Message Sent"
 msgstr "Meddelandet är skickat"
 
-#: ../include/classes.php:1571
+#: ../include/classes.php:1460
 #, php-format
 msgid "Test mail to %s"
 msgstr "Testmeddelande till %s"
 
-#: ../include/classes.php:1572
+#: ../include/classes.php:1461
+msgid "Hello!"
+msgstr "Hej!"
+
+#: ../include/classes.php:1462
 #, php-format
 msgid "This is a test email generated from %s on %s"
 msgstr "Detta är ett testmeddelande genererat från %s på %s"
 
-#: ../include/classes.php:1584
+#: ../include/classes.php:1463
+msgid "Regards"
+msgstr "Mvh."
+
+#: ../include/classes.php:1476
 msgid "The test message was sent successfully"
 msgstr "Testmeddelandet skickades som det skulle"
 
-#: ../include/classes.php:1589
+#: ../include/classes.php:1481
 msgid "I am sorry, but I could not send the message for you"
 msgstr "Förlåt men jag kunde inte skicka meddelandet åt dig"
 
-#: ../include/classes.php:1590
+#: ../include/classes.php:1482
 msgid "More information regarding this is saved in the log"
 msgstr "Mer information om detta är sparat i loggen"
 
-#: ../include/classes.php:1594
+#: ../include/classes.php:1486
 #, php-format
 msgid "Debug %s"
 msgstr "Felsök %s"
 
-#: ../include/classes.php:1609
+#: ../include/classes.php:1501
 msgid "I could not send the test email. Please make sure that the credentials are correct"
 msgstr "Jag kunde inte skicka testmeddelandet. Var vänlig kontrollera uppgifterna så att de är korrekt"
 
-#: ../include/classes.php:1615
+#: ../include/classes.php:1507
 msgid "You did not enter a valid email address. Please do and try again"
 msgstr "Du angav inte en korrekt e-postadress. Var vänlig försök igen"
 
-#: ../include/classes.php:1675
+#: ../include/classes.php:1567
 msgid "The e-mail limit for the last hour has been reached so you can not send anymore e-mails at them moment. Save as a draft and check back in a moment"
 msgstr "E-postgränsen för senaste timmen har nåtts så du kan inte skicka fler meddelanden just nu. Spara som utkast och kom tillbaka om en stund"
 
-#: ../include/classes.php:1737
+#: ../include/classes.php:1629
 msgid "The email account was not updated"
 msgstr "Kontot uppdaterades inte"
 
-#: ../include/classes.php:1745
+#: ../include/classes.php:1637
 msgid "The email account already exists"
 msgstr "E-postkontot finns redan"
 
-#: ../include/classes.php:1759
+#: ../include/classes.php:1651
 msgid "The email account could not be created"
 msgstr "E-postkontot kunde inte skapas"
 
-#: ../include/classes.php:1778
+#: ../include/classes.php:1670
 msgid "The e-mail account was deleted"
 msgstr "E-postkontot raderades"
 
-#: ../include/classes.php:1783
+#: ../include/classes.php:1675
 msgid "The e-mail account could not be deleted"
 msgstr "E-postkontot kunde inte raderas"
 
-#: ../include/classes.php:1791
+#: ../include/classes.php:1683
 msgid "The e-mail account was confirmed"
 msgstr "E-postkontot bekräftades"
 
-#: ../include/classes.php:1823
+#: ../include/classes.php:1715
 msgid "The e-mail account passed verification"
 msgstr "E-postkontot klarade verifieringen och kan nu användas"
 
-#: ../include/classes.php:1830
+#: ../include/classes.php:1722
 msgid "The e-mail account did not pass the verification"
 msgstr "E-postkontot kunde inte verifieras"
 
-#: ../include/classes.php:1844
+#: ../include/classes.php:1736
 #, php-format
 msgid "Please confirm your e-mail %s for use on %s"
 msgstr "Var god bekräfta din e-post %s för användning på %s"
 
-#: ../include/classes.php:1845
+#: ../include/classes.php:1737
 #, php-format
 msgid "We have gotten a request to confirm the address %s from a user at %s (%s). If this is a valid request please click %shere%s to confirm the use of your e-mail address to send messages"
 msgstr "Vi har fått en förfrågan om att godkänna adressen %s från en användare på %s (%s). Om detta är okej, klicka %shär%s för att bekräfta användningen av din e-postadress, för att skicka meddelanden"
 
-#: ../include/classes.php:1858
+#: ../include/classes.php:1750
 #, php-format
 msgid "An e-mail with a confirmation link has been sent to %s"
 msgstr "Ett meddelande med bekräftelselänk har skickats till %s"
 
-#: ../include/classes.php:1867
+#: ../include/classes.php:1759
 msgid "The account was created"
 msgstr "Kontot skapades"
 
-#: ../include/classes.php:1872
+#: ../include/classes.php:1764
 msgid "The account was updated"
 msgstr "Kontot uppdaterades"
 
-#: ../include/classes.php:1917
-#: ../include/classes.php:2256
-#: ../include/classes.php:2771
+#: ../include/classes.php:1809
+#: ../include/classes.php:2148
+#: ../include/classes.php:2663
 msgid "Sent"
 msgstr "Skickat"
 
-#: ../include/classes.php:1946
+#: ../include/classes.php:1838
 msgid "The file does not seem to exist"
 msgstr "Filen verkar inte finnas"
 
-#: ../include/classes.php:1957
+#: ../include/classes.php:1849
 msgid "Could not save the attached file to DB, but it was successfully sent"
 msgstr "Det gick inte att spara den bifogade filen i databasen, men det skickades till mottagaren"
 
-#: ../include/classes.php:1971
+#: ../include/classes.php:1863
 msgid "Unfortunately, I could not send the email for you. Please try again. If the problem persists, please contact my admin"
 msgstr "Tyvärr kunde jag inte skicka meddelandet åt dig. Var vänlig försök igen. Om problemet kvarstår, kontakta min admin"
 
-#: ../include/classes.php:1978
+#: ../include/classes.php:1870
 msgid "You have to choose who to send from and to, a subject and text"
 msgstr "Du behöver välja vem du ska skicka från och till, ett ämne och text"
 
-#: ../include/classes.php:1984
+#: ../include/classes.php:1876
 msgid "Draft"
 msgstr "Utkast"
 
-#: ../include/classes.php:1990
+#: ../include/classes.php:1882
 msgid "The draft has been saved"
 msgstr "Utkastet har sparats"
 
-#: ../include/classes.php:2116
+#: ../include/classes.php:2008
 msgid "Original message"
 msgstr "Ursprungligt meddelande"
 
-#: ../include/classes.php:2117
+#: ../include/classes.php:2009
 #: ../list/index.php:183
 #: ../send/index.php:18
 msgid "From"
 msgstr "Från"
 
-#: ../include/classes.php:2118
+#: ../include/classes.php:2010
 #: ../send/index.php:21
 msgid "To"
 msgstr "Till"
 
-#: ../include/classes.php:2119
+#: ../include/classes.php:2011
 #: ../list/index.php:182
 #: ../send/index.php:29
 msgid "Subject"
 msgstr "Ämne"
 
-#: ../include/classes.php:2120
+#: ../include/classes.php:2012
 msgid "Date"
 msgstr "Datum"
 
-#: ../include/classes.php:2123
+#: ../include/classes.php:2015
 msgid "End original message"
 msgstr "Slut på ursprungligt meddelande"
 
-#: ../include/classes.php:2319
+#: ../include/classes.php:2211
 msgid "Choose Here"
 msgstr "Välj här"
 
-#: ../include/classes.php:2366
+#: ../include/classes.php:2258
 #: ../send/index.php:49
 #, php-format
 msgid "Hourly Limit Reached. Wait %s min"
 msgstr "Timgränsen är nådd. Vänta %s min"
 
-#: ../include/classes.php:2686
+#: ../include/classes.php:2578
 msgid "All"
 msgstr "Alla"
 
-#: ../include/classes.php:2739
+#: ../include/classes.php:2631
 #: ../list/index.php:67
 msgid "Edit"
 msgstr "Redigera"
 
-#: ../include/classes.php:2743
+#: ../include/classes.php:2635
 #: ../list/index.php:72
 #: ../list/index.php:122
 msgid "Delete"
 msgstr "Radera"
 
-#: ../include/classes.php:2746
+#: ../include/classes.php:2638
 msgid "Send Message"
 msgstr "Skicka meddelande"
 
-#: ../include/classes.php:2751
+#: ../include/classes.php:2643
 msgid "Recover"
 msgstr "Återställ"
 
-#: ../include/classes.php:2766
+#: ../include/classes.php:2658
 msgid "Received"
 msgstr "Mottagna"
 
-#: ../include/classes.php:2879
-#: ../include/classes.php:2968
+#: ../include/classes.php:2771
+#: ../include/classes.php:2860
 msgid "No Password"
 msgstr "Inget lösenord"
 
-#: ../include/classes.php:2888
+#: ../include/classes.php:2780
 msgid "Needs to be Verified"
 msgstr "Behöver verifieras"
 
-#: ../include/classes.php:2890
+#: ../include/classes.php:2782
 msgid "Verify"
 msgstr "Verifera"
 
-#: ../include/classes.php:2898
-#: ../include/classes.php:2982
+#: ../include/classes.php:2790
+#: ../include/classes.php:2874
 #, php-format
 msgid "Last Checked %s"
 msgstr "Senast testad %s"
 
-#: ../include/classes.php:2909
+#: ../include/classes.php:2801
 #, php-format
 msgid "Last E-mail %s"
 msgstr "Senaste e-post %s"
 
-#: ../include/classes.php:2914
+#: ../include/classes.php:2806
 #, php-format
 msgid "Checked %s, Received %s"
 msgstr "Testad %s, Mottagna %s"
 
-#: ../include/classes.php:2920
+#: ../include/classes.php:2812
 msgid "No e-mails received so far"
 msgstr "Inga e-post mottagna än så länge"
 
-#: ../include/classes.php:2929
+#: ../include/classes.php:2821
 msgid "Incoming has not been checked yet"
 msgstr "Inkommande har inte testats ännu"
 
-#: ../include/classes.php:2934
+#: ../include/classes.php:2826
 msgid "Verification Failed"
 msgstr "Verifiering misslyckades"
 
-#: ../include/classes.php:2987
+#: ../include/classes.php:2879
 #, php-format
 msgid "Checked %s"
 msgstr "Testad %s"
 
-#: ../include/classes.php:2993
+#: ../include/classes.php:2885
 msgid "Outgoing has not been checked yet"
 msgstr "Utgående har inte testats ännu"
 
-#: ../include/classes.php:2998
+#: ../include/classes.php:2890
 msgid "Connection Failed"
 msgstr "Hämtningen misslyckades"
 

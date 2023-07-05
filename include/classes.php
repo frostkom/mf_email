@@ -926,6 +926,33 @@ class mf_email
 		{
 			echo "<p>".sprintf(__("The e-mail %s already has an account where you have set an SMTP", 'lang_email'), "<a href='".admin_url("admin.php?page=mf_email/create/index.php&intEmailID=".$intEmailID)."' class='bold'>".$admin_email."</a>")."</p>";
 		}
+
+		if(IS_SUPER_ADMIN)
+		{
+			list($admin_email_prefix, $admin_email_domain) = explode("@", $admin_email);
+
+			$exec_command = "dig +short TXT ".$admin_email_domain;
+			exec($exec_command, $return_value);
+
+			echo "<h4>".sprintf(__("TXT records for %s", 'lang_email'), $admin_email_domain)."</h4>";
+
+			if(is_array($return_value) && count($return_value) > 0)
+			{
+				echo "<ul>";
+
+					foreach($return_value as $return_row)
+					{
+						echo "<li>".$return_row."</li>";
+					}
+
+				echo "</ul>";
+			}
+
+			else
+			{
+				echo "<p>".sprintf(__("No return value on %s so you should add %s", 'lang_email'), "\"".$exec_command."\"", "\"v=spf1 a mx ip4:".get_option_or_default('setting_server_ip', "[Server IP]")." ~all\"")."</p>";
+			}
+		}
 	}
 
 	function setting_smtp_server_callback()
@@ -1455,8 +1482,13 @@ class mf_email
 
 		if($mail_to != '')
 		{
+			$user_data = get_userdata(get_current_user_id());
+
 			$mail_subject = sprintf(__("Test mail to %s", 'lang_email'), $mail_to);
-			$mail_content = sprintf(__("This is a test email generated from %s on %s", 'lang_email'), "Wordpress", remove_protocol(array('url' => get_site_url(), 'clean' => true)));
+			$mail_content = "<p>".__("Hello!", 'lang_email')."</p>"
+				."<p>".sprintf(__("This is a test email generated from %s on %s", 'lang_email'), "Wordpress", remove_protocol(array('url' => get_site_url(), 'clean' => true)))."</p>"
+				."<p>".__("Regards", 'lang_email')."</p>"
+				."<p>".$user_data->first_name."</p>";
 
 			DEFINE('SMTPDebug', 3);
 
