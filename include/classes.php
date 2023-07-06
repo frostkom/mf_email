@@ -914,7 +914,7 @@ class mf_email
 
 	function setting_email_info_callback()
 	{
-		global $wpdb;
+		global $wpdb, $error_text;
 
 		$admin_email = get_bloginfo('admin_email');
 
@@ -950,7 +950,8 @@ class mf_email
 
 			else
 			{
-				echo "<p>".sprintf(__("No return value on %s so you should add %s", 'lang_email'), "\"".$exec_command."\"", "\"v=spf1 a mx ip4:".get_option_or_default('setting_server_ip', "[Server IP]")." ~all\"")."</p>";
+				$error_text = sprintf(__("No return value on %s so you should add %s", 'lang_email'), "\"".$exec_command."\"", "\"v=spf1 ip4:".get_option_or_default('setting_server_ip', "[Server IP]")." ~all\"");
+				echo get_notification();
 			}
 		}
 	}
