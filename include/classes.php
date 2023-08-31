@@ -2,6 +2,10 @@
 
 class mf_email
 {
+	var $id = 0;
+	var $type = '';
+	var $message_id = 0;
+
 	function __construct($data = array())
 	{
 		if(isset($data['id']) && $data['id'] > 0)
@@ -16,7 +20,7 @@ class mf_email
 
 		$this->type = (isset($data['type']) ? $data['type'] : '');
 
-		$this->message_id = 0;
+		//$this->message_id = 0;
 	}
 
 	function get_ssl_for_select()
@@ -527,7 +531,7 @@ class mf_email
 
 											if($intQueueID > 0)
 											{
-												$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->prefix."group_queue SET queueReceived = '-1' WHERE queueID = '%d' AND addressID = '%d'", $intQueueID, $obj_address->id));
+												$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->prefix."group_queue SET queueStatus = 'not_received' WHERE queueID = '%d' AND addressID = '%d'", $intQueueID, $obj_address->id));
 											}
 
 											else
