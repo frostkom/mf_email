@@ -1005,7 +1005,9 @@ class mf_email
 	function setting_smtp_test_callback()
 	{
 		echo show_textfield(array('name' => 'smtp_to', 'value' => '', 'placeholder' => __("E-mail to send test message to", 'lang_email'), 'description' => sprintf(__("Try with your e-mail address or create a temporary at %sMail Tester%s to check your spammyness", 'lang_email'), "<a href='//mail-tester.com'>", "</a>")))
-		.show_button(array('type' => 'button', 'name' => 'btnSmtpTest', 'text' => __("Send", 'lang_email'), 'class' => 'button-secondary'))
+		."<div class='form_button'>"
+			.show_button(array('type' => 'button', 'name' => 'btnSmtpTest', 'text' => __("Send", 'lang_email'), 'class' => 'button-secondary'))
+		."</div>"
 		."<div id='smtp_debug'></div>";
 	}
 

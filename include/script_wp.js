@@ -206,12 +206,13 @@ jQuery(function($)
 	}
 
 	/* Settings */
-	$(document).on('click', "button[name=btnSmtpTest]", function()
+	$(document).on('click', "button[name=btnSmtpTest]:not(.is_disabled)", function()
 	{
 		var smtp_to = $("#smtp_to").val();
 
 		if(typeof smtp_to != undefined && smtp_to != '')
 		{
+			$("button[name=btnSmtpTest]").addClass('is_disabled');
 			$("#smtp_debug").html("<i class='fa fa-spinner fa-spin fa-2x'></i>");
 
 			$.ajax(
@@ -229,7 +230,6 @@ jQuery(function($)
 
 					if(data.success)
 					{
-						$("button[name=btnSmtpTest]").addClass('is_disabled'); /*.attr('disabled', true)*/
 						$("#smtp_debug").html(data.message);
 					}
 
