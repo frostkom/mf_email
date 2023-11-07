@@ -80,8 +80,30 @@ echo "<div class='wrap'>
 						<div class='inside'>"
 							.show_button(array('name' => 'btnEmailCreate', 'text' => __("Save", 'lang_email')))
 							.input_hidden(array('name' => 'intEmailID', 'value' => $obj_email->id))
-							.wp_nonce_field('email_create_'.$obj_email->id, '_wpnonce_email_create', true, false)
-						."</div>
+							.wp_nonce_field('email_create_'.$obj_email->id, '_wpnonce_email_create', true, false);
+
+							if($obj_email->id > 0)
+							{
+								$result = $wpdb->get_results($wpdb->prepare("SELECT emailCreated, userID FROM ".$wpdb->base_prefix."email WHERE emailID = '%d'", $obj_email->id));
+
+								foreach($result as $r)
+								{
+									$dteEmailCreated = $r->emailCreated;
+									$intUserID = $r->userID;
+
+									if($intUserID > 0)
+									{
+										echo "<br><em>".sprintf(__("Created %s by %s", 'lang_email'), format_date($dteEmailCreated), get_user_info(array('id' => $intUserID)))."</em>";
+									}
+
+									else
+									{
+										echo "<br><em>".sprintf(__("Created %s", 'lang_email'), format_date($dteEmailCreated))."</em>";
+									}
+								}
+							}
+
+						echo "</div>
 					</div>
 					<div class='postbox'>
 						<h3 class='hndle'><span>".__("Rights", 'lang_email')."</span></h3>
