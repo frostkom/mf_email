@@ -2500,6 +2500,10 @@ class mf_email
 
 class mf_email_encryption
 {
+	var $key;
+	var $encrypt_method;
+	var $iv;
+
 	function __construct($type)
 	{
 		$this->set_key($type);
