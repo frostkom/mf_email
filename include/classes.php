@@ -6,6 +6,29 @@ class mf_email
 	var $type = '';
 	var $message_id = 0;
 
+	var $server;
+	var $port;
+	var $username;
+	var $password;
+	var $address;
+	var $name;
+	var $signature;
+	var $outgoing_type;
+	var $limit_per_hour;
+	var $smtp_server;
+	var $smtp_port;
+	var $smtp_ssl;
+	var $smtp_hostname;
+	var $smtp_username;
+	var $smtp_password;
+	var $preferred_content_types;
+	var $public;
+	var $roles;
+	var $users;
+	var $smtp_password_encrypted;
+	var $password_encrypted;
+	var $deleted;
+
 	function __construct($data = array())
 	{
 		if(isset($data['id']) && $data['id'] > 0)
