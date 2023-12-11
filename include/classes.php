@@ -104,7 +104,7 @@ class mf_email
 
 		if(!isset($data['cutoff'])){	$data['cutoff'] = date("Y-m-d H:i:s", strtotime("-2 minute"));} //"DATE_SUB(NOW(), INTERVAL 2 MINUTE)"
 
-		if(IS_ADMIN)
+		if(IS_ADMINISTRATOR)
 		{
 			$query_permission = " AND emailID IN ('".implode("','", $this->get_email_accounts_permission())."')";
 
@@ -2691,7 +2691,7 @@ if(class_exists('mf_list_table'))
 					{
 						$actions['edit'] = "<a href='".$email_url."'>".__("Edit", 'lang_email')."</a>";
 
-						if(IS_ADMIN || $intUserID == get_current_user_id())
+						if(IS_ADMINISTRATOR || $intUserID == get_current_user_id())
 						{
 							$actions['delete'] = "<a href='".wp_nonce_url(admin_url("admin.php?page=mf_email/accounts/index.php&btnEmailDelete&intEmailID=".$intEmailID), 'email_delete_'.$intEmailID, '_wpnonce_email_delete')."' rel='confirm'>".__("Delete", 'lang_email')."</a>";
 						}
