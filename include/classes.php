@@ -21,9 +21,9 @@ class mf_email
 	var $smtp_hostname;
 	var $smtp_username;
 	var $smtp_password;
-	var $preferred_content_types;
+	var $preferred_content_types = array();
 	var $public;
-	var $roles;
+	var $roles = array();
 	var $users;
 	var $smtp_password_encrypted;
 	var $password_encrypted;
@@ -42,8 +42,6 @@ class mf_email
 		}
 
 		$this->type = (isset($data['type']) ? $data['type'] : '');
-
-		//$this->message_id = 0;
 	}
 
 	function get_ssl_for_select()
@@ -2106,7 +2104,7 @@ class mf_email
 					foreach($result as $r)
 					{
 						$this->public = $r->emailPublic;
-						$this->roles = explode(",", $r->emailRoles);
+						$this->roles = $r->emailRoles;
 						$this->server = $r->emailServer;
 						$this->port = $r->emailPort;
 						$this->username = $r->emailUsername;
@@ -2122,6 +2120,11 @@ class mf_email
 						$this->smtp_username = $r->emailSmtpUsername;
 						$this->preferred_content_types = $r->emailPreferredContentTypes;
 						$this->deleted = $r->emailDeleted;
+
+						if($this->roles != '')
+						{
+							$this->roles = explode(",", $this->roles);
+						}
 
 						if($this->preferred_content_types != '')
 						{
@@ -2502,7 +2505,17 @@ class mf_email
 
 		$this->encrypt_password();
 
-		$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailSignature = %s, emailOutgoingType = %s, emailLimitPerHour = '%d', emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailPreferredContentTypes = %s, emailCreated = NOW(), userID = '%d'", $wpdb->blogid, $this->public, @implode(",", $this->roles), $this->server, $this->port, $this->username, $this->address, $this->name, $this->signature, $this->outgoing_type, $this->limit_per_hour, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, @implode(",", $this->preferred_content_types), get_current_user_id()));
+		if(is_array($this->roles))
+		{
+			$this->roles = implode(",", $this->roles);
+		}
+
+		if(is_array($this->preferred_content_types))
+		{
+			$this->preferred_content_types = implode(",", $this->preferred_content_types);
+		}
+
+		$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailSignature = %s, emailOutgoingType = %s, emailLimitPerHour = '%d', emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailPreferredContentTypes = %s, emailCreated = NOW(), userID = '%d'", $wpdb->blogid, $this->public, $this->roles, $this->server, $this->port, $this->username, $this->address, $this->name, $this->signature, $this->outgoing_type, $this->limit_per_hour, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, $this->preferred_content_types, get_current_user_id()));
 
 		$this->id = $wpdb->insert_id;
 
@@ -2515,7 +2528,17 @@ class mf_email
 
 		$this->encrypt_password();
 
-		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailVerified = '0', emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailSignature = %s, emailOutgoingType = %s, emailLimitPerHour = '%d', emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailPreferredContentTypes = %s, emailDeleted = '0' WHERE emailID = '%d'", $wpdb->blogid, $this->public, @implode(",", $this->roles), $this->server, $this->port, $this->username, $this->address, $this->name, $this->signature, $this->outgoing_type, $this->limit_per_hour, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, @implode(",", $this->preferred_content_types), $this->id));
+		if(is_array($this->roles))
+		{
+			$this->roles = implode(",", $this->roles);
+		}
+
+		if(is_array($this->preferred_content_types))
+		{
+			$this->preferred_content_types = implode(",", $this->preferred_content_types);
+		}
+
+		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailVerified = '0', emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailSignature = %s, emailOutgoingType = %s, emailLimitPerHour = '%d', emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailPreferredContentTypes = %s, emailDeleted = '0' WHERE emailID = '%d'", $wpdb->blogid, $this->public, $this->roles, $this->server, $this->port, $this->username, $this->address, $this->name, $this->signature, $this->outgoing_type, $this->limit_per_hour, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, $this->preferred_content_types, $this->id));
 
 		return ($wpdb->rows_affected > 0 || $this->update_passwords() || $this->update_rights());
 	}
