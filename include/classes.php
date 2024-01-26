@@ -5,7 +5,6 @@ class mf_email
 	var $id = 0;
 	var $type = '';
 	var $message_id = 0;
-
 	var $server;
 	var $port;
 	var $username;
@@ -28,6 +27,17 @@ class mf_email
 	var $smtp_password_encrypted;
 	var $password_encrypted;
 	var $deleted;
+	var $message_draft_id;
+	var $message_answer;
+	var $message_forward;
+	var $message_to;
+	var $message_cc;
+	var $message_subject;
+	var $message_text;
+	var $message_attachment;
+	var $message_text_source;
+	var $group_message_id;
+	var $all_left_to_send;
 
 	function __construct($data = array())
 	{
