@@ -38,6 +38,7 @@ class mf_email
 	var $message_text_source;
 	var $group_message_id;
 	var $all_left_to_send;
+	var $from_address;
 
 	function __construct($data = array())
 	{
@@ -2255,7 +2256,7 @@ class mf_email
 	{
 		$this->message_id = $message_id;
 
-		if(!isset($this->from_address) || $this->from_address == '')
+		if($this->from_address == '')
 		{
 			$this->get_message_info();
 		}
