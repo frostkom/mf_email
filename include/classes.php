@@ -1890,7 +1890,8 @@ class mf_email
 
 											else if($file_url != '')
 											{
-												$file_url_check = WP_CONTENT_DIR.str_replace(site_url()."/wp-content", "", $file_url);
+												//$file_url_check = WP_CONTENT_DIR.str_replace(site_url()."/wp-content", "", $file_url);
+												$file_url_check = str_replace(WP_CONTENT_URL, WP_CONTENT_DIR, $file_url);
 
 												if(file_exists($file_url_check))
 												{
@@ -2735,7 +2736,7 @@ if(class_exists('mf_list_table'))
 
 					else
 					{
-						$out .= "<a href='".$email_url."'>".__("Recover", 'lang_email')."</a>";
+						$actions['send'] = "<a href='".$email_url."'>".__("Recover", 'lang_email')."</a>";
 					}
 
 					$out .= $this->row_actions($actions);
