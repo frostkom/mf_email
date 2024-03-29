@@ -935,7 +935,8 @@ class mf_email
 		$description = sprintf(__("The log can be viewed by going to %sTools -> Log -> Notice%s.", 'lang_email'), "<a href='".admin_url("admin.php?page=mf_log/list/index.php&post_status=notification")."'>", "</a>");
 		// if get_site_url() is a subfolder, add to descr that some messages (ie. lost password) might be logged on the main site
 
-		$description .= " ".setting_time_limit(array('key' => $setting_key, 'value' => $option, 'time_limit' => 24));
+		list($option, $description_temp) = setting_time_limit(array('key' => $setting_key, 'value' => $option, 'time_limit' => 24, 'return' => 'array'));
+		$description .= " ".$description_temp;
 
 		echo show_select(array('data' => $arr_data, 'name' => $setting_key."[]", 'value' => $option, 'description' => $description));
 	}
