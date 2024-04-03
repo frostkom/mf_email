@@ -881,7 +881,7 @@ class mf_email
 
 		$arr_settings = array();
 
-		if(IS_SUPER_ADMIN && (!function_exists('is_plugin_active') || function_exists('is_plugin_active') && is_plugin_active("mf_log/index.php") && get_option('setting_log_activate') == 'yes'))
+		if(IS_SUPER_ADMIN && (!function_exists('is_plugin_active') || function_exists('is_plugin_active') && is_plugin_active("mf_log/index.php") && get_site_option('setting_log_activate', get_option('setting_log_activate')) == 'yes'))
 		{
 			$arr_settings['setting_email_log'] = __("Log Outgoing Messages", 'lang_email');
 		}
