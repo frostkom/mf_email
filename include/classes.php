@@ -1141,8 +1141,11 @@ class mf_email
 			add_submenu_page($menu_start, $menu_title, " - ".$menu_title, $menu_capability, $menu_root."create/index.php");
 		}
 
-		$menu_title = __("Settings", 'lang_email');
-		add_submenu_page($menu_start, $menu_title, $menu_title, $menu_capability, admin_url("options-general.php?page=settings_mf_base#settings_email"));
+		if(IS_EDITOR)
+		{
+			$menu_title = __("Settings", 'lang_email');
+			add_submenu_page($menu_start, $menu_title, $menu_title, $menu_capability, admin_url("options-general.php?page=settings_mf_base#settings_email"));
+		}
 	}
 
 	function get_user_notifications($array)
