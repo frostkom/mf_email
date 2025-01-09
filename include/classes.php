@@ -964,7 +964,7 @@ class mf_email
 			echo "<p>".sprintf(__("The e-mail %s already has an account where you have set an SMTP", 'lang_email'), "<a href='".admin_url("admin.php?page=mf_email/create/index.php&intEmailID=".$intEmailID)."' class='bold'>".$admin_email."</a>")."</p>";
 		}
 
-		if(IS_SUPER_ADMIN)
+		if(IS_SUPER_ADMIN && function_exists("exec"))
 		{
 			list($admin_email_prefix, $admin_email_domain) = explode("@", $admin_email);
 
