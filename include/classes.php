@@ -987,7 +987,7 @@ class mf_email
 
 			else
 			{
-				$error_text = sprintf(__("No return value on %s so you should add %s", 'lang_email'), "\"".$exec_command."\"", "\"v=spf1 ip4:".get_option_or_default('setting_server_ip', "[Server IP]")." ~all\"");
+				$error_text = sprintf(__("No return value on %s so you should add %s", 'lang_email'), "\"".$exec_command."\"", "\"v=spf1 ip4:".get_option_or_default('setting_site_manager_server_ip', "[Server IP]")." ~all\"");
 				//echo get_notification();
 				echo $error_text;
 			}
