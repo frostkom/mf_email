@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description:
-Version: 6.6.25
+Version: 6.6.27
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -37,7 +37,6 @@ if(!function_exists('is_plugin_active') || function_exists('is_plugin_active') &
 		add_action('admin_menu', array($obj_email, 'admin_menu'));
 
 		add_filter('get_user_notifications', array($obj_email, 'get_user_notifications'), 10, 1);
-		//add_filter('get_user_reminders', array($obj_email, 'get_user_reminders'), 10, 1);
 		add_action('deleted_user', array($obj_email, 'deleted_user'));
 		add_action('wp_trash_post', array($obj_email, 'wp_trash_post'));
 	}
@@ -71,7 +70,7 @@ if(!function_exists('is_plugin_active') || function_exists('is_plugin_active') &
 
 	function activate_email()
 	{
-		global $wpdb;
+		global $wpdb, $obj_email;
 
 		$default_charset = (DB_CHARSET != '' ? DB_CHARSET : 'utf8');
 
@@ -126,74 +125,84 @@ if(!function_exists('is_plugin_active') || function_exists('is_plugin_active') &
 			//'' => "ALTER TABLE [table] ADD INDEX [column] ([column])",
 		);*/
 
-		$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email_users (
-			emailID INT UNSIGNED,
-			userID INT UNSIGNED DEFAULT NULL,
-			KEY emailID (emailID),
-			KEY userID (userID)
-		) DEFAULT CHARSET=".$default_charset);
+		if($obj_email->has_accounts())
+		{
+			$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email_users (
+				emailID INT UNSIGNED,
+				userID INT UNSIGNED DEFAULT NULL,
+				KEY emailID (emailID),
+				KEY userID (userID)
+			) DEFAULT CHARSET=".$default_charset);
 
-		$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email_folder (
-			folderID INT UNSIGNED NOT NULL AUTO_INCREMENT,
-			folderID2 INT UNSIGNED DEFAULT NULL,
-			emailID INT UNSIGNED NOT NULL DEFAULT '0',
-			folderType INT UNSIGNED NOT NULL DEFAULT '0',
-			folderName VARCHAR(100) DEFAULT NULL,
-			folderCreated DATETIME DEFAULT NULL,
-			userID INT UNSIGNED DEFAULT NULL,
-			folderDeleted ENUM('0','1') NOT NULL DEFAULT '0',
-			folderDeletedDate DATETIME DEFAULT NULL,
-			folderDeletedID INT UNSIGNED DEFAULT NULL,
-			PRIMARY KEY (folderID),
-			KEY emailID (emailID),
-			KEY userID (userID),
-			KEY folderType (folderType),
-			KEY folderName (folderName)
-		) DEFAULT CHARSET=".$default_charset);
+			$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email_folder (
+				folderID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+				folderID2 INT UNSIGNED DEFAULT NULL,
+				emailID INT UNSIGNED NOT NULL DEFAULT '0',
+				folderType INT UNSIGNED NOT NULL DEFAULT '0',
+				folderName VARCHAR(100) DEFAULT NULL,
+				folderCreated DATETIME DEFAULT NULL,
+				userID INT UNSIGNED DEFAULT NULL,
+				folderDeleted ENUM('0','1') NOT NULL DEFAULT '0',
+				folderDeletedDate DATETIME DEFAULT NULL,
+				folderDeletedID INT UNSIGNED DEFAULT NULL,
+				PRIMARY KEY (folderID),
+				KEY emailID (emailID),
+				KEY userID (userID),
+				KEY folderType (folderType),
+				KEY folderName (folderName)
+			) DEFAULT CHARSET=".$default_charset);
 
-		$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email_message (
-			messageID INT UNSIGNED NOT NULL AUTO_INCREMENT,
-			folderID INT UNSIGNED DEFAULT NULL,
-			messageTextID VARCHAR(100) DEFAULT NULL,
-			messageMd5 VARCHAR(32) DEFAULT NULL,
-			messageRead ENUM('0','1') NOT NULL DEFAULT '0',
-			messageFrom VARCHAR(100) DEFAULT NULL,
-			messageFromName VARCHAR(100) DEFAULT NULL,
-			messageTo TEXT,
-			messageCc TEXT,
-			messageReplyTo VARCHAR(100) DEFAULT NULL,
-			messageName VARCHAR(200) DEFAULT NULL,
-			messageText TEXT,
-			messageText2 TEXT,
-			messageSize INT UNSIGNED NOT NULL DEFAULT '0',
-			messageCreated DATETIME DEFAULT NULL,
-			messageReceived DATETIME DEFAULT NULL,
-			userID INT UNSIGNED DEFAULT NULL,
-			messageDeleted ENUM('0','1') NOT NULL DEFAULT '0',
-			messageDeletedDate DATETIME DEFAULT NULL,
-			messageDeletedID INT UNSIGNED DEFAULT NULL,
-			PRIMARY KEY (messageID),
-			KEY folderID (folderID),
-			KEY messageDeleted (messageDeleted),
-			KEY messageCreated (messageCreated)
-		) DEFAULT CHARSET=".$default_charset);
+			$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email_message (
+				messageID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+				folderID INT UNSIGNED DEFAULT NULL,
+				messageTextID VARCHAR(100) DEFAULT NULL,
+				messageMd5 VARCHAR(32) DEFAULT NULL,
+				messageRead ENUM('0','1') NOT NULL DEFAULT '0',
+				messageFrom VARCHAR(100) DEFAULT NULL,
+				messageFromName VARCHAR(100) DEFAULT NULL,
+				messageTo TEXT,
+				messageCc TEXT,
+				messageReplyTo VARCHAR(100) DEFAULT NULL,
+				messageName VARCHAR(200) DEFAULT NULL,
+				messageText TEXT,
+				messageText2 TEXT,
+				messageSize INT UNSIGNED NOT NULL DEFAULT '0',
+				messageCreated DATETIME DEFAULT NULL,
+				messageReceived DATETIME DEFAULT NULL,
+				userID INT UNSIGNED DEFAULT NULL,
+				messageDeleted ENUM('0','1') NOT NULL DEFAULT '0',
+				messageDeletedDate DATETIME DEFAULT NULL,
+				messageDeletedID INT UNSIGNED DEFAULT NULL,
+				PRIMARY KEY (messageID),
+				KEY folderID (folderID),
+				KEY messageDeleted (messageDeleted),
+				KEY messageCreated (messageCreated)
+			) DEFAULT CHARSET=".$default_charset);
 
-		$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email_message_attachment (
-			messageID INT UNSIGNED NOT NULL,
-			fileID INT UNSIGNED DEFAULT NULL,
-			KEY messageID (messageID),
-			KEY fileID (fileID)
-		) DEFAULT CHARSET=".$default_charset);
+			$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email_message_attachment (
+				messageID INT UNSIGNED NOT NULL,
+				fileID INT UNSIGNED DEFAULT NULL,
+				KEY messageID (messageID),
+				KEY fileID (fileID)
+			) DEFAULT CHARSET=".$default_charset);
 
-		$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email_spam (
-			spamID INT UNSIGNED NOT NULL AUTO_INCREMENT,
-			emailID INT UNSIGNED,
-			messageFrom VARCHAR(100) DEFAULT NULL,
-			spamCount INT UNSIGNED DEFAULT NULL,
-			KEY spamID (spamID),
-			KEY emailID (emailID),
-			KEY messageFrom (messageFrom)
-		) DEFAULT CHARSET=".$default_charset);
+			$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email_spam (
+				spamID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+				emailID INT UNSIGNED,
+				messageFrom VARCHAR(100) DEFAULT NULL,
+				spamCount INT UNSIGNED DEFAULT NULL,
+				KEY spamID (spamID),
+				KEY emailID (emailID),
+				KEY messageFrom (messageFrom)
+			) DEFAULT CHARSET=".$default_charset);
+		}
+
+		else
+		{
+			mf_uninstall_plugin(array(
+				'tables' => array('email_users', 'email_folders', 'email_message', 'email_message_attachment', 'email_spam'),
+			));
+		}
 
 		update_columns($arr_update_column);
 		add_columns($arr_add_column);

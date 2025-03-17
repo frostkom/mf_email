@@ -22,13 +22,6 @@ $json_output = array();
 switch($arr_input[0])
 {
 	case 'email':
-		//$strFolderName = (isset($arr_input[2]) ? $arr_input[2] : "");
-
-		/*if(!isset($arr_input[2]))
-		{
-			do_log("API - email: No folder name (".$strAjaxInput.")");
-		}*/
-
 		$query_where = " AND emailID IN ('".implode("','", $obj_email->get_email_accounts_permission())."')";
 
 		/* It needs to be this because $arr_input[1] is set to emails when page is loaded */
@@ -39,7 +32,6 @@ switch($arr_input[0])
 			switch($strFolderAction)
 			{
 				case 'delete':
-					//$intFolderID = $strFolderName;
 					$intFolderID = (isset($arr_input[2]) ? $arr_input[2] : "");
 
 					$intTotal = $wpdb->get_var($wpdb->prepare("SELECT COUNT(messageID) FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) WHERE folderID = '%d'".$query_where, $intFolderID));
@@ -279,7 +271,6 @@ switch($arr_input[0])
 					$strMessageText2 = $obj_email->filter_text($strMessageText2);
 
 					$email_outgoing = ($strMessageFrom == '');
-					//$email_outgoing = ($intUserID2 > 0 && $strMessageFrom == '');
 
 					if($email_outgoing)
 					{
