@@ -1218,39 +1218,42 @@ class mf_email
 	{
 		global $wpdb;
 
-		$result = $wpdb->get_results($wpdb->prepare("SELECT messageID FROM ".$wpdb->base_prefix."email_message WHERE messageDeleted = '0' AND (messageText LIKE %s OR messageText LIKE %s OR messageText2 LIKE %s OR messageText2 LIKE %s)", "%".$arr_used['file_url']."%", "%".$arr_used['file_thumb_url']."%", "%".$arr_used['file_url']."%", "%".$arr_used['file_thumb_url']."%"));
-		$rows = $wpdb->num_rows;
-
-		if($rows > 0)
+		if($this->has_accounts())
 		{
-			$arr_used['amount'] += $rows;
+			$result = $wpdb->get_results($wpdb->prepare("SELECT messageID FROM ".$wpdb->base_prefix."email_message WHERE messageDeleted = '0' AND (messageText LIKE %s OR messageText LIKE %s OR messageText2 LIKE %s OR messageText2 LIKE %s)", "%".$arr_used['file_url']."%", "%".$arr_used['file_thumb_url']."%", "%".$arr_used['file_url']."%", "%".$arr_used['file_thumb_url']."%"));
+			$rows = $wpdb->num_rows;
 
-			foreach($result as $r)
+			if($rows > 0)
 			{
-				if($arr_used['example'] != '')
-				{
-					break;
-				}
+				$arr_used['amount'] += $rows;
 
-				$arr_used['example'] = admin_url("admin.php?page=mf_email/list/index.php#email/show/".$r->messageID);
+				foreach($result as $r)
+				{
+					if($arr_used['example'] != '')
+					{
+						break;
+					}
+
+					$arr_used['example'] = admin_url("admin.php?page=mf_email/list/index.php#email/show/".$r->messageID);
+				}
 			}
-		}
 
-		$result = $wpdb->get_results($wpdb->prepare("SELECT messageID FROM ".$wpdb->base_prefix."email_message_attachment WHERE fileID = '%d'", $arr_used['id']));
-		$rows = $wpdb->num_rows;
+			$result = $wpdb->get_results($wpdb->prepare("SELECT messageID FROM ".$wpdb->base_prefix."email_message_attachment WHERE fileID = '%d'", $arr_used['id']));
+			$rows = $wpdb->num_rows;
 
-		if($rows > 0)
-		{
-			$arr_used['amount'] += $rows;
-
-			foreach($result as $r)
+			if($rows > 0)
 			{
-				if($arr_used['example'] != '')
-				{
-					break;
-				}
+				$arr_used['amount'] += $rows;
 
-				$arr_used['example'] = admin_url("admin.php?page=mf_email/list/index.php#email/show/".$r->messageID);
+				foreach($result as $r)
+				{
+					if($arr_used['example'] != '')
+					{
+						break;
+					}
+
+					$arr_used['example'] = admin_url("admin.php?page=mf_email/list/index.php#email/show/".$r->messageID);
+				}
 			}
 		}
 
