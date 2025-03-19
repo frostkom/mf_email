@@ -1492,9 +1492,13 @@ class mf_email
 		return $datetime;
 	}
 
-	function send_smtp_test()
+	function api_email_smtp_test()
 	{
 		global $phpmailer, $done_text, $error_text;
+
+		$json_output = array(
+			'success' => false,
+		);
 
 		$mail_to = check_var('smtp_to', 'email');
 
@@ -1519,6 +1523,8 @@ class mf_email
 			if($sent == true)
 			{
 				$done_text = "<p><strong>".__("The test message was sent successfully", 'lang_email')."</strong></p>";
+
+				$json_output['success'] = true;
 			}
 
 			else
@@ -1537,23 +1543,22 @@ class mf_email
 
 			if($out != '')
 			{
-				$result['success'] = true;
-				$result['message'] = $out;
+				$json_output['html'] = $out;
 			}
 
 			else
 			{
-				$result['error'] = __("I could not send the test email. Please make sure that the credentials are correct", 'lang_email');
+				$json_output['html'] = __("I could not send the test email. Please make sure that the credentials are correct", 'lang_email');
 			}
 		}
 
 		else
 		{
-			$result['error'] = __("You did not enter a valid email address. Please do and try again", 'lang_email');
+			$json_output['html'] = __("You did not enter a valid email address. Please do and try again", 'lang_email');
 		}
 
 		header('Content-Type: application/json');
-		echo json_encode($result);
+		echo json_encode($json_output);
 		die();
 	}
 

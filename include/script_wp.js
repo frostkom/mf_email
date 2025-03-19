@@ -221,22 +221,12 @@ jQuery(function($)
 				type: 'post',
 				dataType: 'json',
 				data: {
-					action: "send_smtp_test",
+					action: "api_email_smtp_test",
 					smtp_to: smtp_to
 				},
 				success: function(data)
 				{
-					$("#smtp_debug").empty();
-
-					if(data.success)
-					{
-						$("#smtp_debug").html(data.message);
-					}
-
-					else
-					{
-						$("#smtp_debug").html(data.error);
-					}
+					$("#smtp_debug").html(data.html);
 				}
 			});
 		}
