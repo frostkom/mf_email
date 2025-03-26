@@ -2641,9 +2641,6 @@ if(class_exists('mf_list_table'))
 			$this->arr_settings['query_all_id'] = "0";
 			$this->arr_settings['query_trash_id'] = "1";
 			$this->orderby_default = "emailDeleted ASC, ".$wpdb->base_prefix."email.userID ASC, emailUsername";
-
-			//$this->arr_settings['has_autocomplete'] = true;
-			//$this->arr_settings['plugin_name'] = 'mf_email';
 		}
 
 		function init_fetch()

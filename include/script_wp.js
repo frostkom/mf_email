@@ -221,7 +221,7 @@ jQuery(function($)
 				type: 'post',
 				dataType: 'json',
 				data: {
-					action: "api_email_smtp_test",
+					action: 'api_email_smtp_test',
 					smtp_to: smtp_to
 				},
 				success: function(data)
