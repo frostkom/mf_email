@@ -453,6 +453,10 @@ class mf_email
 
 		if($obj_cron->is_running == false)
 		{
+			mf_uninstall_plugin(array(
+				'options' => array('setting_email_info', 'setting_email_custom_log_file'),
+			));
+
 			if($this->has_accounts())
 			{
 				$arr_bounce_subject = array(
