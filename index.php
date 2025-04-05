@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description:
-Version: 6.7.2
+Version: 6.7.3
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -70,6 +70,11 @@ if(!function_exists('is_plugin_active') || function_exists('is_plugin_active') &
 	function activate_email()
 	{
 		global $wpdb, $obj_email;
+
+		if(!isset($obj_email))
+		{
+			$obj_email = new mf_email();
+		}
 
 		$default_charset = (DB_CHARSET != '' ? DB_CHARSET : 'utf8');
 
