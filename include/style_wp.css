@@ -10,7 +10,7 @@
 		vertical-align: super;
 	}
 
-		.is_mobile a[rel='external']:after, .is_tablet a[rel='external']:after, a[rel='external']:hover:after
+		a[rel='external']:hover:after
 		{
 			display: inline;
 		}
