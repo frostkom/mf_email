@@ -1109,7 +1109,7 @@ class mf_email
 	{
 		$menu_root = 'mf_email/';
 		$menu_start = $menu_root."list/index.php";
-		$menu_capability = override_capability(array('page' => $menu_start, 'default' => 'edit_posts'));
+		$menu_capability = 'edit_posts';
 
 		if($this->has_accounts())
 		{
