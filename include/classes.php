@@ -916,6 +916,19 @@ class mf_email
 		show_settings_fields(array('area' => $options_area, 'object' => $this, 'settings' => $arr_settings));
 	}
 
+	function pre_update_option($new_value, $old_value)
+	{
+		$out = "";
+
+		if($new_value != '')
+		{
+			$obj_encryption = new mf_encryption(__CLASS__);
+			$out = $obj_encryption->encrypt($new_value, md5(AUTH_KEY));
+		}
+
+		return $out;
+	}
+
 	function settings_email_callback()
 	{
 		$setting_key = get_setting_key(__FUNCTION__);
@@ -1039,6 +1052,9 @@ class mf_email
 	{
 		$setting_key = get_setting_key(__FUNCTION__);
 		$option = get_option($setting_key);
+
+		$obj_encryption = new mf_encryption(__CLASS__);
+		$option = $obj_encryption->decrypt($option, md5(AUTH_KEY));
 
 		echo show_password_field(array('name' => $setting_key, 'value' => $option, 'xtra' => " autocomplete='new-password'"));
 	}
@@ -1309,6 +1325,9 @@ class mf_email
 			$smtp_port = get_option('setting_smtp_port');
 			$smtp_user = get_option('setting_smtp_username');
 			$smtp_pass = get_option('setting_smtp_password');
+
+			$obj_encryption = new mf_encryption(__CLASS__);
+			$smtp_pass = $obj_encryption->decrypt($smtp_pass, md5(AUTH_KEY));
 		}
 
 		switch($outgoing_type)
@@ -2558,6 +2577,11 @@ class mf_email_encryption
 
 	function __construct($type)
 	{
+		if(class_exists('mf_encryption'))
+		{
+			do_log(__CLASS__.": Start using mf_encryption() instead");
+		}
+
 		$this->set_key($type);
 
 		if(function_exists('mcrypt_create_iv') && function_exists('mcrypt_get_iv_size'))
@@ -2571,7 +2595,7 @@ class mf_email_encryption
 
 			if(!in_array($this->encrypt_method, openssl_get_cipher_methods()) && !in_array(strtolower($this->encrypt_method), openssl_get_cipher_methods()))
 			{
-				do_log("Encryption: ".$this->encrypt_method." does not exist in ".var_export(openssl_get_cipher_methods(), true));
+				do_log(__CLASS__.": ".$this->encrypt_method." does not exist in ".var_export(openssl_get_cipher_methods(), true));
 			}
 
 			$this->iv = substr(hash('sha256', $this->key), 0, 16);
