@@ -490,7 +490,16 @@ class mf_email
 					//switch_to_blog($intBlogID);
 
 					$this->id = $intEmailID;
-					$obj_encryption = new mf_email_encryption("email");
+
+					if(class_exists('mf_encryption'))
+					{
+						$obj_encryption = new mf_encryption("email");
+					}
+
+					else
+					{
+						$obj_encryption = new mf_email_encryption("email");
+					}
 
 					$strEmailPassword = $obj_encryption->decrypt($strEmailPassword, md5($strEmailAddress));
 
@@ -1311,7 +1320,16 @@ class mf_email
 				$smtp_user = $r->emailSmtpUsername;
 				$smtp_pass_encrypted = $r->emailSmtpPassword;
 
-				$obj_encryption = new mf_email_encryption("email");
+				if(class_exists('mf_encryption'))
+				{
+					$obj_encryption = new mf_encryption("email");
+				}
+
+				else
+				{
+					$obj_encryption = new mf_email_encryption("email");
+				}
+
 				$smtp_pass = $obj_encryption->decrypt($smtp_pass_encrypted, md5($phpmailer->From));
 
 				$phpmailer->FromName = $r->emailName;
@@ -1775,7 +1793,16 @@ class mf_email
 							{
 								if($strEmailPassword != '')
 								{
-									$obj_encryption = new mf_email_encryption("email");
+									if(class_exists('mf_encryption'))
+									{
+										$obj_encryption = new mf_encryption("email");
+									}
+
+									else
+									{
+										$obj_encryption = new mf_email_encryption("email");
+									}
+
 									$strEmailPassword = $obj_encryption->decrypt($strEmailPassword, md5($strEmailAddress));
 								}
 
@@ -2428,7 +2455,15 @@ class mf_email
 
 	function encrypt_password()
 	{
-		$obj_encryption = new mf_email_encryption("email");
+		if(class_exists('mf_encryption'))
+		{
+			$obj_encryption = new mf_encryption("email");
+		}
+
+		else
+		{
+			$obj_encryption = new mf_email_encryption("email");
+		}
 
 		if(isset($this->password) && $this->password != '' && $this->address != '')
 		{
@@ -2577,11 +2612,6 @@ class mf_email_encryption
 
 	function __construct($type)
 	{
-		if(class_exists('mf_encryption'))
-		{
-			do_log(__CLASS__.": Start using mf_encryption() instead");
-		}
-
 		$this->set_key($type);
 
 		if(function_exists('mcrypt_create_iv') && function_exists('mcrypt_get_iv_size'))
