@@ -1,21 +1,5 @@
 jQuery(function($)
 {
-	/* WP Admin */
-	$(document).on('click', "a[href^='mailto:']", function(e)
-	{
-		/* If left-click and the admin menu item has not been removed by for example MF Admin Menu */
-		if(e.which != 3 && $("#toplevel_page_mf_email-list-index").length > 0)
-		{
-			var this_href = $(this).attr('href').replace("mailto:", "").replace("?", "&").replace("&subject", "&strMessageSubject").replace("&body", "&strMessageText"),
-				url = script_email.admin_url + '&strMessageTo=' + this_href;
-
-			location.href = url;
-
-			return false;
-		}
-	});
-
-	/* Create Account */
 	var dom_show_and_hide_fields = $("#strEmailAddress, #strEmailName, #strEmailServer, #strEmailOutgoingType, #strEmailSmtpServer");
 
 	function show_and_hide_fields()
@@ -176,61 +160,5 @@ jQuery(function($)
 
 			to_obj.val(arr_from_val[1]);
 		}
-	});
-
-	/* Send Email */
-	if($("#strMessageTo, #strMessageCc").length > 0)
-	{
-		$("#strMessageTo, #strMessageCc").autocomplete(
-		{
-			source: function(request, response)
-			{
-				$.ajax(
-				{
-					url: script_email.plugin_url + 'api/?type=email/search',
-					dataType: 'json',
-					data: {
-						s: request.term
-					},
-					success: function(data)
-					{
-						if(data.amount > 0)
-						{
-							response(data);
-						}
-					}
-				});
-			},
-			minLength: 3
-		});
-	}
-
-	/* Settings */
-	$(document).on('click', "button[name=btnSmtpTest]:not(.is_disabled)", function()
-	{
-		var smtp_to = $("#smtp_to").val();
-
-		if(typeof smtp_to != undefined && smtp_to != '')
-		{
-			$("button[name=btnSmtpTest]").addClass('is_disabled');
-			$("#smtp_debug").html("<i class='fa fa-spinner fa-spin fa-2x'></i>");
-
-			$.ajax(
-			{
-				url: script_email.ajax_url,
-				type: 'post',
-				dataType: 'json',
-				data: {
-					action: 'api_email_smtp_test',
-					smtp_to: smtp_to
-				},
-				success: function(data)
-				{
-					$("#smtp_debug").html(data.html);
-				}
-			});
-		}
-
-		return false;
 	});
 });

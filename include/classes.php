@@ -1081,32 +1081,49 @@ class mf_email
 	{
 		global $pagenow;
 
-		$plugin_base_include_url = plugins_url()."/mf_base/include/";
+		$page = check_var('page');
+
 		$plugin_include_url = plugin_dir_url(__FILE__);
 
-		if(IS_EDITOR)
+		switch($pagenow)
 		{
-			mf_enqueue_script('jquery-ui-autocomplete');
-			mf_enqueue_script('script_email', $plugin_include_url."script_wp.js", array('admin_url' => admin_url("admin.php?page=mf_email/send/index.php"), 'plugin_url' => $plugin_include_url, 'ajax_url' => admin_url('admin-ajax.php')));
-		}
+			case 'admin.php':
+				switch($page)
+				{
+					case 'mf_email/create/index.php':
+						mf_enqueue_script('script_email_create', $plugin_include_url."script_create.js");
+					break;
 
-		if($pagenow == 'admin.php' && check_var('page') == 'mf_email/list/index.php')
-		{
-			mf_enqueue_style('style_email_wp', $plugin_include_url."style_wp.css");
-			mf_enqueue_style('style_base_bb', $plugin_base_include_url."backbone/style.css");
+					case 'mf_email/list/index.php':
+						$plugin_base_include_url = plugins_url()."/mf_base/include/";
 
-			wp_enqueue_script('jquery-ui-draggable');
-			wp_enqueue_script('jquery-ui-droppable');
-			mf_enqueue_script('script_touch', $plugin_base_include_url."jquery.ui.touch-punch.min.js");
+						mf_enqueue_style('style_email_wp', $plugin_include_url."style_wp.css");
+						mf_enqueue_style('style_base_bb', $plugin_base_include_url."backbone/style.css");
 
-			mf_enqueue_script('underscore');
-			mf_enqueue_script('backbone');
-			mf_enqueue_script('script_base_plugins', $plugin_base_include_url."backbone/bb.plugins.js");
-			//mf_enqueue_script('script_email_plugins', $plugin_include_url."backbone/bb.plugins.js");
-			mf_enqueue_script('script_email_router', $plugin_include_url."backbone/bb.router.js");
-			mf_enqueue_script('script_email_models', $plugin_include_url."backbone/bb.models.js", array('plugin_url' => $plugin_include_url));
-			mf_enqueue_script('script_email_views', $plugin_include_url."backbone/bb.views.js", array('emails2show' => EMAILS2SHOW));
-			mf_enqueue_script('script_base_init', $plugin_base_include_url."backbone/bb.init.js");
+						wp_enqueue_script('jquery-ui-draggable');
+						wp_enqueue_script('jquery-ui-droppable');
+						mf_enqueue_script('script_touch', $plugin_base_include_url."jquery.ui.touch-punch.min.js");
+
+						mf_enqueue_script('underscore');
+						mf_enqueue_script('backbone');
+						mf_enqueue_script('script_base_plugins', $plugin_base_include_url."backbone/bb.plugins.js");
+						//mf_enqueue_script('script_email_plugins', $plugin_include_url."backbone/bb.plugins.js");
+						mf_enqueue_script('script_email_router', $plugin_include_url."backbone/bb.router.js");
+						mf_enqueue_script('script_email_models', $plugin_include_url."backbone/bb.models.js", array('plugin_url' => $plugin_include_url));
+						mf_enqueue_script('script_email_views', $plugin_include_url."backbone/bb.views.js", array('emails2show' => EMAILS2SHOW));
+						mf_enqueue_script('script_base_init', $plugin_base_include_url."backbone/bb.init.js");
+					break;
+
+					case 'mf_email/send/index.php':
+						mf_enqueue_script('jquery-ui-autocomplete');
+						mf_enqueue_script('script_email_send', $plugin_include_url."script_send.js", array('plugin_url' => $plugin_include_url));
+					break;
+				}
+			break;
+
+			case 'options-general.php':
+				mf_enqueue_script('script_email_settings', $plugin_include_url."script_settings.js", array('ajax_url' => admin_url('admin-ajax.php')));
+			break;
 		}
 	}
 
