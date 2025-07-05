@@ -20,9 +20,9 @@ class mf_email
 	var $smtp_hostname;
 	var $smtp_username;
 	var $smtp_password;
-	var $preferred_content_types = array();
+	var $preferred_content_types = [];
 	var $public;
-	var $roles = array();
+	var $roles = [];
 	var $users;
 	var $smtp_password_encrypted;
 	var $password_encrypted;
@@ -40,7 +40,7 @@ class mf_email
 	var $all_left_to_send;
 	var $from_address;
 
-	function __construct($data = array())
+	function __construct($data = [])
 	{
 		if(isset($data['id']) && $data['id'] > 0)
 		{
@@ -76,7 +76,7 @@ class mf_email
 	{
 		global $wpdb;
 
-		$out = array();
+		$out = [];
 
 		$result = $wpdb->get_results("SELECT emailID FROM ".$wpdb->base_prefix."email_users RIGHT JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE (emailPublic = '1' OR emailRoles LIKE '%".get_current_user_role()."%' OR ".$wpdb->base_prefix."email_users.userID = '".get_current_user_id()."' OR (".$wpdb->base_prefix."email.userID = '".get_current_user_id()."' AND ".$wpdb->base_prefix."email_users.userID IS null)) AND (blogID = '".$wpdb->blogid."' OR blogID = '0')");
 
@@ -107,7 +107,7 @@ class mf_email
 		return $arr_out;
 	}
 
-	function get_update_email($data = array())
+	function get_update_email($data = [])
 	{
 		global $wpdb;
 
@@ -627,7 +627,7 @@ class mf_email
 									{
 										if($intSpamID > 0)
 										{
-											$arr_temp = array();
+											$arr_temp = [];
 
 											$this->set_mail_info(array('message_id' => $intMessageID, 'mail_spam' => 1), $arr_temp);
 											$this->mark_spam(array('message_id' => $intMessageID, 'spam' => true));
@@ -635,7 +635,7 @@ class mf_email
 
 										$done_text = __("Inserted", 'lang_email').": ".$strMessageSubject."<br>";
 
-										$arr_file_id = array();
+										$arr_file_id = [];
 
 										if(count($logical->attachments) > 0)
 										{
@@ -804,7 +804,7 @@ class mf_email
 							$intMessageID = $r->messageID;
 
 							//do_log("Trash ".$r->messageName." (#".$intMessageID.", ".$r->messageReceived.")");
-							$json_output = array();
+							$json_output = [];
 							$this->set_mail_info(array('message_id' => $intMessageID, 'mail_deleted' => 1), $json_output);
 						}
 					}
@@ -895,7 +895,7 @@ class mf_email
 
 		add_settings_section($options_area, "", array($this, $options_area."_callback"), BASE_OPTIONS_PAGE);
 
-		$arr_settings = array();
+		$arr_settings = [];
 
 		if(IS_SUPER_ADMIN && (!function_exists('is_plugin_active') || function_exists('is_plugin_active') && is_plugin_active("mf_log/index.php") && get_site_option('setting_log_activate', get_option('setting_log_activate')) == 'yes'))
 		{
@@ -2199,7 +2199,7 @@ class mf_email
 							$this->preferred_content_types = get_option('setting_email_preferred_content_types');
 						}
 
-						$this->users = array();
+						$this->users = [];
 
 						$resultUsers = $wpdb->get_results($wpdb->prepare("SELECT userID FROM ".$wpdb->base_prefix."email_users WHERE emailID = '%d'", $this->id));
 
@@ -2329,7 +2329,7 @@ class mf_email
 		return $wpdb->get_var($wpdb->prepare("SELECT emailID FROM ".$wpdb->base_prefix."email INNER JOIN ".$wpdb->base_prefix."email_message ON ".$wpdb->base_prefix."email.emailAddress = ".$wpdb->base_prefix."email_message.messageFrom WHERE blogID = '%d' ORDER BY messageCreated DESC LIMIT 0, 1", $wpdb->blogid));
 	}
 
-	function get_from_for_select($data = array())
+	function get_from_for_select($data = [])
 	{
 		global $wpdb;
 
@@ -2782,46 +2782,46 @@ if(class_exists('mf_list_table'))
 						.$strEmailAddress
 					."</a>";
 
-					$actions = array();
+					$arr_actions = [];
 
 					if($intEmailDeleted == 0)
 					{
-						$actions['edit'] = "<a href='".$email_url."'>".__("Edit", 'lang_email')."</a>";
+						$arr_actions['edit'] = "<a href='".$email_url."'>".__("Edit", 'lang_email')."</a>";
 
 						if(IS_ADMINISTRATOR || $intUserID == get_current_user_id())
 						{
-							$actions['delete'] = "<a href='".wp_nonce_url(admin_url("admin.php?page=mf_email/accounts/index.php&btnEmailDelete&intEmailID=".$intEmailID), 'email_delete_'.$intEmailID, '_wpnonce_email_delete')."' rel='confirm'>".__("Delete", 'lang_email')."</a>";
+							$arr_actions['delete'] = "<a href='".wp_nonce_url(admin_url("admin.php?page=mf_email/accounts/index.php&btnEmailDelete&intEmailID=".$intEmailID), 'email_delete_'.$intEmailID, '_wpnonce_email_delete')."' rel='confirm'>".__("Delete", 'lang_email')."</a>";
 						}
 
-						$actions['send'] = "<a href='".admin_url("admin.php?page=mf_email/send/index.php&intEmailID=".$intEmailID)."'><i class='fa fa-paper-plane fa-lg' title='".__("Send Message", 'lang_email')."'></i></a>";
+						$arr_actions['send'] = "<a href='".admin_url("admin.php?page=mf_email/send/index.php&intEmailID=".$intEmailID)."'><i class='fa fa-paper-plane fa-lg' title='".__("Send Message", 'lang_email')."'></i></a>";
 					}
 
 					else
 					{
-						$actions['send'] = "<a href='".$email_url."'>".__("Recover", 'lang_email')."</a>";
+						$arr_actions['send'] = "<a href='".$email_url."'>".__("Recover", 'lang_email')."</a>";
 					}
 
-					$out .= $this->row_actions($actions);
+					$out .= $this->row_actions($arr_actions);
 				break;
 
 				case 'emailName':
 					$out .= $item['emailName'];
 
-					$actions = array();
+					$arr_actions = [];
 
 					$arr_message_amount = $obj_email->get_message_amount($intEmailID);
 
 					if($arr_message_amount['received'] > 0)
 					{
-						$actions['received'] = __("Received", 'lang_email').": ".$arr_message_amount['received'];
+						$arr_actions['received'] = __("Received", 'lang_email').": ".$arr_message_amount['received'];
 					}
 
 					if($arr_message_amount['sent'] > 0)
 					{
-						$actions['sent'] = __("Sent", 'lang_email').": ".$arr_message_amount['sent'];
+						$arr_actions['sent'] = __("Sent", 'lang_email').": ".$arr_message_amount['sent'];
 					}
 
-					$out .= $this->row_actions($actions);
+					$out .= $this->row_actions($arr_actions);
 				break;
 
 				case 'rights':
@@ -2829,7 +2829,7 @@ if(class_exists('mf_list_table'))
 					$strEmailRoles = $item['emailRoles'];
 
 					$rights_icon = $rights_title = "";
-					$arr_rights = array();
+					$arr_rights = [];
 
 					if($intEmailPublic == 1)
 					{

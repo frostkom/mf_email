@@ -58,7 +58,7 @@ echo "<div class='wrap'>
 						<h3 class='hndle'>".__("Advanced", 'lang_email')."</h3>
 						<div class='inside'>";
 
-							$arr_data_source = array();
+							$arr_data_source = [];
 							get_post_children(array('add_choose_here' => true), $arr_data_source);
 
 							echo show_select(array('data' => $arr_data_source, 'name' => 'intEmailTextSource', 'text' => __("Text Source", 'lang_email'), 'xtra' => "rel='submit_change'")) // class='is_disabled' disabled

@@ -17,7 +17,7 @@ $users = get_users(array(
 	'fields' => array('ID', 'display_name'),
 ));
 
-$arr_data_users = array();
+$arr_data_users = [];
 
 foreach($users as $user)
 {

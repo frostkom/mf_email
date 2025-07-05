@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description:
-Version: 6.7.10
+Version: 6.7.11
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -79,7 +79,7 @@ if(!function_exists('is_plugin_active') || function_exists('is_plugin_active') &
 
 		$default_charset = (DB_CHARSET != '' ? DB_CHARSET : 'utf8');
 
-		$arr_add_column = $arr_update_column = $arr_add_index = array();
+		$arr_add_column = $arr_update_column = $arr_add_index = [];
 
 		$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email (
 			emailID INT UNSIGNED NOT NULL AUTO_INCREMENT,

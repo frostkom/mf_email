@@ -17,7 +17,7 @@ if(!isset($obj_email))
 $strAjaxInput = check_var('type', 'char', true, 'email/folders/'.__("Inbox", 'lang_email'));
 $arr_input = explode("/", trim($strAjaxInput, "/"));
 
-$json_output = array();
+$json_output = [];
 
 switch($arr_input[0])
 {
@@ -65,7 +65,7 @@ switch($arr_input[0])
 				default:
 					$strFolderName = (isset($arr_input[2]) ? $arr_input[2] : "");
 
-					$json_output['folders'] = array();
+					$json_output['folders'] = [];
 
 					$result = $wpdb->get_results("SELECT folderID, folderType, folderName FROM ".$wpdb->base_prefix."email_folder WHERE (folderID2 = '0' OR folderID2 IS null) AND folderDeleted = '0'".$query_where." GROUP BY folderName ORDER BY folderType DESC, folderName ASC");
 
@@ -125,7 +125,7 @@ switch($arr_input[0])
 			case 'emails':
 				DEFINE('EMAILS2SHOW', 50);
 
-				$json_output['emails'] = array();
+				$json_output['emails'] = [];
 
 				$strFolderName = (isset($arr_input[2]) ? $arr_input[2] : "");
 
@@ -188,7 +188,7 @@ switch($arr_input[0])
 			break;
 
 			case 'render_row':
-				$json_output['render_row'] = array();
+				$json_output['render_row'] = [];
 
 				$intMessageID = $arr_input[2];
 
@@ -284,7 +284,7 @@ switch($arr_input[0])
 						$strTo = $strEmailAddress.($strMessageTo != $strEmailAddress ? " (".$strMessageTo.")" : "");
 					}
 
-					$arr_attachments = array();
+					$arr_attachments = [];
 
 					$result = $wpdb->get_results($wpdb->prepare("SELECT post_title, guid FROM ".$wpdb->base_prefix."email_message_attachment INNER JOIN ".$wpdb->posts." ON ".$wpdb->base_prefix."email_message_attachment.fileID = ".$wpdb->posts.".ID AND post_type = 'attachment' WHERE messageID = '%d'", $intMessageID));
 
