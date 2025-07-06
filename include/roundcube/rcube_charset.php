@@ -100,7 +100,8 @@ function rcube_charset_convert($str, $from, $to=NULL)
         return $_str;
     }
     else if (($from == 'ISO-8859-1') && function_exists('utf8_encode')) {
-      return utf8_encode($str);
+		//return utf8_encode($str);
+		return mb_convert_encoding($str, 'UTF-8', 'ISO-8859-1');
     }
     else if (class_exists('utf8')) {
       if (!$conv)
@@ -730,7 +731,8 @@ class rcube_charset
                 }
             }
             else if ($from == 'ISO-8859-1' && function_exists('utf8_encode')) {
-                return utf8_encode($str);
+				//return utf8_encode($str);
+				return mb_convert_encoding($str, 'UTF-8', 'ISO-8859-1');
             }
             else if (class_exists('utf8')) {
                 if (!$conv) {
