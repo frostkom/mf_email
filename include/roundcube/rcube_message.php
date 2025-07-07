@@ -34,15 +34,15 @@ class rcube_message
 	 * @var rcube_imap
 	 */
 	private $imap;
-	private $opt = array();
-	private $inline_parts = array();
+	private $opt = [];
+	private $inline_parts = [];
 	private $parse_alternative = false;
 
 	public $uid = null;
 	public $headers;
-	public $parts = array();
-	public $mime_parts = array();
-	public $attachments = array();
+	public $parts = [];
+	public $mime_parts = [];
+	public $attachments = [];
 	public $subject = '';
 	public $sender = null;
 	public $receiver = null;
@@ -497,7 +497,7 @@ class rcube_message
 
 			// if this was a related part try to resolve references
 			if($mimetype == 'multipart/related' && sizeof($this->inline_parts)) {
-				$a_replaces = array();
+				$a_replaces = [];
 				$img_regexp = '/^image\/(gif|jpe?g|png|tiff|bmp|svg)/';
 
 				foreach($this->inline_parts as $inline_object) {
@@ -575,7 +575,7 @@ class rcube_message
 		if(!isset($part->body))
 			$part->body = $this->imap->get_message_part($this->uid, $part->mime_id, $part);
 
-		$parts = array();
+		$parts = [];
 		$tnef = new tnef_decoder;
 		$tnef_arr = $tnef->decompress($part->body);
 
@@ -611,7 +611,7 @@ class rcube_message
 		if(!isset($part->body))
 			$part->body = $this->imap->get_message_part($this->uid, $part->mime_id, $part);
 
-		$parts = array();
+		$parts = [];
 		// FIXME: line length is max.65?
 		$uu_regexp = '/begin [0-7]{3,4} ([^\n]+)\n(([\x21-\x7E]{0,65}\n)+)`\nend/s';
 

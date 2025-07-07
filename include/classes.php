@@ -1122,7 +1122,10 @@ class mf_email
 			break;
 
 			case 'options-general.php':
-				mf_enqueue_script('script_email_settings', $plugin_include_url."script_settings.js", array('ajax_url' => admin_url('admin-ajax.php')));
+				mf_enqueue_script('script_email_settings', $plugin_include_url."script_settings.js", array(
+					'ajax_url' => admin_url('admin-ajax.php'),
+					'loading_animation' => apply_filters('get_loading_animation', ''),
+				));
 			break;
 		}
 	}
@@ -2974,7 +2977,7 @@ if(class_exists('mf_list_table'))
 
 									else
 									{
-										$row_info .= "<i class='fa fa-spinner fa-spin fa-lg'></i>";
+										$row_info .= apply_filters('get_loading_animation', '');
 
 										$row_actions .= ($row_actions != '' ? " | " : "").__("Incoming has not been checked yet", 'lang_email');
 									}

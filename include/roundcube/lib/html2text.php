@@ -320,7 +320,7 @@ class html2text
      *  @access private
      *  @see _build_link_list()
      */
-    var $_link_list = array();
+    var $_link_list = [];
 
     /**
      * Boolean flag, true if a table of link URLs should be listed after the text.
@@ -461,7 +461,7 @@ class html2text
     function _convert()
     {
         // Variables used for building the link list
-        $this->_link_list = array();
+        $this->_link_list = [];
 
         $text = trim(stripslashes($this->html));
 

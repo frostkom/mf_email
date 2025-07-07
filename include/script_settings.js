@@ -7,7 +7,7 @@ jQuery(function($)
 		if(typeof smtp_to != undefined && smtp_to != '')
 		{
 			$("button[name=btnSmtpTest]").addClass('is_disabled');
-			$("#smtp_debug").html("<i class='fa fa-spinner fa-spin fa-2x'></i>");
+			$("#smtp_debug").html(script_email_settings.loading_animation);
 
 			$.ajax(
 			{

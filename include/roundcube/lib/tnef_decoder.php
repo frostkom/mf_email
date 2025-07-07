@@ -63,9 +63,9 @@ class tnef_decoder
      *
      * @return mixed  The decompressed data.
      */
-    public function decompress($data, $params = array())
+    public function decompress($data, $params = [])
     {
-        $out = array();
+        $out = [];
 
         if ($this->_geti($data, 32) == self::SIGNATURE) {
             $this->_geti($data, 16);
