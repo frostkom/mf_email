@@ -118,6 +118,8 @@ class rcube_imap
     const NONEXISTENT   = 7;
     const CONTACTADMIN  = 8;
 
+	var $_msg_uid;
+
     /**
      * Object constructor.
      */
@@ -1974,7 +1976,7 @@ class rcube_imap
      */
     function get_message($uid, $mailbox = null)
     {
-        if (!strlen($mailbox)) {
+        if (!strlen($mailbox ?? '')) {
             $mailbox = $this->mailbox;
         }
 
@@ -4703,6 +4705,13 @@ class rcube_message_part
     var $headers = array();
     var $d_parameters = array();
     var $ctype_parameters = array();
+
+	var $type;
+	var $body;
+	var $parts;
+	var $content_id;
+	var $replaces;
+	var $real_mimetype;
 
     function __clone()
     {

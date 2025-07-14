@@ -257,7 +257,6 @@ class rcube_message
 		return null;
 	}
 
-
 	/**
 	 * Raad the message structure returend by the IMAP server
 	 * and build flat lists of content parts and attachments

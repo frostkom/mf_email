@@ -57,6 +57,8 @@ class rcube_mail_header
 	public $mdn_to;
 	public $others = [];
 	public $flags = [];
+
+	var $structure;
 }
 
 // For backward compatibility with cached messages (#1486602)
@@ -112,6 +114,8 @@ class rcube_imap_generic
 	const COMMAND_NORESPONSE = 1;
 	const COMMAND_CAPABILITY = 2;
 	const COMMAND_LASTLINE   = 4;
+
+	var $user;
 
 	/**
 	 * Object constructor
@@ -2395,6 +2399,11 @@ class rcube_imap_generic
 							break;
 						$headers .= $out;
 					}
+				}
+
+				if($result == false)
+				{
+					$result = [];
 				}
 
 				$result[$idx] = trim($headers);

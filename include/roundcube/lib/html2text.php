@@ -106,7 +106,6 @@
  */
 class html2text
 {
-
     /**
      *  Contains the HTML content to convert.
      *
@@ -330,6 +329,8 @@ class html2text
      * @see html2text()
      */
     var $_do_links = true;
+
+	var $pre_content;
 
     /**
      *  Constructor.
@@ -710,7 +711,7 @@ class html2text
     private function _toupper($str)
     {
         // string can containg HTML tags
-        $chunks = preg_split('/(<[^>]*>)/', $str, null, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+		$chunks = preg_split('/(<[^>]*>)/', $str, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 
         // convert toupper only the text between HTML tags
         foreach ($chunks as $idx => $chunk) {
