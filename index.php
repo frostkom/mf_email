@@ -3,15 +3,12 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description:
-Version: 6.8.0
+Version: 6.8.1
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
 Text Domain: lang_email
 Domain Path: /lang
-
-Depends: MF Base
-GitHub Plugin URI: frostkom/mf_email
 */
 
 if(!function_exists('is_plugin_active') || function_exists('is_plugin_active') && is_plugin_active("mf_base/index.php"))
