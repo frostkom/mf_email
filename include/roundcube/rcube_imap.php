@@ -4549,7 +4549,10 @@ class rcube_imap
     private function _parse_address_list($str, $decode=true)
     {
         // remove any newlines and carriage returns before
-        $str = preg_replace('/\r?\n(\s|\t)?/', ' ', $str);
+		if($str != null)
+		{
+			$str = preg_replace('/\r?\n(\s|\t)?/', ' ', $str);
+		}
 
         // extract list items, remove comments
         $str = self::explode_header_string(',;', $str, true);
@@ -4612,7 +4615,7 @@ class rcube_imap
      */
     static function explode_header_string($separator, $str, $remove_comments=false)
     {
-        $length  = strlen($str);
+        $length  = ($str != null ? strlen($str) : 0);
         $result  = array();
         $quoted  = false;
         $comment = 0;
