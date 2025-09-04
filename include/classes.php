@@ -1143,9 +1143,7 @@ class mf_email
 
 		if($intUnread > 0)
 		{
-			$count_message = "&nbsp;<span class='update-plugins' title='".__("Unread", 'lang_email')."'>
-				<span>".$intUnread."</span>
-			</span>";
+			$count_message = "&nbsp;<span class='update-plugins' title='".__("Unread", 'lang_email')."'><span>".$intUnread."</span></span>";
 		}
 
 		return $count_message;
