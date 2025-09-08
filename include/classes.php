@@ -915,13 +915,7 @@ class mf_email
 			$arr_settings['setting_smtp_password'] = "SMTP ".__("Password", 'lang_email');
 		}
 
-		/*$admin_email = get_bloginfo('admin_email');
-		$wpdb->get_results($wpdb->prepare("SELECT emailID FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s AND emailSmtpServer != ''", $admin_email));
-
-		if($wpdb->num_rows > 0 || get_option('setting_smtp_server') != '')
-		{*/
-			$arr_settings['setting_smtp_test'] = __("Test", 'lang_email')." SMTP";
-		//}
+		$arr_settings['setting_smtp_test'] = __("Test", 'lang_email')." SMTP";
 
 		show_settings_fields(array('area' => $options_area, 'object' => $this, 'settings' => $arr_settings));
 	}
@@ -994,33 +988,80 @@ class mf_email
 			echo "<p>".sprintf(__("The e-mail %s already has an account where you have set an SMTP", 'lang_email'), "<a href='".admin_url("admin.php?page=mf_email/create/index.php&intEmailID=".$intEmailID)."' class='bold'>".$admin_email."</a>")."</p>";
 		}
 
-		if(IS_SUPER_ADMIN && function_exists("exec"))
+		if(IS_SUPER_ADMIN)
 		{
 			list($admin_email_prefix, $admin_email_domain) = explode("@", $admin_email);
 
-			$exec_command = "dig +short TXT ".$admin_email_domain;
-			exec($exec_command, $return_value);
-
 			echo "<h4>".sprintf(__("TXT records for %s", 'lang_email'), $admin_email_domain)."</h4>";
 
-			if(is_array($return_value) && count($return_value) > 0)
-			{
-				echo "<ul>";
+			echo "<ul>";
 
-					foreach($return_value as $return_row)
+				$records = dns_get_record($admin_email_domain, DNS_TXT);
+
+				$has_spf = $has_dkim = $has_dmarc = "";
+
+				foreach($records as $record)
+				{
+					if(isset($record['txt']) && stripos($record['txt'], 'v=spf1') === 0)
 					{
-						echo "<li>".$return_row."</li>";
+						$has_spf = $record['txt'];
+						break;
+					}
+				}
+
+				echo "<li><strong>SPF:</strong> ".($has_spf != '' ? "<i class='fa fa-check green'></i> ".$has_spf : "<i class='fa fa-exclamation-triangle yellow display_warning'></i> ".__("Not found", 'lang_email'))."</li>";
+
+				if($has_spf == "" && function_exists("exec"))
+				{
+					$exec_command = "dig +short TXT ".$admin_email_domain;
+					exec($exec_command, $return_value);
+
+					if(is_array($return_value) && count($return_value) > 0)
+					{
+						foreach($return_value as $return_row)
+						{
+							echo "<li>".$return_row."</li>";
+						}
 					}
 
-				echo "</ul>";
-			}
+					else
+					{
+						$error_text = sprintf(__("No return value on %s so you should add %s", 'lang_email'), "\"".$exec_command."\"", "\"v=spf1 ip4:".get_option_or_default('setting_site_manager_server_ip', "[Server IP]")." ~all\"");
 
-			else
-			{
-				$error_text = sprintf(__("No return value on %s so you should add %s", 'lang_email'), "\"".$exec_command."\"", "\"v=spf1 ip4:".get_option_or_default('setting_site_manager_server_ip', "[Server IP]")." ~all\"");
-				//echo get_notification();
-				echo $error_text;
-			}
+						echo "<li>".$error_text."</li>";
+					}
+				}
+
+				$selector = 'default';
+				$dkim_domain = $selector.'._domainkey.'.$admin_email_domain;
+				$records = dns_get_record($dkim_domain, DNS_TXT);
+
+				foreach($records as $record)
+				{
+					if(isset($record['txt']) && stripos($record['txt'], 'v=DKIM1') === 0)
+					{
+						$has_dkim = $record['txt'];
+						break;
+					}
+				}
+
+				echo "<li><strong>DKIM:</strong> ".($has_dkim != '' ? "<i class='fa fa-check green'></i> ".$has_dkim : "<i class='fa fa-exclamation-triangle yellow display_warning'></i> ".__("Not found", 'lang_email'))."</li>";
+
+				$dmarc_domain = '_dmarc.'.$admin_email_domain;
+				$records = dns_get_record($dmarc_domain, DNS_TXT);
+
+				foreach($records as $record)
+				{
+					if(isset($record['txt']) && stripos($record['txt'], 'v=DMARC1') === 0)
+					{
+						$has_dmarc = $record['txt'];
+						break;
+					}
+				}
+
+				echo "<li><strong>DMARC:</strong> ".($has_dmarc != '' ? "<i class='fa fa-check green'></i> ".$has_dmarc : "<i class='fa fa-exclamation-triangle yellow display_warning'></i> ".__("Not found", 'lang_email'))."</li>";
+
+			echo "</ul>";
 		}
 	}
 
