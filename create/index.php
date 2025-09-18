@@ -112,9 +112,9 @@ echo "<div class='wrap'>
 						<div class='inside'>"
 							.show_checkbox(array('name' => 'intEmailPublic', 'text' => __("Public", 'lang_email'), 'value' => 1, 'compare' => $obj_email->public))
 							."<h3>".__("or", 'lang_email')."</h3>"
-							.show_select(array('data' => get_roles_for_select(array('use_capability' => false)), 'name' => 'arrEmailRoles[]', 'text' => __("Permission", 'lang_email'), 'value' => $obj_email->roles, 'xtra' => "class='multiselect'"))
+							.show_select(array('data' => get_roles_for_select(array('use_capability' => false)), 'name' => 'arrEmailRoles[]', 'text' => __("Permission", 'lang_email'), 'value' => $obj_email->roles, 'xtra' => "class='mf_form_field multiselect'"))
 							."<h3>".__("or", 'lang_email')."</h3>"
-							.show_select(array('data' => $arr_data_users, 'name' => 'arrEmailUsers[]', 'text' => __("Users", 'lang_email'), 'value' => $obj_email->users, 'xtra' => "class='multiselect'"))
+							.show_select(array('data' => $arr_data_users, 'name' => 'arrEmailUsers[]', 'text' => __("Users", 'lang_email'), 'value' => $obj_email->users, 'xtra' => "class='mf_form_field multiselect'"))
 						."</div>
 					</div>
 				</div>
