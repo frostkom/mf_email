@@ -9,6 +9,7 @@ class mf_email
 	var $port;
 	var $username;
 	var $password;
+	var $password_placeholder;
 	var $address;
 	var $name;
 	var $signature;
@@ -20,6 +21,7 @@ class mf_email
 	var $smtp_hostname;
 	var $smtp_username;
 	var $smtp_password;
+	var $smtp_password_placeholder;
 	var $preferred_content_types = [];
 	var $public;
 	var $roles = [];
@@ -2205,7 +2207,7 @@ class mf_email
 			case 'account_create':
 				if($this->id > 0)
 				{
-					$result = $wpdb->get_results($wpdb->prepare("SELECT emailPublic, emailRoles, emailServer, emailPort, emailUsername, emailAddress, emailName, emailSignature, emailOutgoingType, emailLimitPerHour, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailPreferredContentTypes, emailDeleted FROM ".$wpdb->base_prefix."email WHERE emailID = '%d'", $this->id));
+					$result = $wpdb->get_results($wpdb->prepare("SELECT emailPublic, emailRoles, emailServer, emailPort, emailUsername, emailPassword, emailAddress, emailName, emailSignature, emailOutgoingType, emailLimitPerHour, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailSmtpPassword, emailPreferredContentTypes, emailDeleted FROM ".$wpdb->base_prefix."email WHERE emailID = '%d'", $this->id));
 
 					foreach($result as $r)
 					{
@@ -2214,6 +2216,7 @@ class mf_email
 						$this->server = $r->emailServer;
 						$this->port = $r->emailPort;
 						$this->username = $r->emailUsername;
+						$this->password_encrypted = $r->emailPassword;
 						$this->address = $r->emailAddress;
 						$this->name = $r->emailName;
 						$this->signature = $r->emailSignature;
@@ -2224,12 +2227,37 @@ class mf_email
 						$this->smtp_port = $r->emailSmtpPort;
 						$this->smtp_hostname = $r->emailSmtpHostname;
 						$this->smtp_username = $r->emailSmtpUsername;
+						$this->smtp_password_encrypted = $r->emailSmtpPassword;
 						$this->preferred_content_types = $r->emailPreferredContentTypes;
 						$this->deleted = $r->emailDeleted;
 
 						if($this->roles != '')
 						{
 							$this->roles = explode(",", $this->roles);
+						}
+
+						if(class_exists('mf_encryption'))
+						{
+							$obj_encryption = new mf_encryption("email");
+						}
+
+						else
+						{
+							$obj_encryption = new mf_email_encryption("email");
+						}
+
+						if($this->password_encrypted != '' && $this->address != '')
+						{
+							$this->password = $obj_encryption->decrypt($this->password_encrypted, md5($this->address));
+							$this->password_placeholder = substr($this->password, 0, floor(strlen($this->password) / 2));
+							$this->password = "";
+						}
+
+						if($this->smtp_password_encrypted != '' && $this->address != '')
+						{
+							$this->smtp_password = $obj_encryption->decrypt($this->smtp_password_encrypted, md5($this->address));
+							$this->smtp_password_placeholder = substr($this->smtp_password, 0, floor(strlen($this->smtp_password) / 2));
+							$this->smtp_password = "";
 						}
 
 						if($this->preferred_content_types != '')
@@ -2570,7 +2598,7 @@ class mf_email
 				do_log("The encrypted password was longer than the max length in DB (".strlen($this->password_encrypted).")");
 			}
 
-			$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailPassword = %s WHERE emailID = '%d'", $this->password_encrypted, $this->id)); // AND userID = '%d', get_current_user_id()
+			$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailPassword = %s WHERE emailID = '%d'", $this->password_encrypted, $this->id));
 
 			$rows_affected += $wpdb->rows_affected;
 		}
