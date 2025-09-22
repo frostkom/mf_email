@@ -79,6 +79,7 @@ echo "<div class='wrap'>
 				</div>
 				<div id='postbox-container-1'>
 					<div class='postbox'>
+						<h3 class='hndle'><span>".__("Save", 'lang_email')."</span></h3>
 						<div class='inside'>"
 							.show_button(array('name' => 'btnEmailCreate', 'text' => __("Save", 'lang_email')))
 							.input_hidden(array('name' => 'intEmailID', 'value' => $obj_email->id))
@@ -95,12 +96,12 @@ echo "<div class='wrap'>
 
 									if($intUserID > 0)
 									{
-										echo "<br><em>".sprintf(__("Created %s by %s", 'lang_email'), format_date($dteEmailCreated), get_user_info(array('id' => $intUserID)))."</em>";
+										echo "<p class='italic'>".sprintf(__("Created %s by %s", 'lang_email'), format_date($dteEmailCreated), get_user_info(array('id' => $intUserID)))."</p>";
 									}
 
 									else
 									{
-										echo "<br><em>".sprintf(__("Created %s", 'lang_email'), format_date($dteEmailCreated))."</em>";
+										echo "<p class='italic'>".sprintf(__("Created %s", 'lang_email'), format_date($dteEmailCreated))."</p>";
 									}
 								}
 							}
