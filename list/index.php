@@ -192,7 +192,7 @@ echo "<div class='wrap'>
 			<% _.each(messageAttachment, function(attachment)
 			{ %>
 				<li>
-					<a href='<%= attachment.url %>' rel='external'>
+					<a href='<%= attachment.url %>'>
 						<%= attachment.title %>
 					</a>
 				</li>

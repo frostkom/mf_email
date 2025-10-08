@@ -1,20 +1,5 @@
 @media all
 {
-	a[rel='external']:after
-	{
-		font-family: 'Font Awesome 5 Free';
-		content: ' \f35d';
-		display: none;
-		font-size: .8em;
-		font-style: normal;
-		vertical-align: super;
-	}
-
-		a[rel='external']:hover:after
-		{
-			display: inline;
-		}
-
 	.fa-arrows-alt
 	{
 		cursor: move !important;
