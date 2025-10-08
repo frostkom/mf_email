@@ -69,7 +69,7 @@ echo "<div class='wrap'>
 
 				if(folderTotal == 0)
 				{ %>
-					 | <a href='#email/folders/<%= folderID %>/delete' rel='confirm'>".__("Delete", 'lang_email')."</a>
+					 | <a href='#email/folders/<%= folderID %>/delete'".make_link_confirm().">".__("Delete", 'lang_email')."</a>
 				<% } %>
 			</div>
 		</td>
@@ -119,13 +119,13 @@ echo "<div class='wrap'>
 			."<div class='row-actions'>
 				<% if(messageDeleted == 0)
 				{ %>
-					<a href='#email/delete/<%= messageID %>' rel='confirm'>".__("Delete", 'lang_email')."</a>
-					 | <a href='#email/spam/<%= messageID %>' rel='confirm'>".__("Mark as Spam", 'lang_email')."</a>
+					<a href='#email/delete/<%= messageID %>'".make_link_confirm().">".__("Delete", 'lang_email')."</a>
+					 | <a href='#email/spam/<%= messageID %>'".make_link_confirm().">".__("Mark as Spam", 'lang_email')."</a>
 				<% }
 
 				else
 				{ %>
-					<a href='#email/restore/<%= messageID %>' rel='confirm' title='".sprintf(__("Removed %s", 'lang_email'), "<%= messageDeletedDate %>")."'>".__("Restore", 'lang_email')."</a>
+					<a href='#email/restore/<%= messageID %>' title='".sprintf(__("Removed %s", 'lang_email'), "<%= messageDeletedDate %>")."'".make_link_confirm().">".__("Restore", 'lang_email')."</a>
 				<% } %>
 			</div>
 		</td>

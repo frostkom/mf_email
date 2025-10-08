@@ -2859,7 +2859,7 @@ if(class_exists('mf_list_table'))
 
 						if(IS_ADMINISTRATOR || $intUserID == get_current_user_id())
 						{
-							$arr_actions['delete'] = "<a href='".wp_nonce_url(admin_url("admin.php?page=mf_email/accounts/index.php&btnEmailDelete&intEmailID=".$intEmailID), 'email_delete_'.$intEmailID, '_wpnonce_email_delete')."' rel='confirm'>".__("Delete", 'lang_email')."</a>";
+							$arr_actions['delete'] = "<a href='".wp_nonce_url(admin_url("admin.php?page=mf_email/accounts/index.php&btnEmailDelete&intEmailID=".$intEmailID), 'email_delete_'.$intEmailID, '_wpnonce_email_delete')."'".make_link_confirm().">".__("Delete", 'lang_email')."</a>";
 						}
 
 						$arr_actions['send'] = "<a href='".admin_url("admin.php?page=mf_email/send/index.php&intEmailID=".$intEmailID)."'><i class='fa fa-paper-plane fa-lg' title='".__("Send Message", 'lang_email')."'></i></a>";
