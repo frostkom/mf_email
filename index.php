@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description:
-Version: 6.8.12
+Version: 6.8.13
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -30,7 +30,8 @@ if(!function_exists('is_plugin_active') || function_exists('is_plugin_active') &
 		register_uninstall_hook(__FILE__, 'uninstall_email');
 
 		add_action('admin_init', array($obj_email, 'settings_email'));
-		add_filter('pre_update_option_setting_smtp_password', array($obj_email, 'pre_update_option'), 10, 2);
+		add_filter('pre_update_option', array($obj_email, 'pre_update_option'), 10, 3);
+		//add_filter('pre_update_option_setting_smtp_password', array($obj_email, 'pre_update_option'), 10, 2);
 		add_action('admin_init', array($obj_email, 'admin_init'), 0);
 		add_action('admin_menu', array($obj_email, 'admin_menu'));
 

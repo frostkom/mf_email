@@ -922,7 +922,23 @@ class mf_email
 		show_settings_fields(array('area' => $options_area, 'object' => $this, 'settings' => $arr_settings));
 	}
 
-	function pre_update_option($new_value, $old_value)
+	function pre_update_option($new_value, $option_key, $old_value)
+	{
+		if($new_value != '')
+		{
+			switch($option_key)
+			{
+				case 'setting_smtp_password':
+					$obj_encryption = new mf_encryption(__CLASS__);
+					$new_value = $obj_encryption->encrypt($new_value, md5(AUTH_KEY));
+				break;
+			}
+		}
+
+		return $new_value;
+	}
+
+	/*function pre_update_option($new_value, $old_value)
 	{
 		$out = "";
 
@@ -933,7 +949,7 @@ class mf_email
 		}
 
 		return $out;
-	}
+	}*/
 
 	function settings_email_callback()
 	{
