@@ -938,19 +938,6 @@ class mf_email
 		return $new_value;
 	}
 
-	/*function pre_update_option($new_value, $old_value)
-	{
-		$out = "";
-
-		if($new_value != '')
-		{
-			$obj_encryption = new mf_encryption(__CLASS__);
-			$out = $obj_encryption->encrypt($new_value, md5(AUTH_KEY));
-		}
-
-		return $out;
-	}*/
-
 	function settings_email_callback()
 	{
 		$setting_key = get_setting_key(__FUNCTION__);
