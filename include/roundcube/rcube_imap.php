@@ -181,8 +181,10 @@ class rcube_imap
 		{
 			$data = array_merge($this->options, array('host' => $host, 'user' => $user, 'attempt' => ++$attempt));
 
-			if (!empty($data['pass']))
+			if(!empty($data['pass']))
+			{
 				$pass = $data['pass'];
+			}
 
 			//Added default values
 			if(!isset($data['ssl_mode'])){		$data['ssl_mode'] = "";}
@@ -200,7 +202,7 @@ class rcube_imap
 		$this->port = $port;
 		$this->ssl  = $use_ssl;
 
-		$log_message = sprintf(__("Login failed for %s from %s.", 'lang_email'), $user, (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : "(".__("Unknown IP", 'lang_email').")")); //rcmail_remote_ip() //." (".substr($pass, 0, 5)."...)"
+		$log_message = sprintf(__("Login failed for %s from %s.", 'lang_email'), $user, apply_filters('get_current_visitor_ip', ""));
 
 		if($this->conn->connected())
 		{

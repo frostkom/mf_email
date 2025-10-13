@@ -890,6 +890,11 @@ class mf_email
 		$obj_cron->end();
 	}
 
+	function init()
+	{
+		load_plugin_textdomain('lang_email', false, str_replace("/include", "", dirname(plugin_basename(__FILE__)))."/lang/");
+	}
+
 	function settings_email()
 	{
 		global $wpdb;

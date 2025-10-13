@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description:
-Version: 6.8.14
+Version: 6.8.15
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -15,12 +15,12 @@ if(!function_exists('is_plugin_active') || function_exists('is_plugin_active') &
 {
 	include_once("include/classes.php");
 
-	load_plugin_textdomain('lang_email', false, dirname(plugin_basename(__FILE__))."/lang/");
-
 	$obj_email = new mf_email();
 
 	add_action('cron_base', 'activate_email', mt_rand(1, 10));
 	add_action('cron_base', array($obj_email, 'cron_base'), mt_rand(1, 10));
+
+	add_action('init', array($obj_email, 'init'));
 
 	if(is_admin())
 	{
