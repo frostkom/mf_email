@@ -1,57 +1,54 @@
-@media all
+.fa-arrows-alt
 {
-	.fa-arrows-alt
+	cursor: move !important;
+}
+
+#email_column
+{
+	flex: 5 1 0;
+}
+
+.flex_vertical
+{
+	display: flex;
+	flex-direction: column;
+	height: 90vh;
+}
+
+	.flex_vertical > *
 	{
-		cursor: move !important;
+		overflow-y: scroll;
 	}
 
-	#email_column
-	{
-		flex: 5 1 0;
-	}
-
-	.flex_vertical
-	{
-		display: flex;
-		flex-direction: column;
-		height: 90vh;
-	}
-
-		.flex_vertical > *
+		.flex_vertical > *:last-child
 		{
-			overflow-y: scroll;
+			flex: 1 0 70%;
+			min-width: 70%;
 		}
 
-			.flex_vertical > *:last-child
+		#txtEmail
+		{
+			background: #fff;
+		}
+
+			#txtEmail > ul
 			{
-				flex: 1 0 70%;
-				min-width: 70%;
+				margin: 0em;
+				padding: .8em;
 			}
 
-			#txtEmail
+				#txtEmail > ul a
+				{
+					text-decoration: none;
+				}
+
+			#txtEmail > div
 			{
-				background: #fff;
+				margin: .8em;
 			}
 
-				#txtEmail > ul
+				#message_container .nav-tab-wrapper
 				{
-					margin: 0em;
-					padding: .8em;
+					margin: 0 0 1em;
+					padding: 0;
 				}
-
-					#txtEmail > ul a
-					{
-						text-decoration: none;
-					}
-
-				#txtEmail > div
-				{
-					margin: .8em;
-				}
-
-					#message_container .nav-tab-wrapper
-					{
-						margin: 0 0 1em;
-						padding: 0;
-					}
-}
