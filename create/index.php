@@ -30,7 +30,7 @@ echo "<div class='wrap'>
 	<h2>".__("Accounts", 'lang_email')."</h2>"
 	.get_notification()
 	."<div id='poststuff'>
-		<form".apply_filters('get_form_attr', " action='#'", ['class' => ["mf_settings"]]).">
+		<form".apply_filters('get_form_attr', " action='#'").">
 			<div id='post-body' class='columns-2'>
 				<div id='post-body-content'>
 					<div class='postbox'>
