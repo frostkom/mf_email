@@ -47,7 +47,7 @@ echo "<div class='wrap'>
 	."<div id='poststuff' class='postbox'>
 		<h3 class='hndle'>".__("Add", 'lang_email')."</h3>
 		<div class='inside'>
-			<form action='#' method='post' class='mf_form mf_settings'>";
+			<form".apply_filters('get_form_attr', " action='#'", ['class' => ["mf_settings"]]).">";
 
 				if($intFolderID > 0)
 				{

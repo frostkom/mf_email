@@ -36,11 +36,11 @@ echo "<div class='wrap'>
 	.get_notification()
 	."<div class='flex_flow'>
 		<div>
-			<table id='txtFolders' class='widefat striped'><tbody></tbody></table>
+			<table id='txtFolders'".apply_filters('get_table_attr', " class='widefat striped'")."><tbody></tbody></table>
 		</div>
 		<div id='email_column'>
 			<div id='txtEmails'>
-				<table class='widefat striped'><tbody></tbody></table>
+				<table".apply_filters('get_table_attr', " class='widefat striped'")."><tbody></tbody></table>
 			</div>
 			<div id='txtEmail' class='stuffbox'></div>
 		</div>
