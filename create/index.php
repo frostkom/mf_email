@@ -36,7 +36,7 @@ echo "<div class='wrap'>
 					<div class='postbox'>
 						<h3 class='hndle'><span>".__("Information", 'lang_email')."</span></h3>
 						<div class='inside'>
-							<div class='flex_flow'>"
+							<div".apply_filters('get_flex_flow', "").">"
 								.show_textfield(array('name' => 'strEmailAddress', 'text' => __("Address", 'lang_email'), 'value' => $obj_email->address, 'placeholder' => $placeholder_address))
 								.show_textfield(array('name' => 'strEmailName', 'text' => __("Name", 'lang_email'), 'value' => $obj_email->name, 'placeholder' => $placeholder_name, 'xtra_class' => "display_email_name"))
 							."</div>"
@@ -46,11 +46,11 @@ echo "<div class='wrap'>
 					<div class='postbox'>
 						<h3 class='hndle'><span>".__("Incoming", 'lang_email')." (IMAP)</span></h3>
 						<div class='inside'>
-							<div class='flex_flow'>"
+							<div".apply_filters('get_flex_flow', "").">"
 								.show_textfield(array('name' => 'strEmailServer', 'text' => __("Server", 'lang_email'), 'value' => $obj_email->server, 'placeholder' => "mail.".$placeholder_server))
 								.show_textfield(array('type' => 'number', 'name' => 'intEmailPort', 'text' => __("Port", 'lang_email'), 'value' => $obj_email->port, 'placeholder' => 143, 'xtra_class' => "display_email_settings"))
 							."</div>
-							<div class='flex_flow display_email_credentials'>"
+							<div".apply_filters('get_flex_flow', "", ['class' => ['display_email_credentials']]).">"
 								.show_textfield(array('name' => 'strEmailUsername', 'text' => __("Username", 'lang_email'), 'value' => $obj_email->username, 'xtra' => " autocomplete='off' maxlength='100'"))
 								.show_password_field(array('name' => 'strEmailPassword', 'text' => __("Password"), 'value' => $obj_email->password, 'placeholder' => $obj_email->password_placeholder, 'xtra' => " autocomplete='new-password'"))
 							."</div>
@@ -59,17 +59,17 @@ echo "<div class='wrap'>
 					<div class='postbox'>
 						<h3 class='hndle'><span>".__("Outgoing", 'lang_email')."</span></h3>
 						<div class='inside'>
-							<div class='flex_flow'>"
+							<div".apply_filters('get_flex_flow', "").">"
 								.show_select(array('data' => apply_filters('email_outgoing_alternatives', array('smtp' => "SMTP")), 'name' => 'strEmailOutgoingType', 'text' => __("Type", 'lang_email'), 'value' => $obj_email->outgoing_type, 'allow_hidden_field' => false))
 								.show_textfield(array('type' => 'number', 'name' => 'intEmailLimitPerHour', 'text' => __("Outgoing e-mails per hour", 'lang_email'), 'value' => $obj_email->limit_per_hour))
 							."</div>
-							<div class='flex_flow display_outgoing_smtp'>"
+							<div".apply_filters('get_flex_flow', "", ['class' => ['display_outgoing_smtp']]).">"
 								.show_textfield(array('name' => 'strEmailSmtpServer', 'text' => __("Server", 'lang_email'), 'value' => $obj_email->smtp_server, 'placeholder' => "mail.".$placeholder_server))
 								.show_textfield(array('type' => 'number', 'name' => 'intEmailSmtpPort', 'text' => __("Port", 'lang_email'), 'value' => $obj_email->smtp_port, 'placeholder' => 587, 'xtra_class' => "display_smtp_settings"))
 								.show_select(array('data' => $obj_email->get_ssl_for_select(), 'name' => 'strEmailSmtpSSL', 'text' => "SSL", 'value' => $obj_email->smtp_ssl, 'class' => "display_smtp_settings"))
 							."</div>"
 							.show_textfield(array('name' => 'strEmailSmtpHostname', 'text' => __("Hostname", 'lang_email'), 'value' => $obj_email->smtp_hostname, 'xtra_class' => "display_smtp_settings"))
-							."<div class='flex_flow display_smtp_credentials'>"
+							."<div".apply_filters('get_flex_flow', "", ['class' => ['display_smtp_credentials']]).">"
 								.show_textfield(array('name' => 'strEmailSmtpUsername', 'text' => __("User", 'lang_email'), 'value' => $obj_email->smtp_username, 'xtra' => " autocomplete='off' maxlength='100'"))
 								.show_password_field(array('name' => 'strEmailSmtpPassword', 'text' => __("Password"), 'value' => $obj_email->smtp_password, 'placeholder' => $obj_email->smtp_password_placeholder, 'xtra' => " autocomplete='new-password'"))
 							."</div>"

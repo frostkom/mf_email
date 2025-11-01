@@ -34,7 +34,7 @@ echo "<div class='wrap'>
 		."<a href='".admin_url("admin.php?page=mf_email/send/index.php")."' class='add-new-h2'>".__("Send new", 'lang_email')."</a>"
 	."</h2>"
 	.get_notification()
-	."<div class='flex_flow'>
+	."<div".apply_filters('get_flex_flow', "").">
 		<div>
 			<table id='txtFolders'".apply_filters('get_table_attr', "")."><tbody></tbody></table>
 		</div>
