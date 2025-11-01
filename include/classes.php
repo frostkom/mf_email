@@ -2799,6 +2799,8 @@ if(class_exists('mf_list_table'))
 		{
 			global $wpdb, $obj_email;
 
+			do_action('load_font_awesome');
+
 			$this->query_join .= " LEFT JOIN ".$wpdb->base_prefix."email_users USING (emailID)";
 			$this->query_where .= ($this->query_where != '' ? " AND " : "")."(emailPublic = '1' OR emailRoles LIKE '%".get_current_user_role()."%' OR ".$wpdb->base_prefix."email.userID = '".get_current_user_id()."' OR ".$wpdb->base_prefix."email_users.userID = '".get_current_user_id()."') AND (blogID = '".$wpdb->blogid."' OR blogID = '0')";
 

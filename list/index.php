@@ -9,6 +9,8 @@ if(!isset($obj_base))
 
 $obj_email = new mf_email();
 
+do_action('load_font_awesome');
+
 $intFolderID = check_var('intFolderID');
 $strFolderName = check_var('strFolderName', '', true, __("Inbox", 'lang_email'));
 
