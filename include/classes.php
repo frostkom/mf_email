@@ -1124,7 +1124,7 @@ class mf_email
 		."<div".get_form_button_classes().">"
 			.show_button(array('type' => 'button', 'name' => 'btnSmtpTest', 'text' => __("Send", 'lang_email'), 'class' => 'button-secondary'))
 		."</div>"
-		."<div id='smtp_debug'></div>";
+		."<p id='smtp_debug'></p>";
 	}
 
 	function admin_init()
