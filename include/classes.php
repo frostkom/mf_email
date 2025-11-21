@@ -2478,10 +2478,21 @@ class mf_email
 
 		if(count($arr_data) <= 1 && $allow_fallback == true)
 		{
-			$user_data = get_userdata(get_current_user_id());
+			$user_id = get_current_user_id();
 
-			$user_name = $user_data->display_name;
-			$user_email = $user_data->user_email;
+			if($user_id > 0)
+			{
+				$user_data = get_userdata($user_id);
+
+				$user_name = $user_data->display_name;
+				$user_email = $user_data->user_email;
+			}
+
+			else
+			{
+				$user_name = $user_email = "";
+			}
+
 			$site_title = get_bloginfo('name');
 			$admin_email = get_bloginfo('admin_email');
 

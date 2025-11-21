@@ -507,7 +507,8 @@ class html2text
 		$text = preg_replace($this->search, $this->replace, $text);
 
 		// Run our defined tags search-and-replace with callback
-		$text = preg_replace_callback($this->callback_search, array('html2text', '_preg_callback'), $text);
+		//$text = preg_replace_callback($this->callback_search, array('html2text', '_preg_callback'), $text);
+		$text = preg_replace_callback($this->callback_search, array('html2text', '_preg_callback'), (string)$text);
 
 		// Strip any other HTML tags
 		$text = strip_tags($text, $this->allowed_tags);
