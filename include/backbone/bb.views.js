@@ -179,13 +179,13 @@ var EmailView = Backbone.View.extend(
 		{
 			if(currentMessageID > 0)
 			{
-				jQuery("#email_column").addClass('flex_vertical');
+				jQuery("#email_column > div").addClass('flex_vertical');
 			}
 
 			else
 			{
 				jQuery("#txtEmail").empty();
-				jQuery("#email_column").removeClass('flex_vertical');
+				jQuery("#email_column > div").removeClass('flex_vertical');
 			}
 
 			this.currentMessageID = currentMessageID;

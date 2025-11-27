@@ -41,10 +41,12 @@ echo "<div class='wrap'>
 			<table id='txtFolders'".apply_filters('get_table_attr', "")."><tbody></tbody></table>
 		</div>
 		<div id='email_column'>
-			<div id='txtEmails'>
-				<table".apply_filters('get_table_attr', "")."><tbody></tbody></table>
+			<div>
+				<div id='txtEmails'>
+					<table".apply_filters('get_table_attr', "")."><tbody></tbody></table>
+				</div>
+				<div id='txtEmail' class='stuffbox'></div>
 			</div>
-			<div id='txtEmail' class='stuffbox'></div>
 		</div>
 	</div>
 </div>"

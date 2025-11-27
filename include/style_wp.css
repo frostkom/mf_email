@@ -23,7 +23,7 @@
 		.flex_vertical > *:last-child
 		{
 			flex: 1 0 70%;
-			min-width: 70%;
+			min-height: 70%;
 		}
 
 		#txtEmail
