@@ -1534,7 +1534,7 @@ class mf_email
 
 			if($email != '')
 			{
-				$emails_per_hour = $obj_base->cache_query($wpdb->prepare("SELECT emailLimitPerHour FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s", $email), 'get_var');
+				$emails_per_hour = $obj_base->get_var($wpdb->prepare("SELECT emailLimitPerHour FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s", $email));
 
 				if($emails_per_hour > 0)
 				{
@@ -1557,7 +1557,7 @@ class mf_email
 				$query_where = " AND emailAddress = '".esc_sql($email)."'";
 			}
 
-			$result = $obj_base->cache_query("SELECT messageID FROM ".$wpdb->base_prefix."email INNER JOIN ".$wpdb->base_prefix."email_folder USING (emailID) INNER JOIN ".$wpdb->base_prefix."email_message USING (folderID) WHERE messageFrom = '' AND messageCreated > DATE_SUB(NOW(), INTERVAL 1 HOUR)".$query_where);
+			$result = $obj_base->get_results("SELECT messageID FROM ".$wpdb->base_prefix."email INNER JOIN ".$wpdb->base_prefix."email_folder USING (emailID) INNER JOIN ".$wpdb->base_prefix."email_message USING (folderID) WHERE messageFrom = '' AND messageCreated > DATE_SUB(NOW(), INTERVAL 1 HOUR)".$query_where);
 			$amount_temp -= count($result);
 
 			if($type != '')
@@ -2458,7 +2458,7 @@ class mf_email
 			break;
 		}
 
-		$result = $obj_base->cache_query("SELECT ".$wpdb->base_prefix."email.emailID, emailName, emailAddress FROM ".$wpdb->base_prefix."email_users RIGHT JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE ".$this->get_permission_where()." AND (blogID = '".$wpdb->blogid."' OR blogID = '0') AND emailDeleted = '0' AND emailAddress != ''".$query_where." GROUP BY ".$wpdb->base_prefix."email.emailID ORDER BY emailName ASC, emailAddress ASC");
+		$result = $obj_base->get_results("SELECT ".$wpdb->base_prefix."email.emailID, emailName, emailAddress FROM ".$wpdb->base_prefix."email_users RIGHT JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE ".$this->get_permission_where()." AND (blogID = '".$wpdb->blogid."' OR blogID = '0') AND emailDeleted = '0' AND emailAddress != ''".$query_where." GROUP BY ".$wpdb->base_prefix."email.emailID ORDER BY emailName ASC, emailAddress ASC");
 
 		foreach($result as $r)
 		{
