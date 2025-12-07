@@ -1520,7 +1520,7 @@ class mf_email
 
 	function get_emails_left_to_send($amount, $email, $type = '')
 	{
-		global $wpdb;
+		global $wpdb, $obj_base;
 
 		if($type != '' && isset($this->emails_left_to_send[$type][$email]))
 		{
@@ -1534,7 +1534,7 @@ class mf_email
 
 			if($email != '')
 			{
-				$emails_per_hour = $wpdb->get_var($wpdb->prepare("SELECT emailLimitPerHour FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s", $email));
+				$emails_per_hour = $obj_base->cache_query($wpdb->prepare("SELECT emailLimitPerHour FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s", $email), 'get_var');
 
 				if($emails_per_hour > 0)
 				{
@@ -1557,9 +1557,8 @@ class mf_email
 				$query_where = " AND emailAddress = '".esc_sql($email)."'";
 			}
 
-			$wpdb->get_results("SELECT messageID FROM ".$wpdb->base_prefix."email INNER JOIN ".$wpdb->base_prefix."email_folder USING (emailID) INNER JOIN ".$wpdb->base_prefix."email_message USING (folderID) WHERE messageFrom = '' AND messageCreated > DATE_SUB(NOW(), INTERVAL 1 HOUR)".$query_where);
-
-			$amount_temp -= $wpdb->num_rows;
+			$result = $obj_base->cache_query("SELECT messageID FROM ".$wpdb->base_prefix."email INNER JOIN ".$wpdb->base_prefix."email_folder USING (emailID) INNER JOIN ".$wpdb->base_prefix."email_message USING (folderID) WHERE messageFrom = '' AND messageCreated > DATE_SUB(NOW(), INTERVAL 1 HOUR)".$query_where);
+			$amount_temp -= count($result);
 
 			if($type != '')
 			{
@@ -1762,7 +1761,7 @@ class mf_email
 
 		return str_replace($arr_exclude, $arr_include, $string);
 	}
-	
+
 	function get_permission_where()
 	{
 		global $wpdb;
@@ -2427,7 +2426,7 @@ class mf_email
 
 	function get_from_for_select($data = [])
 	{
-		global $wpdb;
+		global $wpdb, $obj_base;
 
 		if(!isset($data['index'])){	$data['index'] = 'id';}
 		if(!isset($data['type'])){	$data['type'] = 'all';} //incoming, outgoing
@@ -2459,7 +2458,7 @@ class mf_email
 			break;
 		}
 
-		$result = $wpdb->get_results("SELECT ".$wpdb->base_prefix."email.emailID, emailName, emailAddress FROM ".$wpdb->base_prefix."email_users RIGHT JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE ".$this->get_permission_where()." AND (blogID = '".$wpdb->blogid."' OR blogID = '0') AND emailDeleted = '0' AND emailAddress != ''".$query_where." GROUP BY ".$wpdb->base_prefix."email.emailID ORDER BY emailName ASC, emailAddress ASC");
+		$result = $obj_base->cache_query("SELECT ".$wpdb->base_prefix."email.emailID, emailName, emailAddress FROM ".$wpdb->base_prefix."email_users RIGHT JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE ".$this->get_permission_where()." AND (blogID = '".$wpdb->blogid."' OR blogID = '0') AND emailDeleted = '0' AND emailAddress != ''".$query_where." GROUP BY ".$wpdb->base_prefix."email.emailID ORDER BY emailName ASC, emailAddress ASC");
 
 		foreach($result as $r)
 		{
