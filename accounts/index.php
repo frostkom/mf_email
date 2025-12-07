@@ -16,6 +16,7 @@ echo "<div class='wrap'>
 
 	$tbl_group->select_data(array(
 		'select' => "emailID, emailAddress, emailName, emailPublic, emailRoles, emailServer, emailPort, emailUsername, emailPassword, emailVerified, emailChecked, emailSmtpServer, emailSmtpPort, emailSmtpUsername, emailSmtpPassword, emailOutgoingType, emailSmtpVerified, emailSmtpChecked, ".$wpdb->base_prefix."email.userID, emailDeleted",
+		//'debug' => true,
 	));
 
 	$tbl_group->do_display();

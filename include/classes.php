@@ -2,8 +2,8 @@
 
 class mf_email
 {
-	var $id = 0;
-	var $type = '';
+	var $id;
+	var $type;
 	var $message_id = 0;
 	var $server;
 	var $port;
@@ -1762,6 +1762,25 @@ class mf_email
 
 		return str_replace($arr_exclude, $arr_include, $string);
 	}
+	
+	function get_permission_where()
+	{
+		global $wpdb;
+
+		$user_id = get_current_user_id();
+
+		if(IS_SUPER_ADMIN)
+		{
+			return "(emailPublic = '1' OR emailRoles != '' OR ".$wpdb->base_prefix."email.userID = '".$user_id."' OR ".$wpdb->base_prefix."email_users.userID = '".$user_id."')";
+		}
+
+		else
+		{
+			$user_role = get_current_user_role();
+
+			return "(emailPublic = '1' OR emailRoles LIKE '%".$user_role."%' OR ".$wpdb->base_prefix."email.userID = '".$user_id."' OR ".$wpdb->base_prefix."email_users.userID = '".$user_id."')";
+		}
+	}
 
 	function save_data()
 	{
@@ -2090,7 +2109,7 @@ class mf_email
 
 					else if($this->message_id > 0)
 					{
-						$result = $wpdb->get_results("SELECT ".$wpdb->base_prefix."email.emailID, emailAddress, messageFrom, messageFromName, messageTo, messageCc, messageReplyTo, messageName, messageText, messageCreated, ".$wpdb->base_prefix."email_message.userID FROM ".$wpdb->base_prefix."email_users RIGHT JOIN ".$wpdb->base_prefix."email USING (emailID) INNER JOIN ".$wpdb->base_prefix."email_folder USING (emailID) INNER JOIN ".$wpdb->base_prefix."email_message USING (folderID) WHERE ".$wpdb->base_prefix."email_message.messageID = '".esc_sql($this->message_id)."' AND (emailPublic = '1' OR emailRoles LIKE '%".get_current_user_role()."%' OR ".$wpdb->base_prefix."email.userID = '".get_current_user_id()."' OR ".$wpdb->base_prefix."email_users.userID = '".get_current_user_id()."') LIMIT 0, 1");
+						$result = $wpdb->get_results("SELECT ".$wpdb->base_prefix."email.emailID, emailAddress, messageFrom, messageFromName, messageTo, messageCc, messageReplyTo, messageName, messageText, messageCreated, ".$wpdb->base_prefix."email_message.userID FROM ".$wpdb->base_prefix."email_users RIGHT JOIN ".$wpdb->base_prefix."email USING (emailID) INNER JOIN ".$wpdb->base_prefix."email_folder USING (emailID) INNER JOIN ".$wpdb->base_prefix."email_message USING (folderID) WHERE ".$wpdb->base_prefix."email_message.messageID = '".esc_sql($this->message_id)."' AND ".$this->get_permission_where()." LIMIT 0, 1");
 
 						foreach($result as $r)
 						{
@@ -2335,7 +2354,7 @@ class mf_email
 
 		if($wpdb->num_rows > 0)
 		{
-			/*$wpdb->get_results("SELECT emailID FROM ".$wpdb->base_prefix."email_users RIGHT JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE (emailPublic = '1' OR emailRoles LIKE '%".get_current_user_role()."%' OR ".$wpdb->base_prefix."email.userID = '".get_current_user_id()."' OR ".$wpdb->base_prefix."email_users.userID = '".get_current_user_id()."') AND (blogID = '".$wpdb->blogid."' OR blogID = '0') AND emailDeleted = '0' GROUP BY emailID"); //".$query_xtra."
+			/*$wpdb->get_results("SELECT emailID FROM ".$wpdb->base_prefix."email_users RIGHT JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE ".$this->get_permission_where()." AND (blogID = '".$wpdb->blogid."' OR blogID = '0') AND emailDeleted = '0' GROUP BY emailID"); //".$query_xtra."
 
 			return ($wpdb->num_rows > 0);*/
 			return true;
@@ -2440,7 +2459,7 @@ class mf_email
 			break;
 		}
 
-		$result = $wpdb->get_results("SELECT ".$wpdb->base_prefix."email.emailID, emailName, emailAddress FROM ".$wpdb->base_prefix."email_users RIGHT JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE (emailPublic = '1' OR emailRoles LIKE '%".get_current_user_role()."%' OR ".$wpdb->base_prefix."email.userID = '".get_current_user_id()."' OR ".$wpdb->base_prefix."email_users.userID = '".get_current_user_id()."') AND (blogID = '".$wpdb->blogid."' OR blogID = '0') AND emailDeleted = '0' AND emailAddress != ''".$query_where." GROUP BY ".$wpdb->base_prefix."email.emailID ORDER BY emailName ASC, emailAddress ASC");
+		$result = $wpdb->get_results("SELECT ".$wpdb->base_prefix."email.emailID, emailName, emailAddress FROM ".$wpdb->base_prefix."email_users RIGHT JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE ".$this->get_permission_where()." AND (blogID = '".$wpdb->blogid."' OR blogID = '0') AND emailDeleted = '0' AND emailAddress != ''".$query_where." GROUP BY ".$wpdb->base_prefix."email.emailID ORDER BY emailName ASC, emailAddress ASC");
 
 		foreach($result as $r)
 		{
@@ -2813,7 +2832,7 @@ if(class_exists('mf_list_table'))
 			do_action('load_font_awesome');
 
 			$this->query_join .= " LEFT JOIN ".$wpdb->base_prefix."email_users USING (emailID)";
-			$this->query_where .= ($this->query_where != '' ? " AND " : "")."(emailPublic = '1' OR emailRoles LIKE '%".get_current_user_role()."%' OR ".$wpdb->base_prefix."email.userID = '".get_current_user_id()."' OR ".$wpdb->base_prefix."email_users.userID = '".get_current_user_id()."') AND (blogID = '".$wpdb->blogid."' OR blogID = '0')";
+			$this->query_where .= ($this->query_where != '' ? " AND " : "").$obj_email->get_permission_where()." AND (blogID = '".$wpdb->blogid."' OR blogID = '0')";
 
 			if($this->search != '')
 			{
