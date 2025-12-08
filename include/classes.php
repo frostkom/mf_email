@@ -42,6 +42,7 @@ class mf_email
 	var $all_left_to_send;
 	var $from_address;
 	var $message_subject_old;
+	var $emails_left_to_send = [];
 
 	function __construct($data = [])
 	{
