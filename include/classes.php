@@ -94,13 +94,13 @@ class mf_email
 
 	function get_preferred_content_types($arr_out, $email)
 	{
-		global $wpdb;
+		global $wpdb, $obj_base;
 
 		$arr_out = get_option('setting_email_preferred_content_types');
 
 		if($email != '')
 		{
-			$strEmailPreferredContentTypes = $wpdb->get_var($wpdb->prepare("SELECT emailPreferredContentTypes FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s LIMIT 0, 1", $email));
+			$strEmailPreferredContentTypes = $obj_base->get_var($wpdb->prepare("SELECT emailPreferredContentTypes FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s LIMIT 0, 1", $email));
 
 			if($strEmailPreferredContentTypes != '')
 			{
@@ -1370,14 +1370,14 @@ class mf_email
 
 	function use_smtp_settings($phpmailer)
 	{
-		global $wpdb;
+		global $wpdb, $obj_base;
 
 		$outgoing_type = 'smtp';
 		$smtp_ssl = $smtp_host = $smtp_port = $smtp_hostname = $smtp_user = $smtp_pass = "";
 
-		$result = $wpdb->get_results($wpdb->prepare("SELECT emailName, emailOutgoingType, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailSmtpPassword FROM ".$wpdb->base_prefix."email WHERE blogID = '%d' AND emailAddress = %s", $wpdb->blogid, $phpmailer->From));
+		$result = $obj_base->get_results($wpdb->prepare("SELECT emailName, emailOutgoingType, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailSmtpPassword FROM ".$wpdb->base_prefix."email WHERE blogID = '%d' AND emailAddress = %s", $wpdb->blogid, $phpmailer->From));
 
-		if($wpdb->num_rows > 0)
+		if(count($result) > 0)
 		{
 			foreach($result as $r)
 			{
