@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description:
-Version: 6.8.29
+Version: 6.8.30
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -37,6 +37,11 @@ if(!function_exists('is_plugin_active') || function_exists('is_plugin_active') &
 		add_filter('get_user_notifications', array($obj_email, 'get_user_notifications'), 10, 1);
 		add_action('deleted_user', array($obj_email, 'deleted_user'));
 		add_action('wp_trash_post', array($obj_email, 'wp_trash_post'));
+
+		if(wp_doing_ajax())
+		{
+			add_action('wp_ajax_api_email_smtp_test', array($obj_email, 'api_email_smtp_test'));
+		}
 	}
 
 	add_filter('wp_mail_from', array($obj_email, 'wp_mail_from'));
@@ -49,8 +54,6 @@ if(!function_exists('is_plugin_active') || function_exists('is_plugin_active') &
 	add_filter('get_hourly_release_time', array($obj_email, 'get_hourly_release_time'), 10, 3);
 
 	add_filter('get_preferred_content_types', array($obj_email, 'get_preferred_content_types'), 10, 3);
-
-	add_action('wp_ajax_api_email_smtp_test', array($obj_email, 'api_email_smtp_test'));
 
 	add_filter('filter_is_file_used', array($obj_email, 'filter_is_file_used'));
 
