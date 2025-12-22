@@ -1769,7 +1769,7 @@ class rcube_imap_generic
 
 						switch($field)
 						{
-							case 'date';
+							case 'date':
 								$result[$id]->date = $string;
 								$result[$id]->timestamp = $this->strToTime($string);
 							break;
