@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description:
-Version: 6.8.31
+Version: 6.8.32
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -130,15 +130,15 @@ if(!function_exists('is_plugin_active') || function_exists('is_plugin_active') &
 			//'' => "ALTER TABLE [table] ADD INDEX [column] ([column])",
 		);*/
 
+		$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email_users (
+			emailID INT UNSIGNED,
+			userID INT UNSIGNED DEFAULT NULL,
+			KEY emailID (emailID),
+			KEY userID (userID)
+		) DEFAULT CHARSET=".$default_charset);
+
 		if($obj_email->has_accounts())
 		{
-			$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email_users (
-				emailID INT UNSIGNED,
-				userID INT UNSIGNED DEFAULT NULL,
-				KEY emailID (emailID),
-				KEY userID (userID)
-			) DEFAULT CHARSET=".$default_charset);
-
 			$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email_folder (
 				folderID INT UNSIGNED NOT NULL AUTO_INCREMENT,
 				folderID2 INT UNSIGNED DEFAULT NULL,
@@ -206,7 +206,7 @@ if(!function_exists('is_plugin_active') || function_exists('is_plugin_active') &
 		{
 			// What happens if there are messages and has_accounts() goes wrong?
 			/*mf_uninstall_plugin(array(
-				'tables' => array('email_users', 'email_folders', 'email_message', 'email_message_attachment', 'email_spam'),
+				'tables' => array('email_folders', 'email_message', 'email_message_attachment', 'email_spam'),
 			));*/
 		}
 

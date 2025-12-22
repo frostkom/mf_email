@@ -115,7 +115,7 @@ class mf_email
 	{
 		global $wpdb;
 
-		if(!isset($data['cutoff'])){	$data['cutoff'] = date("Y-m-d H:i:s", strtotime("-2 minute"));} //"DATE_SUB(NOW(), INTERVAL 2 MINUTE)"
+		if(!isset($data['cutoff'])){	$data['cutoff'] = date("Y-m-d H:i:s", strtotime("-2 minute"));}
 
 		if(IS_ADMINISTRATOR)
 		{
@@ -2352,18 +2352,7 @@ class mf_email
 
 		$wpdb->get_results("SELECT emailID FROM ".$wpdb->base_prefix."email LIMIT 0, 1");
 
-		if($wpdb->num_rows > 0)
-		{
-			/*$wpdb->get_results("SELECT emailID FROM ".$wpdb->base_prefix."email_users RIGHT JOIN ".$wpdb->base_prefix."email USING (emailID) WHERE ".$this->get_permission_where()." AND (blogID = '".$wpdb->blogid."' OR blogID = '0') AND emailDeleted = '0' GROUP BY emailID"); //".$query_xtra."
-
-			return ($wpdb->num_rows > 0);*/
-			return true;
-		}
-
-		else
-		{
-			return false;
-		}
+		return ($wpdb->num_rows > 0);
 	}
 
 	function get_message_amount($id)
