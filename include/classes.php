@@ -990,7 +990,7 @@ class mf_email
 
 		$admin_email = get_bloginfo('admin_email');
 
-		$intEmailID = $wpdb->get_var($wpdb->prepare("SELECT emailID FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s AND emailSmtpServer != ''", $admin_email));
+		$intEmailID = $wpdb->get_var($wpdb->prepare("SELECT emailID FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s AND emailSmtpServer != '' AND emailDeleted = %d", $admin_email, 0));
 
 		if($intEmailID > 0)
 		{
