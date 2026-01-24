@@ -13,7 +13,7 @@ $placeholder_name = $user_data->display_name;
 $placeholder_address = $user_data->user_email;
 list($rest, $placeholder_server) = explode("@", $placeholder_address);
 
-$users = get_users(array(
+$arr_users = get_users(array(
 	'orderby' => 'display_name',
 	'order' => 'ASC',
 	'fields' => array('ID', 'display_name'),
@@ -21,7 +21,7 @@ $users = get_users(array(
 
 $arr_data_users = [];
 
-foreach($users as $user)
+foreach($arr_users as $user)
 {
 	$arr_data_users[$user->ID] = $user->display_name;
 }
