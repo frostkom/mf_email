@@ -2087,7 +2087,6 @@ class mf_email
 					$this->message_text = $wpdb->get_var($wpdb->prepare("SELECT post_content FROM ".$wpdb->posts." WHERE post_type = %s AND post_status = %s AND ID = '%d'", 'page', 'publish', $this->message_text_source));
 
 					$this->message_text = str_replace("[name]", get_user_info(), $this->message_text);
-
 					$this->message_text = $this->convert_characters($this->message_text);
 				}
 
