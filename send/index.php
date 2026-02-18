@@ -36,14 +36,16 @@ echo "<div class='wrap'>
 						<h3 class='hndle'>".__("Send", 'lang_email')."</h3>
 						<div class='inside'>";
 
-							if($obj_email->all_left_to_send > 0)
+							$arr_email_left_to_send = apply_filters('get_emails_left_to_send', []);
+
+							if($arr_email_left_to_send['amount_left'] > 0)
 							{
 								echo show_button(array('name' => 'btnMessageSend', 'text' => __("Send", 'lang_email')))."&nbsp;";
 							}
 
 							else
 							{
-								$hourly_release_time = apply_filters('get_hourly_release_time', '', '');
+								$hourly_release_time = apply_filters('get_hourly_release_time', '');
 								$mins = time_between_dates(array('start' => $hourly_release_time, 'end' => date("Y-m-d H:i:s"), 'type' => 'round', 'return' => 'minutes'));
 
 								echo "<p>".sprintf(__("Hourly Limit Reached. Wait %s min", 'lang_email'), (60 - $mins))."</p>";

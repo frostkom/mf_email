@@ -39,10 +39,8 @@ class mf_email
 	var $message_attachment;
 	var $message_text_source;
 	var $group_message_id;
-	var $all_left_to_send;
 	var $from_address;
 	var $message_subject_old;
-	var $emails_left_to_send = [];
 
 	function __construct($data = [])
 	{
@@ -1519,63 +1517,22 @@ class mf_email
 		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailSmtpVerified = '%d', emailSmtpChecked = NOW() WHERE emailAddress = %s", -1, $from));
 	}
 
-	function get_emails_left_to_send($amount, $email, $type = '')
+	function get_emails_left_to_send($data = [])
 	{
 		global $wpdb, $obj_base;
 
-		if($type != '' && isset($this->emails_left_to_send[$type][$email]))
-		{
-			$amount_temp = $this->emails_left_to_send[$type][$email];
-		}
+		if(!isset($data['amount_limit'])){	$data['amount_limit'] = get_option_or_default('setting_emails_per_hour', 200);}
+		if(!isset($data['amount_sent'])){	$data['amount_sent'] = 0;}
 
-		else
-		{
-			$amount_temp = 0;
-			$query_where = "";
+		$result = $obj_base->get_results("SELECT messageID FROM ".$wpdb->base_prefix."email INNER JOIN ".$wpdb->base_prefix."email_folder USING (emailID) INNER JOIN ".$wpdb->base_prefix."email_message USING (folderID) WHERE messageFrom = '' AND messageCreated > DATE_SUB(NOW(), INTERVAL 1 HOUR)");
+		$data['amount_sent'] += count($result);
 
-			if($email != '')
-			{
-				$emails_per_hour = $obj_base->get_var($wpdb->prepare("SELECT emailLimitPerHour FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s", $email));
+		$data['amount_left'] = ($data['amount_limit'] - $data['amount_sent']);
 
-				if($emails_per_hour > 0)
-				{
-					$amount_temp += $emails_per_hour;
-				}
-
-				else if($amount == 0)
-				{
-					$amount_temp += 10000;
-				}
-			}
-
-			else
-			{
-				if($amount == 0)
-				{
-					$amount_temp += 10000;
-				}
-
-				$query_where = " AND emailAddress = '".esc_sql($email)."'";
-			}
-
-			$result = $obj_base->get_results("SELECT messageID FROM ".$wpdb->base_prefix."email INNER JOIN ".$wpdb->base_prefix."email_folder USING (emailID) INNER JOIN ".$wpdb->base_prefix."email_message USING (folderID) WHERE messageFrom = '' AND messageCreated > DATE_SUB(NOW(), INTERVAL 1 HOUR)".$query_where);
-			$amount_temp -= count($result);
-
-			if($type != '')
-			{
-				$this->emails_left_to_send[$type][$email] = $amount_temp;
-			}
-		}
-
-		if($type != '')
-		{
-			$this->emails_left_to_send[$type][$email]--;
-		}
-
-		return ($amount + $amount_temp);
+		return $data;
 	}
 
-	function get_hourly_release_time($datetime, $email)
+	function get_hourly_release_time($datetime)
 	{
 		global $wpdb;
 
@@ -1584,14 +1541,7 @@ class mf_email
 			$datetime = date("Y-m-d H:i:s");
 		}
 
-		$query_where = "";
-
-		if($email != '')
-		{
-			$query_where = " AND emailAddress = '".esc_sql($email)."'";
-		}
-
-		$datetime_temp = $wpdb->get_var("SELECT messageCreated FROM ".$wpdb->base_prefix."email INNER JOIN ".$wpdb->base_prefix."email_folder USING (emailID) INNER JOIN ".$wpdb->base_prefix."email_message USING (folderID) WHERE messageFrom = '' AND messageCreated > DATE_SUB(NOW(), INTERVAL 1 HOUR)".$query_where." ORDER BY messageCreated ASC LIMIT 0, 1");
+		$datetime_temp = $wpdb->get_var("SELECT messageCreated FROM ".$wpdb->base_prefix."email INNER JOIN ".$wpdb->base_prefix."email_folder USING (emailID) INNER JOIN ".$wpdb->base_prefix."email_message USING (folderID) WHERE messageFrom = '' AND messageCreated > DATE_SUB(NOW(), INTERVAL 1 HOUR) ORDER BY messageCreated ASC LIMIT 0, 1");
 
 		if($datetime_temp > DEFAULT_DATE && $datetime_temp < $datetime)
 		{
@@ -1718,13 +1668,6 @@ class mf_email
 				$this->message_text_source = check_var('intEmailTextSource');
 
 				$this->group_message_id = check_var('intGroupMessageID');
-
-				$this->all_left_to_send = apply_filters('get_emails_left_to_send', 0, '');
-
-				if($this->all_left_to_send == 0)
-				{
-					$error_text = __("The e-mail limit for the last hour has been reached so you can not send anymore e-mails at them moment. Save as a draft and check back in a moment", 'lang_email');
-				}
 			break;
 		}
 	}
@@ -2459,13 +2402,13 @@ class mf_email
 
 			$key_prefix = "";
 
-			$left_to_send = apply_filters('get_emails_left_to_send', 0, $strEmailAddress);
+			$arr_email_left_to_send = apply_filters('get_emails_left_to_send', []);
 
-			if($left_to_send == 0)
+			if($arr_email_left_to_send['amount_left'] == 0)
 			{
 				$key_prefix = "disabled_";
 
-				$hourly_release_time = apply_filters('get_hourly_release_time', '', $strEmailAddress);
+				$hourly_release_time = apply_filters('get_hourly_release_time', '');
 				$mins = time_between_dates(array('start' => $hourly_release_time, 'end' => date("Y-m-d H:i:s"), 'type' => 'round', 'return' => 'minutes'));
 
 				$strEmailName .= " (".sprintf(__("Hourly Limit Reached. Wait %s min", 'lang_email'), (60 - $mins)).")";
