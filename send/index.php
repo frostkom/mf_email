@@ -55,19 +55,21 @@ echo "<div class='wrap'>
 							.input_hidden(array('name' => 'intMessageDraftID', 'value' => $obj_email->message_draft_id))
 							.wp_nonce_field('message_send', '_wpnonce_message_send', true, false)
 						."</div>
-					</div>
-					<div class='postbox'>
+					</div>";
+
+					echo "<div class='postbox'>
 						<h3 class='hndle'>".__("Advanced", 'lang_email')."</h3>
 						<div class='inside'>";
 
-							$arr_data_source = [];
+							/*$arr_data_source = [];
 							get_post_children(array('add_choose_here' => true), $arr_data_source);
 
-							echo show_select(array('data' => $arr_data_source, 'name' => 'intEmailTextSource', 'text' => __("Text Source", 'lang_email'), 'xtra' => "rel='submit_change'"))
-							.get_media_button(array('name' => 'strMessageAttachment', 'value' => $obj_email->message_attachment))
+							echo show_select(array('data' => $arr_data_source, 'name' => 'intEmailTextSource', 'text' => __("Text Source", 'lang_email'), 'xtra' => "rel='submit_change'")):*/
+							echo get_media_button(array('name' => 'strMessageAttachment', 'value' => $obj_email->message_attachment))
 						."</div>
-					</div>
-				</div>
+					</div>";
+
+				echo "</div>
 			</div>
 		</form>
 	</div>

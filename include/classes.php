@@ -14,7 +14,7 @@ class mf_email
 	var $name;
 	var $signature;
 	var $outgoing_type;
-	var $limit_per_hour;
+	//var $limit_per_hour;
 	var $smtp_server;
 	var $smtp_port;
 	var $smtp_ssl;
@@ -37,7 +37,7 @@ class mf_email
 	var $message_subject;
 	var $message_text;
 	var $message_attachment;
-	var $message_text_source;
+	//var $message_text_source;
 	var $group_message_id;
 	var $from_address;
 	var $message_subject_old;
@@ -482,27 +482,15 @@ class mf_email
 				foreach($result as $r)
 				{
 					$intEmailID = $r->emailID;
-					//$intBlogID = $r->blogID;
 					$strEmailServer = $r->emailServer;
 					$intEmailPort = $r->emailPort;
 					$strEmailUsername = $r->emailUsername;
 					$strEmailPassword = $r->emailPassword;
 					$strEmailAddress = $r->emailAddress;
 
-					//switch_to_blog($intBlogID);
-
 					$this->id = $intEmailID;
 
-					if(class_exists('mf_encryption'))
-					{
-						$obj_encryption = new mf_encryption("email");
-					}
-
-					else
-					{
-						$obj_encryption = new mf_email_encryption("email");
-					}
-
+					$obj_encryption = new mf_encryption("email");
 					$strEmailPassword = $obj_encryption->decrypt($strEmailPassword, md5($strEmailAddress));
 
 					list($is_connected, $connection) = $this->email_connect(array('server' => $strEmailServer, 'port' => $intEmailPort, 'username' => $strEmailUsername, 'password' => $strEmailPassword));
@@ -738,8 +726,6 @@ class mf_email
 					{
 						$error_text = __("Connection failed", 'lang_email');
 					}
-
-					//restore_current_blog();
 				}
 				####################################
 
@@ -1387,16 +1373,7 @@ class mf_email
 				$smtp_user = $r->emailSmtpUsername;
 				$smtp_pass_encrypted = $r->emailSmtpPassword;
 
-				if(class_exists('mf_encryption'))
-				{
-					$obj_encryption = new mf_encryption("email");
-				}
-
-				else
-				{
-					$obj_encryption = new mf_email_encryption("email");
-				}
-
+				$obj_encryption = new mf_encryption("email");
 				$smtp_pass = $obj_encryption->decrypt($smtp_pass_encrypted, md5($phpmailer->From));
 
 				$phpmailer->FromName = $r->emailName;
@@ -1637,7 +1614,7 @@ class mf_email
 				$this->signature = check_var('strEmailSignature');
 
 				$this->outgoing_type = check_var('strEmailOutgoingType');
-				$this->limit_per_hour = check_var('intEmailLimitPerHour');
+				//$this->limit_per_hour = check_var('intEmailLimitPerHour');
 				$this->smtp_server = check_var('strEmailSmtpServer');
 				$this->smtp_port = check_var('intEmailSmtpPort');
 				$this->smtp_ssl = check_var('strEmailSmtpSSL');
@@ -1665,7 +1642,7 @@ class mf_email
 				$this->message_subject = check_var('strMessageSubject');
 				$this->message_text = check_var('strMessageText', 'raw');
 				$this->message_attachment = check_var('strMessageAttachment');
-				$this->message_text_source = check_var('intEmailTextSource');
+				//$this->message_text_source = check_var('intEmailTextSource');
 
 				$this->group_message_id = check_var('intGroupMessageID');
 			break;
@@ -1823,16 +1800,7 @@ class mf_email
 							{
 								if($strEmailPassword != '')
 								{
-									if(class_exists('mf_encryption'))
-									{
-										$obj_encryption = new mf_encryption("email");
-									}
-
-									else
-									{
-										$obj_encryption = new mf_email_encryption("email");
-									}
-
+									$obj_encryption = new mf_encryption("email");
 									$strEmailPassword = $obj_encryption->decrypt($strEmailPassword, md5($strEmailAddress));
 								}
 
@@ -2025,13 +1993,13 @@ class mf_email
 					}
 				}
 
-				else if($this->message_text_source > 0)
+				/*else if($this->message_text_source > 0)
 				{
 					$this->message_text = $wpdb->get_var($wpdb->prepare("SELECT post_content FROM ".$wpdb->posts." WHERE post_type = %s AND post_status = %s AND ID = '%d'", 'page', 'publish', $this->message_text_source));
 
 					$this->message_text = str_replace("[name]", get_user_info(), $this->message_text);
 					$this->message_text = $this->convert_characters($this->message_text);
-				}
+				}*/
 
 				else if($this->message_cc == '' && $this->message_subject == '' && $this->message_text == '')
 				{
@@ -2174,7 +2142,7 @@ class mf_email
 			case 'account_create':
 				if($this->id > 0)
 				{
-					$result = $wpdb->get_results($wpdb->prepare("SELECT emailPublic, emailRoles, emailServer, emailPort, emailUsername, emailPassword, emailAddress, emailName, emailSignature, emailOutgoingType, emailLimitPerHour, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailSmtpPassword, emailPreferredContentTypes, emailDeleted FROM ".$wpdb->base_prefix."email WHERE emailID = '%d'", $this->id));
+					$result = $wpdb->get_results($wpdb->prepare("SELECT emailPublic, emailRoles, emailServer, emailPort, emailUsername, emailPassword, emailAddress, emailName, emailSignature, emailOutgoingType, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailSmtpPassword, emailPreferredContentTypes, emailDeleted FROM ".$wpdb->base_prefix."email WHERE emailID = '%d'", $this->id)); //, emailLimitPerHour
 
 					foreach($result as $r)
 					{
@@ -2188,7 +2156,7 @@ class mf_email
 						$this->name = $r->emailName;
 						$this->signature = $r->emailSignature;
 						$this->outgoing_type = $r->emailOutgoingType;
-						$this->limit_per_hour = $r->emailLimitPerHour;
+						//$this->limit_per_hour = $r->emailLimitPerHour;
 						$this->smtp_ssl = $r->emailSmtpSSL;
 						$this->smtp_server = $r->emailSmtpServer;
 						$this->smtp_port = $r->emailSmtpPort;
@@ -2203,15 +2171,7 @@ class mf_email
 							$this->roles = explode(",", $this->roles);
 						}
 
-						if(class_exists('mf_encryption'))
-						{
-							$obj_encryption = new mf_encryption("email");
-						}
-
-						else
-						{
-							$obj_encryption = new mf_email_encryption("email");
-						}
+						$obj_encryption = new mf_encryption("email");
 
 						if($this->password_encrypted != '' && $this->address != '')
 						{
@@ -2508,17 +2468,9 @@ class mf_email
 		return $arr_data;
 	}
 
-	function encrypt_password()
+	/*function encrypt_password()
 	{
-		if(class_exists('mf_encryption'))
-		{
-			$obj_encryption = new mf_encryption("email");
-		}
-
-		else
-		{
-			$obj_encryption = new mf_email_encryption("email");
-		}
+		$obj_encryption = new mf_encryption("email");
 
 		if(isset($this->password) && $this->password != '' && $this->address != '')
 		{
@@ -2529,7 +2481,7 @@ class mf_email
 		{
 			$this->smtp_password_encrypted = $obj_encryption->encrypt($this->smtp_password, md5($this->address));
 		}
-	}
+	}*/
 
 	function check_if_account_exists()
 	{
@@ -2557,6 +2509,18 @@ class mf_email
 		global $wpdb;
 
 		$rows_affected = 0;
+
+		$obj_encryption = new mf_encryption("email");
+
+		if(isset($this->password) && $this->password != '' && $this->address != '')
+		{
+			$this->password_encrypted = $obj_encryption->encrypt($this->password, md5($this->address));
+		}
+
+		if(isset($this->smtp_password) && $this->smtp_password != '' && $this->address != '')
+		{
+			$this->smtp_password_encrypted = $obj_encryption->encrypt($this->smtp_password, md5($this->address));
+		}
 
 		if($this->password_encrypted != '')
 		{
@@ -2618,7 +2582,7 @@ class mf_email
 	{
 		global $wpdb;
 
-		$this->encrypt_password();
+		//$this->encrypt_password();
 
 		if(is_array($this->roles))
 		{
@@ -2630,7 +2594,7 @@ class mf_email
 			$this->preferred_content_types = implode(",", $this->preferred_content_types);
 		}
 
-		$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailSignature = %s, emailOutgoingType = %s, emailLimitPerHour = '%d', emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailPreferredContentTypes = %s, emailCreated = NOW(), userID = '%d'", $wpdb->blogid, $this->public, $this->roles, $this->server, $this->port, $this->username, $this->address, $this->name, $this->signature, $this->outgoing_type, $this->limit_per_hour, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, $this->preferred_content_types, get_current_user_id()));
+		$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailSignature = %s, emailOutgoingType = %s, emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailPreferredContentTypes = %s, emailCreated = NOW(), userID = '%d'", $wpdb->blogid, $this->public, $this->roles, $this->server, $this->port, $this->username, $this->address, $this->name, $this->signature, $this->outgoing_type, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, $this->preferred_content_types, get_current_user_id())); //, emailLimitPerHour = '%d', $this->limit_per_hour
 
 		$this->id = $wpdb->insert_id;
 
@@ -2641,7 +2605,7 @@ class mf_email
 	{
 		global $wpdb;
 
-		$this->encrypt_password();
+		//$this->encrypt_password();
 
 		if(is_array($this->roles))
 		{
@@ -2653,89 +2617,9 @@ class mf_email
 			$this->preferred_content_types = implode(",", $this->preferred_content_types);
 		}
 
-		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailVerified = '0', emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailSignature = %s, emailOutgoingType = %s, emailLimitPerHour = '%d', emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailPreferredContentTypes = %s, emailDeleted = '0' WHERE emailID = '%d'", $wpdb->blogid, $this->public, $this->roles, $this->server, $this->port, $this->username, $this->address, $this->name, $this->signature, $this->outgoing_type, $this->limit_per_hour, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, $this->preferred_content_types, $this->id));
+		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailVerified = '0', emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailSignature = %s, emailOutgoingType = %s, emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailPreferredContentTypes = %s, emailDeleted = '0' WHERE emailID = '%d'", $wpdb->blogid, $this->public, $this->roles, $this->server, $this->port, $this->username, $this->address, $this->name, $this->signature, $this->outgoing_type, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, $this->preferred_content_types, $this->id)); //, emailLimitPerHour = '%d', $this->limit_per_hour
 
 		return ($wpdb->rows_affected > 0 || $this->update_passwords() || $this->update_rights());
-	}
-}
-
-class mf_email_encryption
-{
-	var $key;
-	var $encrypt_method;
-	var $iv;
-
-	function __construct($type)
-	{
-		$this->set_key($type);
-
-		if(function_exists('mcrypt_create_iv') && function_exists('mcrypt_get_iv_size'))
-		{
-			$this->iv = @mcrypt_create_iv(@mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND);
-		}
-
-		else
-		{
-			$this->encrypt_method = 'AES-256-CBC';
-
-			if(!in_array($this->encrypt_method, openssl_get_cipher_methods()) && !in_array(strtolower($this->encrypt_method), openssl_get_cipher_methods()))
-			{
-				do_log(__CLASS__.": ".$this->encrypt_method." does not exist in ".var_export(openssl_get_cipher_methods(), true));
-			}
-
-			$this->iv = substr(hash('sha256', $this->key), 0, 16);
-		}
-	}
-
-	function set_key($type)
-	{
-		if(function_exists('mcrypt_encrypt'))
-		{
-			$this->key = substr("mf_crypt".$type, 0, 32);
-		}
-
-		else
-		{
-			$this->key = hash('sha256', "mf_crypt".$type);
-		}
-	}
-
-	function encrypt($text, $key = '')
-	{
-		if($key != '')
-		{
-			$this->set_key($key);
-		}
-
-		if(function_exists('mcrypt_encrypt'))
-		{
-			$text_encrypted = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $this->key, $text, MCRYPT_MODE_ECB, $this->iv));
-		}
-
-		else
-		{
-			$text_encrypted = base64_encode(openssl_encrypt($text, $this->encrypt_method, $this->key, 0, $this->iv));
-		}
-
-		return $text_encrypted;
-	}
-
-	function decrypt($text, $key = '')
-	{
-		if($key != '')
-		{
-			$this->set_key($key);
-		}
-
-		if(function_exists('mcrypt_encrypt'))
-		{
-			return trim(@mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $this->key, base64_decode($text), MCRYPT_MODE_ECB, $this->iv));
-		}
-
-		else
-		{
-			return openssl_decrypt(base64_decode($text), $this->encrypt_method, $this->key, 0, $this->iv);
-		}
 	}
 }
 

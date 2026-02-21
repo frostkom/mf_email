@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: Add support e-mail accounts
-Version: 6.8.39
+Version: 6.8.40
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -97,7 +97,6 @@ if(!function_exists('is_plugin_active') || function_exists('is_plugin_active') &
 			emailCreated DATETIME,
 			emailChecked DATETIME,
 			emailOutgoingType VARCHAR(20) NOT NULL DEFAULT 'smtp',
-			emailLimitPerHour SMALLINT UNSIGNED DEFAULT '0',
 			emailSmtpVerified ENUM('-1', '0', '1') NOT NULL DEFAULT '0',
 			emailSmtpSSL ENUM('', 'ssl', 'tls') NOT NULL DEFAULT '',
 			emailSmtpServer VARCHAR(100) DEFAULT NULL,
@@ -115,16 +114,17 @@ if(!function_exists('is_plugin_active') || function_exists('is_plugin_active') &
 			KEY userID (userID),
 			KEY emailDeleted (emailDeleted),
 			KEY emailAddress (emailAddress)
-		) DEFAULT CHARSET=".$default_charset);
+		) DEFAULT CHARSET=".$default_charset); //emailLimitPerHour SMALLINT UNSIGNED DEFAULT '0',
 
 		$arr_add_column[$wpdb->base_prefix."email"] = array(
-			'emailSmtpVerified' => "ALTER TABLE [table] ADD [column] ENUM('-1', '0', '1') NOT NULL DEFAULT '0' AFTER emailLimitPerHour",
+			'emailSmtpVerified' => "ALTER TABLE [table] ADD [column] ENUM('-1', '0', '1') NOT NULL DEFAULT '0' AFTER emailOutgoingType",
 			'emailPreferredContentTypes' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpPassword",
 			'emailSignature' => "ALTER TABLE [table] ADD [column] TEXT AFTER emailName",
 		);
 
 		$arr_update_column[$wpdb->base_prefix."email"] = array(
 			//'emailUsername' => "ALTER TABLE [table] CHANGE [column] [column] VARCHAR(100)",
+			'emailLimitPerHour' => "ALTER TABLE [table] DROP COLUMN [column]", //260221
 		);
 
 		/*$arr_add_index[$wpdb->base_prefix."email"] = array(
