@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: Add support e-mail accounts
-Version: 6.8.40
+Version: 6.8.41
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -114,7 +114,7 @@ if(!function_exists('is_plugin_active') || function_exists('is_plugin_active') &
 			KEY userID (userID),
 			KEY emailDeleted (emailDeleted),
 			KEY emailAddress (emailAddress)
-		) DEFAULT CHARSET=".$default_charset); //emailLimitPerHour SMALLINT UNSIGNED DEFAULT '0',
+		) DEFAULT CHARSET=".$default_charset);
 
 		$arr_add_column[$wpdb->base_prefix."email"] = array(
 			'emailSmtpVerified' => "ALTER TABLE [table] ADD [column] ENUM('-1', '0', '1') NOT NULL DEFAULT '0' AFTER emailOutgoingType",

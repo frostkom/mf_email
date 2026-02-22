@@ -61,14 +61,13 @@ echo "<div class='wrap'>
 						<div class='inside'>
 							<div".apply_filters('get_flex_flow', "").">"
 								.show_select(array('data' => apply_filters('email_outgoing_alternatives', array('smtp' => "SMTP")), 'name' => 'strEmailOutgoingType', 'text' => __("Type", 'lang_email'), 'value' => $obj_email->outgoing_type, 'allow_hidden_field' => false))
-								//.show_textfield(array('type' => 'number', 'name' => 'intEmailLimitPerHour', 'text' => __("Outgoing e-mails per hour", 'lang_email'), 'value' => $obj_email->limit_per_hour))
+								.show_textfield(array('name' => 'strEmailSmtpHostname', 'text' => __("Hostname", 'lang_email'), 'value' => $obj_email->smtp_hostname, 'xtra_class' => "display_smtp_settings"))
 							."</div>
 							<div".apply_filters('get_flex_flow', "", ['class' => ['display_outgoing_smtp']]).">"
 								.show_textfield(array('name' => 'strEmailSmtpServer', 'text' => __("Server", 'lang_email'), 'value' => $obj_email->smtp_server, 'placeholder' => "mail.".$placeholder_server))
 								.show_textfield(array('type' => 'number', 'name' => 'intEmailSmtpPort', 'text' => __("Port", 'lang_email'), 'value' => $obj_email->smtp_port, 'placeholder' => 587, 'xtra_class' => "display_smtp_settings"))
 								.show_select(array('data' => $obj_email->get_ssl_for_select(), 'name' => 'strEmailSmtpSSL', 'text' => __("Encryption", 'lang_email'), 'value' => $obj_email->smtp_ssl, 'class' => "display_smtp_settings"))
 							."</div>"
-							.show_textfield(array('name' => 'strEmailSmtpHostname', 'text' => __("Hostname", 'lang_email'), 'value' => $obj_email->smtp_hostname, 'xtra_class' => "display_smtp_settings"))
 							."<div".apply_filters('get_flex_flow', "", ['class' => ['display_smtp_credentials']]).">"
 								.show_textfield(array('name' => 'strEmailSmtpUsername', 'text' => __("User", 'lang_email'), 'value' => $obj_email->smtp_username, 'xtra' => " autocomplete='off' maxlength='100'"))
 								.show_password_field(array('name' => 'strEmailSmtpPassword', 'text' => __("Password"), 'value' => $obj_email->smtp_password, 'placeholder' => $obj_email->smtp_password_placeholder, 'xtra' => " autocomplete='new-password'"))

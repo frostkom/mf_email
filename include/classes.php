@@ -490,7 +490,7 @@ class mf_email
 
 					$this->id = $intEmailID;
 
-					$obj_encryption = new mf_encryption("email");
+					$obj_encryption = new mf_encryption(__CLASS__);
 					$strEmailPassword = $obj_encryption->decrypt($strEmailPassword, md5($strEmailAddress));
 
 					list($is_connected, $connection) = $this->email_connect(array('server' => $strEmailServer, 'port' => $intEmailPort, 'username' => $strEmailUsername, 'password' => $strEmailPassword));
@@ -1373,7 +1373,7 @@ class mf_email
 				$smtp_user = $r->emailSmtpUsername;
 				$smtp_pass_encrypted = $r->emailSmtpPassword;
 
-				$obj_encryption = new mf_encryption("email");
+				$obj_encryption = new mf_encryption(__CLASS__);
 				$smtp_pass = $obj_encryption->decrypt($smtp_pass_encrypted, md5($phpmailer->From));
 
 				$phpmailer->FromName = $r->emailName;
@@ -1614,7 +1614,6 @@ class mf_email
 				$this->signature = check_var('strEmailSignature');
 
 				$this->outgoing_type = check_var('strEmailOutgoingType');
-				//$this->limit_per_hour = check_var('intEmailLimitPerHour');
 				$this->smtp_server = check_var('strEmailSmtpServer');
 				$this->smtp_port = check_var('intEmailSmtpPort');
 				$this->smtp_ssl = check_var('strEmailSmtpSSL');
@@ -1800,7 +1799,7 @@ class mf_email
 							{
 								if($strEmailPassword != '')
 								{
-									$obj_encryption = new mf_encryption("email");
+									$obj_encryption = new mf_encryption(__CLASS__);
 									$strEmailPassword = $obj_encryption->decrypt($strEmailPassword, md5($strEmailAddress));
 								}
 
@@ -2142,7 +2141,7 @@ class mf_email
 			case 'account_create':
 				if($this->id > 0)
 				{
-					$result = $wpdb->get_results($wpdb->prepare("SELECT emailPublic, emailRoles, emailServer, emailPort, emailUsername, emailPassword, emailAddress, emailName, emailSignature, emailOutgoingType, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailSmtpPassword, emailPreferredContentTypes, emailDeleted FROM ".$wpdb->base_prefix."email WHERE emailID = '%d'", $this->id)); //, emailLimitPerHour
+					$result = $wpdb->get_results($wpdb->prepare("SELECT emailPublic, emailRoles, emailServer, emailPort, emailUsername, emailPassword, emailAddress, emailName, emailSignature, emailOutgoingType, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailSmtpPassword, emailPreferredContentTypes, emailDeleted FROM ".$wpdb->base_prefix."email WHERE emailID = '%d'", $this->id));
 
 					foreach($result as $r)
 					{
@@ -2156,7 +2155,6 @@ class mf_email
 						$this->name = $r->emailName;
 						$this->signature = $r->emailSignature;
 						$this->outgoing_type = $r->emailOutgoingType;
-						//$this->limit_per_hour = $r->emailLimitPerHour;
 						$this->smtp_ssl = $r->emailSmtpSSL;
 						$this->smtp_server = $r->emailSmtpServer;
 						$this->smtp_port = $r->emailSmtpPort;
@@ -2171,7 +2169,7 @@ class mf_email
 							$this->roles = explode(",", $this->roles);
 						}
 
-						$obj_encryption = new mf_encryption("email");
+						$obj_encryption = new mf_encryption(__CLASS__);
 
 						if($this->password_encrypted != '' && $this->address != '')
 						{
@@ -2468,21 +2466,6 @@ class mf_email
 		return $arr_data;
 	}
 
-	/*function encrypt_password()
-	{
-		$obj_encryption = new mf_encryption("email");
-
-		if(isset($this->password) && $this->password != '' && $this->address != '')
-		{
-			$this->password_encrypted = $obj_encryption->encrypt($this->password, md5($this->address));
-		}
-
-		if(isset($this->smtp_password) && $this->smtp_password != '' && $this->address != '')
-		{
-			$this->smtp_password_encrypted = $obj_encryption->encrypt($this->smtp_password, md5($this->address));
-		}
-	}*/
-
 	function check_if_account_exists()
 	{
 		global $wpdb;
@@ -2510,14 +2493,14 @@ class mf_email
 
 		$rows_affected = 0;
 
-		$obj_encryption = new mf_encryption("email");
+		$obj_encryption = new mf_encryption(__CLASS__);
 
-		if(isset($this->password) && $this->password != '' && $this->address != '')
+		if($this->password != '' && $this->address != '')
 		{
 			$this->password_encrypted = $obj_encryption->encrypt($this->password, md5($this->address));
 		}
 
-		if(isset($this->smtp_password) && $this->smtp_password != '' && $this->address != '')
+		if($this->smtp_password != '' && $this->address != '')
 		{
 			$this->smtp_password_encrypted = $obj_encryption->encrypt($this->smtp_password, md5($this->address));
 		}
@@ -2582,8 +2565,6 @@ class mf_email
 	{
 		global $wpdb;
 
-		//$this->encrypt_password();
-
 		if(is_array($this->roles))
 		{
 			$this->roles = implode(",", $this->roles);
@@ -2594,7 +2575,7 @@ class mf_email
 			$this->preferred_content_types = implode(",", $this->preferred_content_types);
 		}
 
-		$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailSignature = %s, emailOutgoingType = %s, emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailPreferredContentTypes = %s, emailCreated = NOW(), userID = '%d'", $wpdb->blogid, $this->public, $this->roles, $this->server, $this->port, $this->username, $this->address, $this->name, $this->signature, $this->outgoing_type, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, $this->preferred_content_types, get_current_user_id())); //, emailLimitPerHour = '%d', $this->limit_per_hour
+		$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailSignature = %s, emailOutgoingType = %s, emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailPreferredContentTypes = %s, emailCreated = NOW(), userID = '%d'", $wpdb->blogid, $this->public, $this->roles, $this->server, $this->port, $this->username, $this->address, $this->name, $this->signature, $this->outgoing_type, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, $this->preferred_content_types, get_current_user_id()));
 
 		$this->id = $wpdb->insert_id;
 
@@ -2605,8 +2586,6 @@ class mf_email
 	{
 		global $wpdb;
 
-		//$this->encrypt_password();
-
 		if(is_array($this->roles))
 		{
 			$this->roles = implode(",", $this->roles);
@@ -2617,7 +2596,7 @@ class mf_email
 			$this->preferred_content_types = implode(",", $this->preferred_content_types);
 		}
 
-		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailVerified = '0', emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailSignature = %s, emailOutgoingType = %s, emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailPreferredContentTypes = %s, emailDeleted = '0' WHERE emailID = '%d'", $wpdb->blogid, $this->public, $this->roles, $this->server, $this->port, $this->username, $this->address, $this->name, $this->signature, $this->outgoing_type, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, $this->preferred_content_types, $this->id)); //, emailLimitPerHour = '%d', $this->limit_per_hour
+		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailVerified = '0', emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailSignature = %s, emailOutgoingType = %s, emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailPreferredContentTypes = %s, emailDeleted = '0' WHERE emailID = '%d'", $wpdb->blogid, $this->public, $this->roles, $this->server, $this->port, $this->username, $this->address, $this->name, $this->signature, $this->outgoing_type, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, $this->preferred_content_types, $this->id));
 
 		return ($wpdb->rows_affected > 0 || $this->update_passwords() || $this->update_rights());
 	}
