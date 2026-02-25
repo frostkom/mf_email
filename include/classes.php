@@ -988,7 +988,7 @@ class mf_email
 
 			echo show_textfield(array('name' => $setting_key, 'value' => $option));
 
-			echo "<p>".sprintf(__("The e-mail %s is used as sender address so this must be white listed in the SMTP, otherwise it can be caught in the servers spam filter", 'lang_email'), "<a href='".(is_multisite() ? admin_url("network/site-settings.php?id=".$wpdb->blogid."#admin_email") : admin_url("options-general.php"))."' class='strong'>".$admin_email."</a>")."</p>";
+			echo "<p>".sprintf(__("The e-mail %s is used as sender address so this must be white listed in the SMTP, otherwise it can be caught in the servers spam filter.", 'lang_email'), "<a href='".(is_multisite() ? admin_url("network/site-settings.php?id=".$wpdb->blogid."#admin_email") : admin_url("options-general.php"))."' class='strong'>".$admin_email."</a>")."</p>";
 
 			if(IS_SUPER_ADMIN)
 			{
@@ -1063,7 +1063,23 @@ class mf_email
 
 					echo "<li><strong>DMARC:</strong> ".($has_dmarc != '' ? "<i class='fa fa-check green'></i> ".$has_dmarc : "<i class='fa fa-exclamation-triangle yellow display_warning'></i> ".__("Not found", 'lang_email'))."</li>";
 
+					echo "<li><strong>DMARC:</strong> ".($has_dmarc != '' ? "<i class='fa fa-check green'></i> ".$has_dmarc : "<i class='fa fa-exclamation-triangle yellow display_warning'></i> ".__("Not found", 'lang_email'))."</li>";
+
 				echo "</ul>";
+
+				$setting_site_manager_server_ip = get_option_or_default('setting_site_manager_server_ip');
+
+				if($setting_site_manager_server_ip != '')
+				{
+					$server_evaluation_url = "https://mxtoolbox.com/SuperTool.aspx?action=blacklist%3a".$setting_site_manager_server_ip."&run=toolpage";
+				}
+
+				else
+				{
+					$server_evaluation_url = "https://mxtoolbox.com/SuperTool.aspx?run=toolpage";
+				}
+
+				echo "<p>".sprintf(__("Find out if %syour server%s is on any blacklists.", 'lang_email'), "<a href='".$server_evaluation_url."' class='strong'>", "</a>")."</p>";
 			}
 		}
 	}

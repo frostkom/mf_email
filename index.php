@@ -2,8 +2,8 @@
 /*
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
-Description: Add support e-mail accounts
-Version: 6.8.41
+Description: Add support for sending and getting e-mails
+Version: 6.8.42
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
