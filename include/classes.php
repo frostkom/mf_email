@@ -1063,8 +1063,6 @@ class mf_email
 
 					echo "<li><strong>DMARC:</strong> ".($has_dmarc != '' ? "<i class='fa fa-check green'></i> ".$has_dmarc : "<i class='fa fa-exclamation-triangle yellow display_warning'></i> ".__("Not found", 'lang_email'))."</li>";
 
-					echo "<li><strong>DMARC:</strong> ".($has_dmarc != '' ? "<i class='fa fa-check green'></i> ".$has_dmarc : "<i class='fa fa-exclamation-triangle yellow display_warning'></i> ".__("Not found", 'lang_email'))."</li>";
-
 				echo "</ul>";
 
 				$setting_site_manager_server_ip = get_option_or_default('setting_site_manager_server_ip');
