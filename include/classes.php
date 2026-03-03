@@ -308,7 +308,7 @@ class mf_email
 		if(!isset($data['reply_to'])){		$data['reply_to'] = "";}
 		if(!isset($data['content'])){		$data['content'] = "";}
 		if(!isset($data['content_html'])){	$data['content_html'] = "";}
-		if(!isset($data['created'])){		$data['created'] = date("Y-m-d H:i:s");}
+		if(!isset($data['created'])){		$data['created'] = current_time('mysql');}
 
 		if($data['content_html'] == $data['content'])
 		{
@@ -1373,7 +1373,7 @@ class mf_email
 		$outgoing_type = 'smtp';
 		$smtp_ssl = $smtp_host = $smtp_port = $smtp_hostname = $smtp_user = $smtp_pass = "";
 
-		$result = $obj_base->get_results($wpdb->prepare("SELECT emailName, emailOutgoingType, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailSmtpPassword FROM ".$wpdb->base_prefix."email WHERE blogID = '%d' AND emailAddress = %s", $wpdb->blogid, $phpmailer->From));
+		$result = $obj_base->get_results($wpdb->prepare("SELECT emailName, emailOutgoingType, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailSmtpPassword FROM ".$wpdb->base_prefix."email WHERE blogID = '%d' AND emailAddress = %s LIMIT 0, 1", $wpdb->blogid, $phpmailer->From));
 
 		if(count($result) > 0)
 		{
@@ -1416,7 +1416,6 @@ class mf_email
 					$phpmailer->SMTPDebug = (defined('SMTPDebug') ? SMTPDebug : false);
 
 					$phpmailer->IsSMTP();
-					//$phpmailer->Mailer = 'smtp';
 
 					if($smtp_ssl == '')
 					{
@@ -1446,19 +1445,6 @@ class mf_email
 						$phpmailer->Username = $smtp_user;
 						$phpmailer->Password = $smtp_pass;
 					}
-
-					/*$mail->SMTPOptions = array(
-						'ssl' => [
-							'verify_peer' => true,
-							'verify_depth' => 3,
-							'allow_self_signed' => true,
-							'peer_name' => 'smtp.example.com',
-							'cafile' => '/etc/ssl/ca_cert.pem',
-							'crypto_method' => STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT,
-						],
-					);*/
-
-					//$phpmailer = apply_filters('wp_mail_smtp_custom_options', $phpmailer);
 				}
 			break;
 
@@ -1466,6 +1452,8 @@ class mf_email
 				do_action('email_outgoing_process', $outgoing_type, $smtp_user, $smtp_pass);
 			break;
 		}
+
+		return $phpmailer;
 	}
 
 	function phpmailer_init($phpmailer)
@@ -1529,7 +1517,7 @@ class mf_email
 
 		if($datetime == '')
 		{
-			$datetime = date("Y-m-d H:i:s");
+			$datetime = current_time('mysql');
 		}
 
 		$datetime_temp = $wpdb->get_var("SELECT messageCreated FROM ".$wpdb->base_prefix."email INNER JOIN ".$wpdb->base_prefix."email_folder USING (emailID) INNER JOIN ".$wpdb->base_prefix."email_message USING (folderID) WHERE messageFrom = '' AND messageCreated > DATE_SUB(NOW(), INTERVAL 1 HOUR) ORDER BY messageCreated ASC LIMIT 0, 1");
@@ -1905,74 +1893,89 @@ class mf_email
 
 							list($mail_attachment, $rest) = get_attachment_to_send($this->message_attachment);
 
-							$sent = send_email(array(
-								'from' => $strEmailAddress,
-								'from_name' => $strEmailName,
-								'to' => $this->message_to,
-								'subject' => $this->message_subject,
-								'content' => $this->message_text,
-								'headers' => $mail_headers,
-								'attachment' => $mail_attachment,
-							));
-
-							if($sent)
+							if($this->message_text != '')
 							{
-								$intFolderID = $this->get_folder_ids(__("Sent", 'lang_email'), 4, $this->id);
+								$data_temp = array(
+									'from' => $strEmailAddress,
+									'from_name' => $strEmailName,
+									'to' => $this->message_to,
+									'subject' => $this->message_subject,
+									'content' => $this->message_text,
+									'headers' => $mail_headers,
+									'attachment' => $mail_attachment,
+								);
 
-								list($this->message_id, $affected_rows) = $this->save_email(array('read' => 1, 'folder_id' => $intFolderID, 'to' => $this->message_to, 'cc' => $this->message_cc, 'subject' => $this->message_subject, 'content_html' => $this->message_text));
+								$sent = send_email($data_temp);
 
-								if($this->message_id > 0)
+								if($sent)
 								{
-									if($this->message_attachment != '')
+									$intFolderID = $this->get_folder_ids(__("Sent", 'lang_email'), 4, $this->id);
+
+									list($this->message_id, $affected_rows) = $this->save_email(array('read' => 1, 'folder_id' => $intFolderID, 'to' => $this->message_to, 'cc' => $this->message_cc, 'subject' => $this->message_subject, 'content_html' => $this->message_text));
+
+									if($this->message_id > 0)
 									{
-										$arr_attachments = explode(",", $this->message_attachment);
-
-										foreach($arr_attachments as $attachment)
+										if($this->message_attachment != '')
 										{
-											@list($file_name, $file_url, $file_id) = explode("|", $attachment);
+											$arr_attachments = explode(",", $this->message_attachment);
 
-											if($file_id > 0){}
-
-											else if($file_url != '')
+											foreach($arr_attachments as $attachment)
 											{
-												//$file_url_check = WP_CONTENT_DIR.str_replace(site_url()."/wp-content", "", $file_url);
-												$file_url_check = str_replace(WP_CONTENT_URL, WP_CONTENT_DIR, $file_url);
+												@list($file_name, $file_url, $file_id) = explode("|", $attachment);
 
-												if(file_exists($file_url_check))
+												if($file_id > 0){}
+
+												else if($file_url != '')
 												{
-													$query = $wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_type = 'attachment' AND post_title = %s", $file_name);
+													//$file_url_check = WP_CONTENT_DIR.str_replace(site_url()."/wp-content", "", $file_url);
+													$file_url_check = str_replace(WP_CONTENT_URL, WP_CONTENT_DIR, $file_url);
 
-													$file_id = $wpdb->get_var($query);
+													if(file_exists($file_url_check))
+													{
+														$query = $wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_type = 'attachment' AND post_title = %s", $file_name);
+
+														$file_id = $wpdb->get_var($query);
+													}
+
+													else
+													{
+														$error_text = __("The file does not seem to exist", 'lang_email')." (".$file_url_check.")";
+													}
+												}
+
+												if($file_id > 0)
+												{
+													$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email_message_attachment SET messageID = '%d', fileID = '%d'", $this->message_id, $file_id));
 												}
 
 												else
 												{
-													$error_text = __("The file does not seem to exist", 'lang_email')." (".$file_url_check.")";
+													$error_text = __("Could not save the attached file to DB, but it was successfully sent", 'lang_email');
 												}
 											}
+										}
 
-											if($file_id > 0)
-											{
-												$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email_message_attachment SET messageID = '%d', fileID = '%d'", $this->message_id, $file_id));
-											}
-
-											else
-											{
-												$error_text = __("Could not save the attached file to DB, but it was successfully sent", 'lang_email');
-											}
+										if(!isset($error_text) || $error_text == '')
+										{
+											mf_redirect(admin_url("admin.php?page=mf_email/list/index.php&sent"));
 										}
 									}
+								}
 
-									if(!isset($error_text) || $error_text == '')
+								else
+								{
+									$error_text = __("Unfortunately, I could not send the email for you. Please try again. If the problem persists, please contact my admin", 'lang_email');
+
+									if(IS_SUPER_ADMIN)
 									{
-										mf_redirect(admin_url("admin.php?page=mf_email/list/index.php&sent"));
+										$error_text .= " (".var_export($data_temp, true).")";
 									}
 								}
 							}
 
 							else
 							{
-								$error_text = __("Unfortunately, I could not send the email for you. Please try again. If the problem persists, please contact my admin", 'lang_email');
+								$error_text = __("I am sorry, but you need to add a message before you push send. Try again.", 'lang_email');
 							}
 						}
 					}
@@ -2381,7 +2384,7 @@ class mf_email
 				$key_prefix = "disabled_";
 
 				$hourly_release_time = apply_filters('get_hourly_release_time', '');
-				$mins = time_between_dates(array('start' => $hourly_release_time, 'end' => date("Y-m-d H:i:s"), 'type' => 'round', 'return' => 'minutes'));
+				$mins = time_between_dates(array('start' => $hourly_release_time, 'end' => current_time('mysql'), 'type' => 'round', 'return' => 'minutes'));
 
 				$strEmailName .= " (".sprintf(__("Hourly Limit Reached. Wait %s min", 'lang_email'), (60 - $mins)).")";
 			}

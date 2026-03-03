@@ -149,11 +149,7 @@ echo "<div class='wrap'>
 			{ %>
 				<a href='mailto:<%= messageTo %>'><%= messageToName %></a>
 				<div class='row-actions'>
-					<%= messageFromName %>
-					<% if(messageFrom != messageFromName)
-					{ %>
-						&nbsp;&lt;<%= messageFrom %>&gt;
-					<% } %>
+					<%= emailAddress %>
 				</div>
 			<% }
 

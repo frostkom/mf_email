@@ -46,7 +46,7 @@ echo "<div class='wrap'>
 							else
 							{
 								$hourly_release_time = apply_filters('get_hourly_release_time', '');
-								$mins = time_between_dates(array('start' => $hourly_release_time, 'end' => date("Y-m-d H:i:s"), 'type' => 'round', 'return' => 'minutes'));
+								$mins = time_between_dates(array('start' => $hourly_release_time, 'end' => current_time('mysql'), 'type' => 'round', 'return' => 'minutes'));
 
 								echo "<p>".sprintf(__("Hourly Limit Reached. Wait %s min", 'lang_email'), (60 - $mins))."</p>";
 							}
