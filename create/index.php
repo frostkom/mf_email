@@ -39,6 +39,7 @@ echo "<div class='wrap'>
 							<div".apply_filters('get_flex_flow', "").">"
 								.show_textfield(array('name' => 'strEmailAddress', 'text' => __("Address", 'lang_email'), 'value' => $obj_email->address, 'placeholder' => $placeholder_address))
 								.show_textfield(array('name' => 'strEmailName', 'text' => __("Name", 'lang_email'), 'value' => $obj_email->name, 'placeholder' => $placeholder_name, 'xtra_class' => "display_email_name"))
+								.show_textfield(array('name' => 'strEmailReplyTo', 'text' => __("Reply To", 'lang_email'), 'value' => $obj_email->reply_to))
 							."</div>"
 							.show_textarea(array('name' => 'strEmailSignature', 'text' => __("Signature", 'lang_email'), 'value' => $obj_email->signature, 'class' => "display_email_signature"))
 						."</div>

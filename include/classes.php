@@ -12,9 +12,9 @@ class mf_email
 	var $password_placeholder;
 	var $address;
 	var $name;
+	var $reply_to;
 	var $signature;
 	var $outgoing_type;
-	//var $limit_per_hour;
 	var $smtp_server;
 	var $smtp_port;
 	var $smtp_ssl;
@@ -1373,12 +1373,14 @@ class mf_email
 		$outgoing_type = 'smtp';
 		$smtp_ssl = $smtp_host = $smtp_port = $smtp_hostname = $smtp_user = $smtp_pass = "";
 
-		$result = $obj_base->get_results($wpdb->prepare("SELECT emailName, emailOutgoingType, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailSmtpPassword FROM ".$wpdb->base_prefix."email WHERE blogID = '%d' AND emailAddress = %s LIMIT 0, 1", $wpdb->blogid, $phpmailer->From));
+		$result = $obj_base->get_results($wpdb->prepare("SELECT emailName, emailReplyTo, emailOutgoingType, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailSmtpPassword FROM ".$wpdb->base_prefix."email WHERE blogID = '%d' AND emailAddress = %s LIMIT 0, 1", $wpdb->blogid, $phpmailer->From));
 
 		if(count($result) > 0)
 		{
 			foreach($result as $r)
 			{
+				$email_name = $r->emailName;
+				$email_reply_to = $r->emailReplyTo;
 				$outgoing_type = $r->emailOutgoingType;
 				$smtp_ssl = $r->emailSmtpSSL;
 				$smtp_host = $r->emailSmtpServer;
@@ -1390,7 +1392,12 @@ class mf_email
 				$obj_encryption = new mf_encryption(__CLASS__);
 				$smtp_pass = $obj_encryption->decrypt($smtp_pass_encrypted, md5($phpmailer->From));
 
-				$phpmailer->FromName = $r->emailName;
+				$phpmailer->FromName = $email_name;
+
+				if($email_reply_to != '')
+				{
+					$phpmailer->addReplyTo($email_reply_to, $email_name);
+				}
 			}
 		}
 
@@ -1613,6 +1620,7 @@ class mf_email
 				$this->password = check_var('strEmailPassword');
 				$this->address = check_var('strEmailAddress');
 				$this->name = check_var('strEmailName');
+				$this->reply_to = check_var('strEmailReplyTo');
 				$this->signature = check_var('strEmailSignature');
 
 				$this->outgoing_type = check_var('strEmailOutgoingType');
@@ -2158,7 +2166,7 @@ class mf_email
 			case 'account_create':
 				if($this->id > 0)
 				{
-					$result = $wpdb->get_results($wpdb->prepare("SELECT emailPublic, emailRoles, emailServer, emailPort, emailUsername, emailPassword, emailAddress, emailName, emailSignature, emailOutgoingType, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailSmtpPassword, emailPreferredContentTypes, emailDeleted FROM ".$wpdb->base_prefix."email WHERE emailID = '%d'", $this->id));
+					$result = $wpdb->get_results($wpdb->prepare("SELECT emailPublic, emailRoles, emailServer, emailPort, emailUsername, emailPassword, emailAddress, emailName, emailReplyTo, emailSignature, emailOutgoingType, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailSmtpPassword, emailPreferredContentTypes, emailDeleted FROM ".$wpdb->base_prefix."email WHERE emailID = '%d'", $this->id));
 
 					foreach($result as $r)
 					{
@@ -2170,6 +2178,7 @@ class mf_email
 						$this->password_encrypted = $r->emailPassword;
 						$this->address = $r->emailAddress;
 						$this->name = $r->emailName;
+						$this->reply_to = $r->emailReplyTo;
 						$this->signature = $r->emailSignature;
 						$this->outgoing_type = $r->emailOutgoingType;
 						$this->smtp_ssl = $r->emailSmtpSSL;
@@ -2592,7 +2601,7 @@ class mf_email
 			$this->preferred_content_types = implode(",", $this->preferred_content_types);
 		}
 
-		$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailSignature = %s, emailOutgoingType = %s, emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailPreferredContentTypes = %s, emailCreated = NOW(), userID = '%d'", $wpdb->blogid, $this->public, $this->roles, $this->server, $this->port, $this->username, $this->address, $this->name, $this->signature, $this->outgoing_type, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, $this->preferred_content_types, get_current_user_id()));
+		$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailReplyTo = %s, emailSignature = %s, emailOutgoingType = %s, emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailPreferredContentTypes = %s, emailCreated = NOW(), userID = '%d'", $wpdb->blogid, $this->public, $this->roles, $this->server, $this->port, $this->username, $this->address, $this->name, $this->reply_to, $this->signature, $this->outgoing_type, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, $this->preferred_content_types, get_current_user_id()));
 
 		$this->id = $wpdb->insert_id;
 
@@ -2613,7 +2622,7 @@ class mf_email
 			$this->preferred_content_types = implode(",", $this->preferred_content_types);
 		}
 
-		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailVerified = '0', emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailSignature = %s, emailOutgoingType = %s, emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailPreferredContentTypes = %s, emailDeleted = '0' WHERE emailID = '%d'", $wpdb->blogid, $this->public, $this->roles, $this->server, $this->port, $this->username, $this->address, $this->name, $this->signature, $this->outgoing_type, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, $this->preferred_content_types, $this->id));
+		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailVerified = '0', emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailReplyTo = %s, emailSignature = %s, emailOutgoingType = %s, emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailPreferredContentTypes = %s, emailDeleted = '0' WHERE emailID = '%d'", $wpdb->blogid, $this->public, $this->roles, $this->server, $this->port, $this->username, $this->address, $this->name, $this->reply_to, $this->signature, $this->outgoing_type, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, $this->preferred_content_types, $this->id));
 
 		return ($wpdb->rows_affected > 0 || $this->update_passwords() || $this->update_rights());
 	}

@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: Add support for sending and getting e-mails
-Version: 6.8.44
+Version: 6.8.45
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -93,6 +93,7 @@ if(!function_exists('is_plugin_active') || function_exists('is_plugin_active') &
 			emailPassword VARCHAR(150),
 			emailAddress VARCHAR(50),
 			emailName VARCHAR(60),
+			emailReplyTo VARCHAR(50),
 			emailSignature TEXT,
 			emailCreated DATETIME,
 			emailChecked DATETIME,
@@ -120,10 +121,10 @@ if(!function_exists('is_plugin_active') || function_exists('is_plugin_active') &
 			'emailSmtpVerified' => "ALTER TABLE [table] ADD [column] ENUM('-1', '0', '1') NOT NULL DEFAULT '0' AFTER emailOutgoingType",
 			'emailPreferredContentTypes' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpPassword",
 			'emailSignature' => "ALTER TABLE [table] ADD [column] TEXT AFTER emailName",
+			'emailReplyTo' => "ALTER TABLE [table] ADD [column] VARCHAR(50) AFTER emailName", //260309
 		);
 
 		$arr_update_column[$wpdb->base_prefix."email"] = array(
-			//'emailUsername' => "ALTER TABLE [table] CHANGE [column] [column] VARCHAR(100)",
 			'emailLimitPerHour' => "ALTER TABLE [table] DROP COLUMN [column]", //260221
 		);
 
@@ -201,14 +202,6 @@ if(!function_exists('is_plugin_active') || function_exists('is_plugin_active') &
 				KEY emailID (emailID),
 				KEY messageFrom (messageFrom)
 			) DEFAULT CHARSET=".$default_charset);
-		}
-
-		else
-		{
-			// What happens if there are messages and has_accounts() goes wrong?
-			/*mf_uninstall_plugin(array(
-				'tables' => array('email_folders', 'email_message', 'email_message_attachment', 'email_spam'),
-			));*/
 		}
 
 		update_columns($arr_update_column);
