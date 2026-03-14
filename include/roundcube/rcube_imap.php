@@ -202,11 +202,10 @@ class rcube_imap
 		$this->port = $port;
 		$this->ssl  = $use_ssl;
 
-		$log_message = sprintf(__("Login failed for %s from %s.", 'lang_email'), $user, apply_filters('get_current_visitor_ip', ""));
+		$log_message = sprintf(__CLASS__."->".__FUNCTION__.": ".__("Login failed for %s from %s.", 'lang_email'), $user, apply_filters('get_current_visitor_ip', ""));
 
 		if($this->conn->connected())
 		{
-			// get namespace and delimiter
 			$this->set_env();
 
 			do_log($log_message, 'trash');
