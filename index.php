@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: Add support for sending and getting e-mails
-Version: 6.8.46
+Version: 6.9.0
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -52,6 +52,9 @@ if(!function_exists('is_plugin_active') || function_exists('is_plugin_active') &
 
 	add_filter('get_emails_left_to_send', array($obj_email, 'get_emails_left_to_send'), 10, 2);
 	add_filter('get_hourly_release_time', array($obj_email, 'get_hourly_release_time'), 10, 2);
+	add_filter('get_email_address_from_id', array($obj_email, 'get_email_address_from_id'), 10, 2);
+	//add_filter('get_email_name_from_address', array($obj_email, 'get_email_name_from_address'), 10, 2);
+	//add_filter('get_email_reply_to_from_address', array($obj_email, 'get_email_reply_to_from_address'), 10, 2);
 
 	add_filter('get_preferred_content_types', array($obj_email, 'get_preferred_content_types'), 10, 3);
 

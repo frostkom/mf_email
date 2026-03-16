@@ -1537,6 +1537,41 @@ class mf_email
 		return $datetime;
 	}
 
+	function get_email_address_from_id($id)
+	{
+		global $wpdb;
+
+		return $wpdb->get_var($wpdb->prepare("SELECT emailAddress FROM ".$wpdb->base_prefix."email WHERE emailID = '%d'", $id));
+	}
+
+	/*function get_email_name_from_address($string)
+	{
+		global $wpdb;
+
+		$strEmailName = $wpdb->get_var($wpdb->prepare("SELECT emailName FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s", $string));
+
+		if($strEmailName != '')
+		{
+			$string = $strEmailName;
+		}
+
+		return $string;
+	}
+
+	function get_email_reply_to_from_address($string)
+	{
+		global $wpdb;
+
+		$strEmailReplyTo = $wpdb->get_var($wpdb->prepare("SELECT emailReplyTo FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s", $string));
+
+		if($strEmailReplyTo != '')
+		{
+			$string = $strEmailReplyTo;
+		}
+
+		return $string;
+	}*/
+
 	function api_email_smtp_test()
 	{
 		global $phpmailer, $done_text, $error_text;
@@ -1711,6 +1746,128 @@ class mf_email
 		}
 	}
 
+	function update_passwords()
+	{
+		global $wpdb;
+
+		$rows_affected = 0;
+
+		$obj_encryption = new mf_encryption(__CLASS__);
+
+		if($this->password != '' && $this->address != '')
+		{
+			$this->password_encrypted = $obj_encryption->encrypt($this->password, md5($this->address));
+		}
+
+		if($this->smtp_password != '' && $this->address != '')
+		{
+			$this->smtp_password_encrypted = $obj_encryption->encrypt($this->smtp_password, md5($this->address));
+		}
+
+		if($this->password_encrypted != '')
+		{
+			if(strlen($this->password_encrypted) > 150)
+			{
+				do_log("The encrypted password was longer than the max length in DB (".strlen($this->password_encrypted).")");
+			}
+
+			$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailPassword = %s WHERE emailID = '%d'", $this->password_encrypted, $this->id));
+
+			$rows_affected += $wpdb->rows_affected;
+		}
+
+		if($this->smtp_password_encrypted != '')
+		{
+			if(strlen($this->smtp_password_encrypted) > 150)
+			{
+				do_log("The encrypted password was longer than the max length in DB (".strlen($this->smtp_password_encrypted).")");
+			}
+
+			$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailSmtpPassword = %s WHERE emailID = '%d'", $this->smtp_password_encrypted, $this->id));
+
+			$rows_affected += $wpdb->rows_affected;
+		}
+
+		return $rows_affected;
+	}
+
+	function update_rights()
+	{
+		global $wpdb;
+
+		$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->base_prefix."email_users WHERE emailID = '%d'", $this->id));
+
+		$rows_affected = $wpdb->rows_affected;
+
+		if(is_array($this->users))
+		{
+			foreach($this->users as $intUserID)
+			{
+				$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email_users SET emailID = '%d', userID = '%d'", $this->id, $intUserID));
+
+				$rows_affected += $wpdb->rows_affected;
+			}
+		}
+
+		return $rows_affected;
+	}
+
+	function create_account()
+	{
+		global $wpdb;
+
+		if(is_array($this->roles))
+		{
+			$this->roles = implode(",", $this->roles);
+		}
+
+		if(is_array($this->preferred_content_types))
+		{
+			$this->preferred_content_types = implode(",", $this->preferred_content_types);
+		}
+
+		$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailReplyTo = %s, emailSignature = %s, emailOutgoingType = %s, emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailPreferredContentTypes = %s, emailCreated = NOW(), userID = '%d'", $wpdb->blogid, $this->public, $this->roles, $this->server, $this->port, $this->username, $this->address, $this->name, $this->reply_to, $this->signature, $this->outgoing_type, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, $this->preferred_content_types, get_current_user_id()));
+
+		$this->id = $wpdb->insert_id;
+
+		if($this->id > 0)
+		{
+			$rows_affected = $wpdb->rows_affected;
+			$rows_affected += $this->update_passwords();
+			$rows_affected += $this->update_rights();
+
+			return $rows_affected;
+		}
+
+		else
+		{
+			return 0;
+		}
+	}
+
+	function update_account()
+	{
+		global $wpdb;
+
+		if(is_array($this->roles))
+		{
+			$this->roles = implode(",", $this->roles);
+		}
+
+		if(is_array($this->preferred_content_types))
+		{
+			$this->preferred_content_types = implode(",", $this->preferred_content_types);
+		}
+
+		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailVerified = '0', emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailReplyTo = %s, emailSignature = %s, emailOutgoingType = %s, emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailPreferredContentTypes = %s, emailDeleted = '0' WHERE emailID = '%d'", $wpdb->blogid, $this->public, $this->roles, $this->server, $this->port, $this->username, $this->address, $this->name, $this->reply_to, $this->signature, $this->outgoing_type, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, $this->preferred_content_types, $this->id));
+
+		$rows_affected = $wpdb->rows_affected;
+		$rows_affected += $this->update_passwords();
+		$rows_affected += $this->update_rights();
+
+		return $rows_affected;
+	}
+
 	function save_data()
 	{
 		global $wpdb, $error_text, $done_text;
@@ -1724,9 +1881,7 @@ class mf_email
 				{
 					if($this->id > 0)
 					{
-						$updated = $this->update_account();
-
-						if($updated == true)
+						if($this->update_account() > 0)
 						{
 							$type = "updated";
 						}
@@ -1746,9 +1901,7 @@ class mf_email
 
 						else
 						{
-							$this->create_account();
-
-							if($this->id > 0)
+							if($this->create_account() > 0)
 							{
 								$type = "created";
 							}
@@ -2200,14 +2353,14 @@ class mf_email
 						if($this->password_encrypted != '' && $this->address != '')
 						{
 							$this->password = $obj_encryption->decrypt($this->password_encrypted, md5($this->address));
-							$this->password_placeholder = substr($this->password, 0, floor(strlen($this->password) / 2));
+							$this->password_placeholder = shorten_text(array('string' => $this->password, 'limit' => 0.5));
 							$this->password = "";
 						}
 
 						if($this->smtp_password_encrypted != '' && $this->address != '')
 						{
 							$this->smtp_password = $obj_encryption->decrypt($this->smtp_password_encrypted, md5($this->address));
-							$this->smtp_password_placeholder = substr($this->smtp_password, 0, floor(strlen($this->smtp_password) / 2));
+							$this->smtp_password_placeholder = shorten_text(array('string' => $this->smtp_password, 'limit' => 0.5));
 							$this->smtp_password = "";
 						}
 
@@ -2384,11 +2537,11 @@ class mf_email
 
 			$strEmailName = ($strEmailName != '' ? $strEmailName." &lt;".$strEmailAddress."&gt;" : $strEmailAddress);
 
-			$key_prefix = "";
+			/*$key_prefix = "";
 
 			$arr_email_left_to_send = apply_filters('get_emails_left_to_send', []);
 
-			if($arr_email_left_to_send['amount_left'] == 0)
+			if($arr_email_left_to_send['amount_left'] <= 0)
 			{
 				$key_prefix = "disabled_";
 
@@ -2396,16 +2549,16 @@ class mf_email
 				$mins = time_between_dates(array('start' => $hourly_release_time, 'end' => current_time('mysql'), 'type' => 'round', 'return' => 'minutes'));
 
 				$strEmailName .= " (".sprintf(__("Hourly Limit Reached. Wait %s min", 'lang_email'), (60 - $mins)).")";
-			}
+			}*/
 
 			switch($data['index'])
 			{
 				case 'id':
-					$arr_data[$key_prefix.$intEmailID2] = $strEmailName;
+					$arr_data[$intEmailID2] = $strEmailName; //$key_prefix.
 				break;
 
 				case 'address':
-					$arr_data[$key_prefix.$strEmailName_orig."|".$strEmailAddress] = $strEmailName;
+					$arr_data[$strEmailName_orig."|".$strEmailAddress] = $strEmailName; //$key_prefix.
 				break;
 			}
 		}
@@ -2512,120 +2665,6 @@ class mf_email
 
 		return $string;
 	}
-
-	function update_passwords()
-	{
-		global $wpdb;
-
-		$rows_affected = 0;
-
-		$obj_encryption = new mf_encryption(__CLASS__);
-
-		if($this->password != '' && $this->address != '')
-		{
-			$this->password_encrypted = $obj_encryption->encrypt($this->password, md5($this->address));
-		}
-
-		if($this->smtp_password != '' && $this->address != '')
-		{
-			$this->smtp_password_encrypted = $obj_encryption->encrypt($this->smtp_password, md5($this->address));
-		}
-
-		if($this->password_encrypted != '')
-		{
-			if(strlen($this->password_encrypted) > 150)
-			{
-				do_log("The encrypted password was longer than the max length in DB (".strlen($this->password_encrypted).")");
-			}
-
-			$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailPassword = %s WHERE emailID = '%d'", $this->password_encrypted, $this->id));
-
-			$rows_affected += $wpdb->rows_affected;
-		}
-
-		if($this->smtp_password_encrypted != '')
-		{
-			if(strlen($this->smtp_password_encrypted) > 150)
-			{
-				do_log("The encrypted password was longer than the max length in DB (".strlen($this->smtp_password_encrypted).")");
-			}
-
-			$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailSmtpPassword = %s WHERE emailID = '%d'", $this->smtp_password_encrypted, $this->id));
-
-			$rows_affected += $wpdb->rows_affected;
-		}
-
-		return ($rows_affected > 0);
-	}
-
-	function update_rights()
-	{
-		global $wpdb;
-
-		$was_updated = false;
-
-		$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->base_prefix."email_users WHERE emailID = '%d'", $this->id));
-
-		if($wpdb->rows_affected > 0)
-		{
-			$was_updated = true;
-		}
-
-		if(is_array($this->users))
-		{
-			foreach($this->users as $intUserID)
-			{
-				$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email_users SET emailID = '%d', userID = '%d'", $this->id, $intUserID));
-
-				if($wpdb->rows_affected > 0)
-				{
-					$was_updated = true;
-				}
-			}
-		}
-
-		return $was_updated;
-	}
-
-	function create_account()
-	{
-		global $wpdb;
-
-		if(is_array($this->roles))
-		{
-			$this->roles = implode(",", $this->roles);
-		}
-
-		if(is_array($this->preferred_content_types))
-		{
-			$this->preferred_content_types = implode(",", $this->preferred_content_types);
-		}
-
-		$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailReplyTo = %s, emailSignature = %s, emailOutgoingType = %s, emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailPreferredContentTypes = %s, emailCreated = NOW(), userID = '%d'", $wpdb->blogid, $this->public, $this->roles, $this->server, $this->port, $this->username, $this->address, $this->name, $this->reply_to, $this->signature, $this->outgoing_type, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, $this->preferred_content_types, get_current_user_id()));
-
-		$this->id = $wpdb->insert_id;
-
-		return ($this->id > 0 && ($wpdb->rows_affected > 0 || $this->update_passwords() || $this->update_rights()));
-	}
-
-	function update_account()
-	{
-		global $wpdb;
-
-		if(is_array($this->roles))
-		{
-			$this->roles = implode(",", $this->roles);
-		}
-
-		if(is_array($this->preferred_content_types))
-		{
-			$this->preferred_content_types = implode(",", $this->preferred_content_types);
-		}
-
-		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET blogID = '%d', emailPublic = '%d', emailRoles = %s, emailVerified = '0', emailServer = %s, emailPort = '%d', emailUsername = %s, emailAddress = %s, emailName = %s, emailReplyTo = %s, emailSignature = %s, emailOutgoingType = %s, emailSmtpSSL = %s, emailSmtpServer = %s, emailSmtpPort = '%d', emailSmtpHostname = %s, emailSmtpUsername = %s, emailPreferredContentTypes = %s, emailDeleted = '0' WHERE emailID = '%d'", $wpdb->blogid, $this->public, $this->roles, $this->server, $this->port, $this->username, $this->address, $this->name, $this->reply_to, $this->signature, $this->outgoing_type, $this->smtp_ssl, $this->smtp_server, $this->smtp_port, $this->smtp_hostname, $this->smtp_username, $this->preferred_content_types, $this->id));
-
-		return ($wpdb->rows_affected > 0 || $this->update_passwords() || $this->update_rights());
-	}
 }
 
 if(class_exists('mf_list_table'))
@@ -2702,14 +2741,21 @@ if(class_exists('mf_list_table'))
 			{
 				case 'emailAddress':
 					$strEmailAddress = $item['emailAddress'];
+					$strEmailReplyTo = $item['emailReplyTo'];
 					$intUserID = $item['userID'];
 					$intEmailDeleted = $item['emailDeleted'];
 
 					$email_url = admin_url("admin.php?page=mf_email/create/index.php&intEmailID=".$intEmailID);
 
 					$out .= "<a href='".$email_url."'>"
-						.$strEmailAddress
-					."</a>";
+						.$strEmailAddress;
+
+						if($strEmailReplyTo != '' && $strEmailReplyTo != $strEmailAddress)
+						{
+							$out .= " -> ".$strEmailReplyTo;
+						}
+
+					$out .= "</a>";
 
 					$arr_actions = [];
 
@@ -2918,7 +2964,19 @@ if(class_exists('mf_list_table'))
 
 							if($item['emailUsername'] != '')
 							{
-								$row_actions .= ($row_actions != '' ? " | " : "").$item['emailUsername'];
+								if($item['emailPassword'] != '')
+								{
+									$obj_encryption = new mf_encryption('mf_email');
+									$email_password = $obj_encryption->decrypt($item['emailPassword'], md5($item['emailAddress']));
+									$email_password_shortened = shorten_text(array('string' => $email_password, 'limit' => 0.5));
+								}
+
+								else
+								{
+									$email_password_shortened = "(".__("empty", 'lang_email').")";
+								}
+
+								$row_actions .= ($row_actions != '' ? " | " : "").$item['emailUsername']." / ".$email_password_shortened;
 							}
 						}
 
@@ -2996,7 +3054,19 @@ if(class_exists('mf_list_table'))
 
 							if($item['emailSmtpUsername'] != '')
 							{
-								$row_actions .= ($row_actions != '' ? " | " : "").$item['emailSmtpUsername'];
+								if($item['emailSmtpPassword'] != '')
+								{
+									$obj_encryption = new mf_encryption('mf_email');
+									$smtp_password = $obj_encryption->decrypt($item['emailSmtpPassword'], md5($item['emailAddress']));
+									$smtp_password_shortened = shorten_text(array('string' => $smtp_password, 'limit' => 0.5));
+								}
+								
+								else
+								{
+									$smtp_password_shortened = "(".__("empty", 'lang_email').")";
+								}
+
+								$row_actions .= ($row_actions != '' ? " | " : "").$item['emailSmtpUsername']." / ".$smtp_password_shortened;
 							}
 						}
 

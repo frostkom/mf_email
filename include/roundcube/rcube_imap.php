@@ -4694,7 +4694,8 @@ class rcube_imap
 	 */
 	public function debug_handler(&$imap, $message)
 	{
-		write_log('imap', $message);
+		//write_log('imap', $message);
+		do_log(__FUNCTION__.": ".$message);
 	}
 
 }  // end class rcube_imap

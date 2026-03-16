@@ -277,7 +277,7 @@ class rcube_imap_generic
 	{
 		do
 		{
-			$line = trim($this->readLine(1024));
+			$line = trim($this->readLine(1024) ?? '');
 
 			// store untagged response lines
 			if(isset($line[0]) && $line[0] == '*')
@@ -366,7 +366,7 @@ class rcube_imap_generic
 	function setError($code, $msg='')
 	{
 		$this->errornum = $code;
-		$this->error	= $msg;
+		$this->error = $msg;
 	}
 
 	// check if $string starts with $match (or * BYE/BAD)
@@ -2716,7 +2716,7 @@ class rcube_imap_generic
 				$buffer = fgets($in_fp, 4096);
 				$this->putLine($buffer, false);
 			}
-			fclose($in_fp);
+			@fclose($in_fp);
 
 			if(!$this->putLine('')) { // \r\n
 				return false;
