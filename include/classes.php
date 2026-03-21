@@ -1373,7 +1373,7 @@ class mf_email
 		$outgoing_type = 'smtp';
 		$smtp_ssl = $smtp_host = $smtp_port = $smtp_hostname = $smtp_user = $smtp_pass = "";
 
-		$result = $obj_base->get_results($wpdb->prepare("SELECT emailName, emailReplyTo, emailOutgoingType, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailSmtpPassword FROM ".$wpdb->base_prefix."email WHERE blogID = '%d' AND emailAddress = %s LIMIT 0, 1", $wpdb->blogid, $phpmailer->From));
+		$result = $obj_base->get_results($wpdb->prepare("SELECT emailName, emailReplyTo, emailOutgoingType, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailSmtpPassword FROM ".$wpdb->base_prefix."email WHERE blogID = '%d' AND emailAddress = %s AND emailDeleted = '0' LIMIT 0, 1", $wpdb->blogid, $phpmailer->From));
 
 		if(count($result) > 0)
 		{
@@ -3060,7 +3060,7 @@ if(class_exists('mf_list_table'))
 									$smtp_password = $obj_encryption->decrypt($item['emailSmtpPassword'], md5($item['emailAddress']));
 									$smtp_password_shortened = shorten_text(array('string' => $smtp_password, 'limit' => 0.5));
 								}
-								
+
 								else
 								{
 									$smtp_password_shortened = "(".__("empty", 'lang_email').")";
