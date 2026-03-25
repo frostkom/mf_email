@@ -3,7 +3,7 @@
 Plugin Name: MF Email
 Plugin URI: https://github.com/frostkom/mf_email
 Description: Add support for sending and getting e-mails
-Version: 6.9.1
+Version: 6.9.2
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -53,8 +53,6 @@ if(!function_exists('is_plugin_active') || function_exists('is_plugin_active') &
 	add_filter('get_emails_left_to_send', array($obj_email, 'get_emails_left_to_send'), 10, 2);
 	add_filter('get_hourly_release_time', array($obj_email, 'get_hourly_release_time'), 10, 2);
 	add_filter('get_email_address_from_id', array($obj_email, 'get_email_address_from_id'), 10, 2);
-	//add_filter('get_email_name_from_address', array($obj_email, 'get_email_name_from_address'), 10, 2);
-	//add_filter('get_email_reply_to_from_address', array($obj_email, 'get_email_reply_to_from_address'), 10, 2);
 
 	add_filter('get_preferred_content_types', array($obj_email, 'get_preferred_content_types'), 10, 3);
 
@@ -101,7 +99,7 @@ if(!function_exists('is_plugin_active') || function_exists('is_plugin_active') &
 			emailCreated DATETIME,
 			emailChecked DATETIME,
 			emailOutgoingType VARCHAR(20) NOT NULL DEFAULT 'smtp',
-			emailSmtpVerified ENUM('-1', '0', '1') NOT NULL DEFAULT '0',
+			emailSmtpVerified TINYINT NOT NULL DEFAULT '0',
 			emailSmtpSSL ENUM('', 'ssl', 'tls') NOT NULL DEFAULT '',
 			emailSmtpServer VARCHAR(100) DEFAULT NULL,
 			emailSmtpPort SMALLINT DEFAULT NULL,
@@ -121,7 +119,7 @@ if(!function_exists('is_plugin_active') || function_exists('is_plugin_active') &
 		) DEFAULT CHARSET=".$default_charset);
 
 		$arr_add_column[$wpdb->base_prefix."email"] = array(
-			'emailSmtpVerified' => "ALTER TABLE [table] ADD [column] ENUM('-1', '0', '1') NOT NULL DEFAULT '0' AFTER emailOutgoingType",
+			'emailSmtpVerified' => "ALTER TABLE [table] ADD [column] TINYINT NOT NULL DEFAULT '0' AFTER emailOutgoingType",
 			'emailPreferredContentTypes' => "ALTER TABLE [table] ADD [column] VARCHAR(100) DEFAULT NULL AFTER emailSmtpPassword",
 			'emailSignature' => "ALTER TABLE [table] ADD [column] TEXT AFTER emailName",
 			'emailReplyTo' => "ALTER TABLE [table] ADD [column] VARCHAR(50) AFTER emailName", //260309
@@ -129,11 +127,8 @@ if(!function_exists('is_plugin_active') || function_exists('is_plugin_active') &
 
 		$arr_update_column[$wpdb->base_prefix."email"] = array(
 			'emailLimitPerHour' => "ALTER TABLE [table] DROP COLUMN [column]", //260221
+			'emailSmtpVerified' => "ALTER TABLE [table] CHANGE [column] TINYINT NOT NULL DEFAULT '0'", //260325
 		);
-
-		/*$arr_add_index[$wpdb->base_prefix."email"] = array(
-			//'' => "ALTER TABLE [table] ADD INDEX [column] ([column])",
-		);*/
 
 		$wpdb->query("CREATE TABLE IF NOT EXISTS ".$wpdb->base_prefix."email_users (
 			emailID INT UNSIGNED,

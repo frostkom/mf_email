@@ -1371,9 +1371,9 @@ class mf_email
 		global $wpdb, $obj_base;
 
 		$outgoing_type = 'smtp';
-		$smtp_ssl = $smtp_host = $smtp_port = $smtp_hostname = $smtp_user = $smtp_pass = "";
+		$smtp_ssl = $smtp_host = $smtp_port = $smtp_hostname = $smtp_user = $smtp_pass_encrypted = $smtp_pass = "";
 
-		$result = $obj_base->get_results($wpdb->prepare("SELECT emailName, emailReplyTo, emailOutgoingType, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailSmtpPassword FROM ".$wpdb->base_prefix."email WHERE blogID = '%d' AND emailAddress = %s AND emailDeleted = '0' LIMIT 0, 1", $wpdb->blogid, $phpmailer->From));
+		$result = $obj_base->get_results($wpdb->prepare("SELECT emailName, emailReplyTo, emailOutgoingType, emailSmtpSSL, emailSmtpServer, emailSmtpPort, emailSmtpHostname, emailSmtpUsername, emailSmtpPassword FROM ".$wpdb->base_prefix."email WHERE blogID = '%d' AND emailAddress = %s AND emailSmtpVerified >= 0 AND emailDeleted = '0' LIMIT 0, 1", $wpdb->blogid, $phpmailer->From));
 
 		if(count($result) > 0)
 		{
@@ -1403,14 +1403,21 @@ class mf_email
 
 		else
 		{
-			$smtp_ssl = get_option('setting_smtp_ssl');
 			$smtp_host = get_option('setting_smtp_server');
-			$smtp_port = get_option('setting_smtp_port');
-			$smtp_user = get_option('setting_smtp_username');
-			$smtp_pass = get_option('setting_smtp_password');
 
-			$obj_encryption = new mf_encryption(__CLASS__);
-			$smtp_pass = $obj_encryption->decrypt($smtp_pass, md5(AUTH_KEY));
+			if($smtp_host != '')
+			{
+				$smtp_port = get_option('setting_smtp_port');
+				$smtp_ssl = get_option('setting_smtp_ssl');
+				$smtp_user = get_option('setting_smtp_username');
+				$smtp_pass_encrypted = get_option('setting_smtp_password');
+
+				if($smtp_pass_encrypted != '')
+				{
+					$obj_encryption = new mf_encryption(__CLASS__);
+					$smtp_pass = $obj_encryption->decrypt($smtp_pass_encrypted, md5(AUTH_KEY));
+				}
+			}
 		}
 
 		switch($outgoing_type)
@@ -1493,14 +1500,14 @@ class mf_email
 	{
 		global $wpdb;
 
-		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailSmtpVerified = '%d', emailSmtpChecked = NOW() WHERE emailAddress = %s", 1, $from));
+		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailSmtpVerified = LEAST((emailSmtpVerified + 1), 100), emailSmtpChecked = NOW() WHERE emailAddress = %s", $from));
 	}
 
 	function sent_email_error($from)
 	{
 		global $wpdb;
 
-		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailSmtpVerified = '%d', emailSmtpChecked = NOW() WHERE emailAddress = %s", -1, $from));
+		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."email SET emailSmtpVerified = GREATEST((emailSmtpVerified - 1), -100), emailSmtpChecked = NOW() WHERE emailAddress = %s", $from));
 	}
 
 	function get_emails_left_to_send($data = [])
@@ -1543,34 +1550,6 @@ class mf_email
 
 		return $wpdb->get_var($wpdb->prepare("SELECT emailAddress FROM ".$wpdb->base_prefix."email WHERE emailID = '%d'", $id));
 	}
-
-	/*function get_email_name_from_address($string)
-	{
-		global $wpdb;
-
-		$strEmailName = $wpdb->get_var($wpdb->prepare("SELECT emailName FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s", $string));
-
-		if($strEmailName != '')
-		{
-			$string = $strEmailName;
-		}
-
-		return $string;
-	}
-
-	function get_email_reply_to_from_address($string)
-	{
-		global $wpdb;
-
-		$strEmailReplyTo = $wpdb->get_var($wpdb->prepare("SELECT emailReplyTo FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s", $string));
-
-		if($strEmailReplyTo != '')
-		{
-			$string = $strEmailReplyTo;
-		}
-
-		return $string;
-	}*/
 
 	function api_email_smtp_test()
 	{
@@ -3007,33 +2986,30 @@ if(class_exists('mf_list_table'))
 
 						else
 						{
-							switch($intEmailSmtpVerified)
+							if($intEmailSmtpVerified < 0)
 							{
-								default:
-								case 0:
-								case 1:
-									if($dteEmailSmtpChecked > DEFAULT_DATE)
-									{
-										if($dteEmailSmtpChecked < date("Y-m-d H:i:s", strtotime("-7 day")))
-										{
-											$row_info .= "<i class='fa fa-exclamation-triangle fa-lg yellow' title='".sprintf(__("Last Checked %s", 'lang_email'), format_date($dteEmailSmtpChecked))."'></i>";
-										}
+								$row_info .= "<i class='fa fa-times fa-lg red' title='".__("Connection Failed", 'lang_email')."'></i>";
+							}
 
-										else
-										{
-											$row_info .= "<i class='fa fa-check fa-lg green' title='".sprintf(__("Checked %s", 'lang_email'), format_date($dteEmailSmtpChecked))."'></i>";
-										}
+							else
+							{
+								if($dteEmailSmtpChecked > DEFAULT_DATE)
+								{
+									if($dteEmailSmtpChecked < date("Y-m-d H:i:s", strtotime("-7 day")))
+									{
+										$row_info .= "<i class='fa fa-exclamation-triangle fa-lg yellow' title='".sprintf(__("Last Checked %s", 'lang_email'), format_date($dteEmailSmtpChecked))."'></i>";
 									}
 
 									else
 									{
-										$row_info .= "<i class='fa fa-question-circle fa-lg' title='".__("Outgoing has not been checked yet", 'lang_email')."'></i>";
+										$row_info .= "<i class='fa fa-check fa-lg green' title='".sprintf(__("Checked %s", 'lang_email'), format_date($dteEmailSmtpChecked))."'></i>";
 									}
-								break;
+								}
 
-								case -1:
-									$row_info .= "<i class='fa fa-times fa-lg red' title='".__("Connection Failed", 'lang_email')."'></i>";
-								break;
+								else
+								{
+									$row_info .= "<i class='fa fa-question-circle fa-lg' title='".__("Outgoing has not been checked yet", 'lang_email')."'></i>";
+								}
 							}
 
 							switch($strEmailOutgoingType)
