@@ -1480,10 +1480,10 @@ class mf_email
 
 		if(is_array($setting_email_log) && in_array('core', $setting_email_log))
 		{
-			if(!isset($obj_base))
+			/*if(!isset($obj_base))
 			{
 				$obj_base = new mf_base();
-			}
+			}*/
 
 			$obj_base->filter_phpmailer_data();
 
