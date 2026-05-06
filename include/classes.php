@@ -113,7 +113,7 @@ class mf_email
 	{
 		global $wpdb;
 
-		if(!isset($data['cutoff'])){	$data['cutoff'] = date("Y-m-d H:i:s", strtotime("-2 minute"));}
+		if(!isset($data['cutoff'])){	$data['cutoff'] = date("Y-m-d H:i:s", strtotime(current_time('mysql')." -2 minute"));}
 
 		if(IS_ADMINISTRATOR)
 		{
@@ -597,7 +597,7 @@ class mf_email
 
 								$resultExists_md5 = $wpdb->get_results($wpdb->prepare("SELECT messageID FROM ".$wpdb->base_prefix."email_message INNER JOIN ".$wpdb->base_prefix."email_folder USING (folderID) WHERE emailID = '%d' AND messageMd5 != '' AND messageMd5 = %s LIMIT 0, 2", $intEmailID, $strMessageMd5));
 
-								if(count($resultExists_md5) == 0 && ($strMessageCreated >= date("Y-m-d H:i:s", strtotime("-7 day")))) // || $rowsTotal == 0
+								if(count($resultExists_md5) == 0 && ($strMessageCreated >= date("Y-m-d H:i:s", strtotime(current_time('mysql')." -7 day"))))
 								{
 									$intSpamID = $this->check_if_spam(array('from' => $strMessageFrom, 'subject' => $strMessageSubject));
 
@@ -684,38 +684,7 @@ class mf_email
 								else
 								{
 									$error_text = __("The e-mail already exists", 'lang_email').": ".$strMessageSubject."<br>";
-
-									/*$r = $resultExists_md5[0];
-									$intMessageStatus = $r->mailStatus;
-
-									if($intMessageStatus > 0)
-									{
-										$read_email_message = true;
-									}
-
-									if($strMessageCreated < date("Y-m-d H:i:s", strtotime("-14 day")) && $error_text == '')
-									{
-										$delete_email_message = true;
-									}*/
 								}
-
-								/*if(isset($read_email_message) && $read_email_message == true)
-								{
-									if(isset($delete_email_message) && $delete_email_message == true)
-									{
-										$imap->delete_message($header->uid);
-									}
-
-									else
-									{
-										//$imap->set_flag($header->uid, 'SEEN', 'INBOX');
-									}
-								}
-
-								else
-								{
-									//$imap->unset_flag($header->uid, 'SEEN', 'INBOX');
-								}*/
 							}
 						}
 
@@ -2406,11 +2375,11 @@ class mf_email
 
 	function has_accounts()
 	{
-		global $wpdb;
+		global $wpdb, $obj_base;
 
-		$wpdb->get_results("SELECT emailID FROM ".$wpdb->base_prefix."email LIMIT 0, 1");
+		$result = $obj_base->get_results("SELECT emailID FROM ".$wpdb->base_prefix."email LIMIT 0, 1");
 
-		return ($wpdb->num_rows > 0);
+		return (count($result) > 0);
 	}
 
 	function get_message_amount($id)
@@ -2897,7 +2866,7 @@ if(class_exists('mf_list_table'))
 								case 1:
 									if($dteEmailChecked > DEFAULT_DATE)
 									{
-										if($dteEmailChecked < date("Y-m-d H:i:s", strtotime("-1 day")))
+										if($dteEmailChecked < date("Y-m-d H:i:s", strtotime(current_time('mysql')." -1 day")))
 										{
 											$row_info .= "<i class='fa fa-ban fa-lg red' title='".sprintf(__("Last Checked %s", 'lang_email'), format_date($dteEmailChecked))."'></i>";
 										}
@@ -2908,7 +2877,7 @@ if(class_exists('mf_list_table'))
 
 											if($dteEmailReceived > DEFAULT_DATE)
 											{
-												if($dteEmailReceived < date("Y-m-d H:i:s", strtotime("-3 day")))
+												if($dteEmailReceived < date("Y-m-d H:i:s", strtotime(current_time('mysql')." -3 day")))
 												{
 													$row_info .= "<i class='fa fa-exclamation-triangle fa-lg yellow' title='".sprintf(__("Last E-mail %s", 'lang_email'), format_date($dteEmailReceived))."'></i>";
 												}
@@ -2995,7 +2964,7 @@ if(class_exists('mf_list_table'))
 							{
 								if($dteEmailSmtpChecked > DEFAULT_DATE)
 								{
-									if($dteEmailSmtpChecked < date("Y-m-d H:i:s", strtotime("-7 day")))
+									if($dteEmailSmtpChecked < date("Y-m-d H:i:s", strtotime(current_time('mysql')." -7 day")))
 									{
 										$row_info .= "<i class='fa fa-exclamation-triangle fa-lg yellow' title='".sprintf(__("Last Checked %s", 'lang_email'), format_date($dteEmailSmtpChecked))."'></i>";
 									}
