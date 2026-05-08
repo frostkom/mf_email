@@ -146,7 +146,7 @@ jQuery(function($)
 		clone_value_if_empty($(this), $("input[name=strEmailSmtpUsername]"));
 	});
 
-	$(document).on('blur', "input[name=strEmailAddress]", function()
+	/*$(document).on('blur', "input[name=strEmailAddress]", function()
 	{
 		var self_obj = $(this),
 			to_obj = $("input[name=strEmailSmtpHostname]");
@@ -160,5 +160,5 @@ jQuery(function($)
 
 			to_obj.val(arr_from_val[1]);
 		}
-	});
+	});*/
 });
