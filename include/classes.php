@@ -1552,6 +1552,11 @@ class mf_email
 			{
 				$done_text = "<p><strong>".__("The test message was sent successfully", 'lang_email')."</strong></p>";
 
+				if(IS_SUPER_ADMIN)
+				{
+					//$done_text .= " (".var_export($phpmailer, true).")";
+				}
+
 				$json_output['success'] = true;
 			}
 
@@ -1564,6 +1569,11 @@ class mf_email
 				{
 					$error_text .= "<p>".sprintf(__("Debug %s", 'lang_email'), "SMTP").":</p>
 					<pre>".$smtp_debug."</pre>";
+
+					if(IS_SUPER_ADMIN)
+					{
+						//$error_text .= " (".var_export($phpmailer, true).")";
+					}
 				}
 			}
 
