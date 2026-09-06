@@ -849,6 +849,62 @@ class mf_email
 		load_plugin_textdomain('lang_email', false, str_replace("/include", "", dirname(plugin_basename(__FILE__)))."/lang/");
 	}
 
+	function get_root_domain( $host )
+	{
+		$host = strtolower( trim( $host ) );
+
+		// Common multi-part public suffixes (not exhaustive — see note below)
+		$two_part_tlds = array(
+			'co.uk', 'org.uk', 'gov.uk', 'ac.uk', 'me.uk',
+			'com.au', 'net.au', 'org.au', 'gov.au',
+			'co.nz', 'co.jp', 'co.in', 'co.za',
+			'com.br', 'com.mx', 'com.sg',
+		);
+
+		$parts = explode( '.', $host );
+
+		if ( count( $parts ) <= 2 ) {
+			return $host; // already just "example.com" or a bare host
+		}
+
+		// Check if the last two labels form a known multi-part suffix
+		$last_two = implode( '.', array_slice( $parts, -2 ) );
+
+		if ( in_array( $last_two, $two_part_tlds, true ) ) {
+			// Need three labels: "example.co.uk"
+			return implode( '.', array_slice( $parts, -3 ) );
+		}
+
+		// Standard case: last two labels are the root domain
+		return implode( '.', array_slice( $parts, -2 ) );
+	}
+
+	function admin_notices()
+	{
+		global $error_text;
+
+		if(IS_ADMINISTRATOR)
+		{
+			$site_url = get_site_url();
+			$admin_email = get_option('admin_email');
+
+			// Extract the domain from the site URL
+			$site_domain = strtolower( parse_url( $site_url, PHP_URL_HOST ) );
+			// Strip a leading "www." so www.example.com matches example.com
+			$site_domain = $this->get_root_domain(preg_replace( '/^www\./', '', $site_domain ));
+
+			// Extract the domain from the admin email
+			$email_domain = $this->get_root_domain(strtolower( substr( strrchr( $admin_email, '@' ), 1 ) ));
+
+			if($site_domain != $email_domain)
+			{
+				$error_text = sprintf(__("The email %s does not match the site domain %s. Outgoing messages may not be delivered as expected.", 'lang_email'), $admin_email, $site_domain);
+
+				echo get_notification();
+			}
+		}
+	}
+
 	function settings_email()
 	{
 		global $wpdb;

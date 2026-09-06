@@ -29,6 +29,8 @@ if(!function_exists('is_plugin_active') || function_exists('is_plugin_active') &
 		register_activation_hook(__FILE__, 'activate_email');
 		register_uninstall_hook(__FILE__, 'uninstall_email');
 
+		add_action('admin_notices', array($obj_email, 'admin_notices'));
+
 		add_action('admin_init', array($obj_email, 'settings_email'));
 		add_filter('pre_update_option', array($obj_email, 'pre_update_option'), 10, 3);
 		add_action('admin_init', array($obj_email, 'admin_init'), 0);
