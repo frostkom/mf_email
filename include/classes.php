@@ -879,6 +879,13 @@ class mf_email
 		return implode( '.', array_slice( $parts, -2 ) );
 	}
 
+	function has_email_server($email)
+	{
+		global $wpdb;
+
+		return $wpdb->get_var($wpdb->prepare("SELECT emailID FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s AND emailSmtpServer != '' AND emailDeleted = '0'", $email));
+	}
+
 	function admin_notices()
 	{
 		global $error_text;
@@ -896,7 +903,7 @@ class mf_email
 			// Extract the domain from the admin email
 			$email_domain = $this->get_root_domain(strtolower( substr( strrchr( $admin_email, '@' ), 1 ) ));
 
-			if($site_domain != $email_domain)
+			if($site_domain != $email_domain && !($this->has_email_server($admin_email) > 0))
 			{
 				$error_text = sprintf(__("The email %s does not match the site domain %s. Outgoing messages may not be delivered as expected.", 'lang_email'), $admin_email, $site_domain);
 
@@ -998,8 +1005,7 @@ class mf_email
 		global $wpdb, $error_text;
 
 		$admin_email = get_bloginfo('admin_email');
-
-		$intEmailID = $wpdb->get_var($wpdb->prepare("SELECT emailID FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s AND emailSmtpServer != '' AND emailDeleted = '0'", $admin_email));
+		$intEmailID = $this->has_email_server($admin_email);
 
 		if($intEmailID > 0)
 		{
