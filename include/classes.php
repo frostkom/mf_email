@@ -883,7 +883,7 @@ class mf_email
 	{
 		global $wpdb;
 
-		return $wpdb->get_var($wpdb->prepare("SELECT emailID FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s AND emailSmtpServer != '' AND emailDeleted = '0'", $email));
+		return $wpdb->get_var($wpdb->prepare("SELECT emailID FROM ".$wpdb->base_prefix."email WHERE emailAddress = %s AND (emailOutgoingType = 'smtp' AND emailSmtpServer != '' OR emailOutgoingType != '' AND emailOutgoingType != 'smtp') AND emailDeleted = '0'", $email));
 	}
 
 	function admin_notices()
