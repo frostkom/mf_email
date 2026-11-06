@@ -46,7 +46,7 @@ class mf_email
 	{
 		if(isset($data['id']) && $data['id'] > 0)
 		{
-			$this->id = $id;
+			$this->id = $data['id'];
 		}
 
 		else
@@ -355,7 +355,7 @@ class mf_email
 
 		else
 		{
-			$intFolderID2 = $wpdb->get_var($wpdb->prepare("SELECT folderID2 FROM ".$wpdb->base_prefix."email_folder WHERE folderDeleted = '0' AND folderName = '".$name."' AND userID = '%d'", get_current_user_id()));
+			$intFolderID2 = $wpdb->get_var($wpdb->prepare("SELECT folderID2 FROM ".$wpdb->base_prefix."email_folder WHERE folderDeleted = '0' AND folderName = %s AND userID = '%d'", $name, get_current_user_id()));
 
 			$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix."email_folder SET folderID2 = '%d', folderType = %s, folderName = %s, emailID = '%d', folderCreated = NOW(), userID = '0'", $intFolderID2, $type, $name, $intEmailID));
 
@@ -1585,71 +1585,74 @@ class mf_email
 			'success' => false,
 		);
 
-		$mail_to = check_var('smtp_to', 'email');
-
-		if($mail_to != '')
+		if(IS_ADMINISTRATOR)
 		{
-			$user_data = get_userdata(get_current_user_id());
+			$mail_to = check_var('smtp_to', 'email');
 
-			$mail_subject = sprintf(__("Test mail to %s", 'lang_email'), $mail_to);
-			$mail_content = "<p>".__("Hello!", 'lang_email')."</p>"
-				."<p>".sprintf(__("This is a test email generated from %s on %s", 'lang_email'), "Wordpress", remove_protocol(array('url' => get_site_url(), 'clean' => true)))."</p>"
-				."<p>".__("Regards", 'lang_email')."</p>"
-				."<p>".$user_data->first_name."</p>";
-
-			DEFINE('SMTPDebug', 3);
-
-			ob_start();
-
-				$sent = send_email(array('to' => $mail_to, 'subject' => $mail_subject, 'content' => $mail_content));
-
-			$smtp_debug = ob_get_clean();
-
-			if($sent == true)
+			if($mail_to != '')
 			{
-				$done_text = "<p><strong>".__("The test message was sent successfully", 'lang_email')."</strong></p>";
+				$user_data = get_userdata(get_current_user_id());
 
-				if(IS_SUPER_ADMIN)
+				$mail_subject = sprintf(__("Test mail to %s", 'lang_email'), $mail_to);
+				$mail_content = "<p>".__("Hello!", 'lang_email')."</p>"
+					."<p>".sprintf(__("This is a test email generated from %s on %s", 'lang_email'), "Wordpress", remove_protocol(array('url' => get_site_url(), 'clean' => true)))."</p>"
+					."<p>".__("Regards", 'lang_email')."</p>"
+					."<p>".$user_data->first_name."</p>";
+
+				DEFINE('SMTPDebug', 3);
+
+				ob_start();
+
+					$sent = send_email(array('to' => $mail_to, 'subject' => $mail_subject, 'content' => $mail_content));
+
+				$smtp_debug = ob_get_clean();
+
+				if($sent == true)
 				{
-					//$done_text .= " (".var_export($phpmailer, true).")";
-				}
-
-				$json_output['success'] = true;
-			}
-
-			else
-			{
-				$error_text = "<p><strong>".__("I am sorry, but I could not send the message for you", 'lang_email')."</strong></p>"
-				."<p>".__("More information regarding this is saved in the log", 'lang_email')."</p>";
-
-				if($smtp_debug != '')
-				{
-					$error_text .= "<p>".sprintf(__("Debug %s", 'lang_email'), "SMTP").":</p>
-					<pre>".$smtp_debug."</pre>";
+					$done_text = "<p><strong>".__("The test message was sent successfully", 'lang_email')."</strong></p>";
 
 					if(IS_SUPER_ADMIN)
 					{
-						//$error_text .= " (".var_export($phpmailer, true).")";
+						//$done_text .= " (".var_export($phpmailer, true).")";
+					}
+
+					$json_output['success'] = true;
+				}
+
+				else
+				{
+					$error_text = "<p><strong>".__("I am sorry, but I could not send the message for you", 'lang_email')."</strong></p>"
+					."<p>".__("More information regarding this is saved in the log", 'lang_email')."</p>";
+
+					if($smtp_debug != '')
+					{
+						$error_text .= "<p>".sprintf(__("Debug %s", 'lang_email'), "SMTP").":</p>
+						<pre>".wp_kses($smtp_debug, array('br' => array()))."</pre>";
+
+						if(IS_SUPER_ADMIN)
+						{
+							//$error_text .= " (".var_export($phpmailer, true).")";
+						}
 					}
 				}
-			}
 
-			$out = get_notification();
+				$out = get_notification();
 
-			if($out != '')
-			{
-				$json_output['html'] = $out;
+				if($out != '')
+				{
+					$json_output['html'] = $out;
+				}
+
+				else
+				{
+					$json_output['html'] = __("I could not send the test email. Please make sure that the credentials are correct", 'lang_email');
+				}
 			}
 
 			else
 			{
-				$json_output['html'] = __("I could not send the test email. Please make sure that the credentials are correct", 'lang_email');
+				$json_output['html'] = __("You did not enter a valid email address. Please do and try again", 'lang_email');
 			}
-		}
-
-		else
-		{
-			$json_output['html'] = __("You did not enter a valid email address. Please do and try again", 'lang_email');
 		}
 
 		header('Content-Type: application/json');
