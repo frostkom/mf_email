@@ -52,7 +52,7 @@ echo "<div class='wrap'>
 </div>"
 .$obj_base->get_templates(array('lost_connection', 'loading'))
 ."<script type='text/template' id='template_folder_item'>
-	<tr id='folder<%= folderID %>' class='<%= folderClass %>'>
+	<tr id='folder<%- folderID %>' class='<%= folderClass %>'>
 		<td>
 			<i class='<%= folderImage %> fa-lg'></i>
 		</td>
@@ -68,12 +68,12 @@ echo "<div class='wrap'>
 				<%= folderTotal %>
 				<% if(!(folderType > 0))
 				{ %>
-					| <a href='".admin_url("admin.php?page=mf_email/folder/index.php&intFolderID=<%= folderID %>")."'>".__("Edit", 'lang_email')."</a>
+					| <a href='".admin_url("admin.php?page=mf_email/folder/index.php&intFolderID=<%- folderID %>")."'>".__("Edit", 'lang_email')."</a>
 				<% }
 
 				if(folderTotal == 0)
 				{ %>
-					 | <a href='#email/folders/<%= folderID %>/delete'".make_link_confirm().">".__("Delete", 'lang_email')."</a>
+					 | <a href='#email/folders/<%- folderID %>/delete'".make_link_confirm().">".__("Delete", 'lang_email')."</a>
 				<% } %>
 			</div>
 		</td>
@@ -85,11 +85,11 @@ echo "<div class='wrap'>
 </script>
 
 <script type='text/template' id='template_email_more'>
-	<tr class='show_more'><td colspan='5'><a href='#email/emails/<%= folderName %>/<%= limit_start %>'>".__("Show more", 'lang_email')."&hellip;</a></td></tr>
+	<tr class='show_more'><td colspan='5'><a href='#email/emails/<%= folderName %>/<%- limit_start %>'>".__("Show more", 'lang_email')."&hellip;</a></td></tr>
 </script>
 
 <script type='text/template' id='template_email_item'>
-	<tr id='message<%= messageID %>' class='<%= messageClass %>'>
+	<tr id='message<%- messageID %>' class='<%= messageClass %>'>
 		<td>
 			<% if(messageDraggable)
 			{ %>
@@ -107,12 +107,12 @@ echo "<div class='wrap'>
 			{
 				if(folderType == 5)
 				{ %>
-					<a href='".admin_url("admin.php?page=mf_email/send/index.php&intMessageDraftID=<%= messageID %>")."'>
+					<a href='".admin_url("admin.php?page=mf_email/send/index.php&intMessageDraftID=<%- messageID %>")."'>
 				<% }
 
 				else
 				{ %>
-					<a href='#email/show/<%= messageID %>'>
+					<a href='#email/show/<%- messageID %>'>
 				<% }
 			} %>
 				<%= messageName %>
@@ -123,25 +123,25 @@ echo "<div class='wrap'>
 			."<div class='row-actions'>
 				<% if(messageDeleted == 0)
 				{ %>
-					<a href='#email/delete/<%= messageID %>'".make_link_confirm().">".__("Delete", 'lang_email')."</a>
-					 | <a href='#email/spam/<%= messageID %>'".make_link_confirm().">".__("Mark as Spam", 'lang_email')."</a>
+					<a href='#email/delete/<%- messageID %>'".make_link_confirm().">".__("Delete", 'lang_email')."</a>
+					 | <a href='#email/spam/<%- messageID %>'".make_link_confirm().">".__("Mark as Spam", 'lang_email')."</a>
 				<% }
 
 				else
 				{ %>
-					<a href='#email/restore/<%= messageID %>' title='".sprintf(__("Removed %s", 'lang_email'), "<%= messageDeletedDate %>")."'".make_link_confirm().">".__("Restore", 'lang_email')."</a>
+					<a href='#email/restore/<%- messageID %>' title='".sprintf(__("Removed %s", 'lang_email'), "<%= messageDeletedDate %>")."'".make_link_confirm().">".__("Restore", 'lang_email')."</a>
 				<% } %>
 			</div>
 		</td>
 		<td>
 			<% if(messageRead == 0)
 			{ %>
-				<a href='#email/read/<%= messageID %>'><i class='fa fa-circle fa-lg green'></i></a>
+				<a href='#email/read/<%- messageID %>'><i class='fa fa-circle fa-lg green'></i></a>
 			<% }
 
 			else
 			{ %>
-				<a href='#email/unread/<%= messageID %>'><i class='far fa-circle fa-lg'></i></a>
+				<a href='#email/unread/<%- messageID %>'><i class='far fa-circle fa-lg'></i></a>
 			<% } %>
 		</td>
 		<td>
@@ -185,7 +185,7 @@ echo "<div class='wrap'>
 		{ %>
 			<li><strong>".__("Cc", 'lang_email').":</strong> <%= messageCc %></li>
 		<% } %>
-		<li><a href='".admin_url("admin.php?page=mf_email/send/index.php&intMessageID=<%= messageID %>&answer")."' class='button'><i class='fa fa-chevron-left'></i> ".__("Answer", 'lang_email')."</a> <a href='?page=mf_email/send/index.php&intMessageID=<%= messageID %>&forward' class='button'>".__("Forward", 'lang_email')." <i class='fa fa-chevron-right'></i></a></li>
+		<li><a href='".admin_url("admin.php?page=mf_email/send/index.php&intMessageID=<%- messageID %>&answer")."' class='button'><i class='fa fa-chevron-left'></i> ".__("Answer", 'lang_email')."</a> <a href='?page=mf_email/send/index.php&intMessageID=<%- messageID %>&forward' class='button'>".__("Forward", 'lang_email')." <i class='fa fa-chevron-right'></i></a></li>
 		<% if(messageAttachment.length > 0)
 		{ %>
 			<li>&nbsp;</li>
